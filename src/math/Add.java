@@ -1,4 +1,4 @@
-package Math;
+package math;
 
 public class Add {
     public static String addBinary(String a, String b) {

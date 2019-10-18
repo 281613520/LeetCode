@@ -1,9 +1,6 @@
-package Math;
-
-import javafx.scene.effect.SepiaTone;
+package math;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ThreeSum {
     public static List<List<Integer>> threeSum(int[] nums) {

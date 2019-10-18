@@ -1,4 +1,4 @@
-package Math;
+package math;
 
 public class MissingElement {
     public int missingElement(int[] nums, int k) {
