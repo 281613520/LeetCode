@@ -72,7 +72,7 @@ public class PrisonAfterNDays {
         }
 
         if (flag) {
-            int a = N - 1;
+            int a = count - 1;
             int b = a % ceshi.size();
             List<Integer> r = ceshi.get(b);
             int[] s = new int[r.size()];
