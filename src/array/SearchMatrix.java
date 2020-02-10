@@ -22,15 +22,17 @@ package array;
  */
 public class SearchMatrix {
     public boolean searchMatrix(int[][] matrix, int target) {
-        for (int[] ints : matrix) {
-            for (int j = matrix[0].length - 1; j >= 0; j--) {
-                if (ints[j] < target) {
-                    break;
-                } else if (ints[j] == target) {
-                    return true;
-                }
-            }
-        }
-        return false;
+       int i = matrix.length - 1;
+       int j = 0;
+       while (i >= 0 && j <matrix[0].length){
+           if (matrix[i][j] > target){
+               i--;
+           }else if (matrix[i][j] == target){
+               return true;
+           }else if (matrix[i][j] < target){
+               j++;
+           }
+       }
+       return false;
     }
 }
