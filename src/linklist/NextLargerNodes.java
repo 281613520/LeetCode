@@ -29,6 +29,7 @@ public class NextLargerNodes {
         return nums;
     }
 
+    // d单调栈
     public static int[] nextLargerNodes2(ListNode head) {
         ListNode cur = head;
         List<Integer> list = new ArrayList<>();
