@@ -42,7 +42,7 @@ public class NextLargerNodes {
 
         for (int i = 0; i < nums.length; i++) {
             int val = list.get(i);
-            while (!stack.isEmpty()&& list.get(stack.peek()) <= val){
+            while (!stack.isEmpty()&& list.get(stack.peek()) < val){
                 int index = stack.pop();
                 nums[index] = val;
             }
