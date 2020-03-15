@@ -19,6 +19,8 @@ import java.util.Map;
  * 0
  * [-1,0,0,1,1,2,2,3,3,4,4,5,5,6,6]
  * [1,1,1,1,1,1,1,0,0,0,0,0,0,0,0]
+ *
+ * 图+dfs
  */
 public class NumOfMinutes {
     public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
