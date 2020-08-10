@@ -55,7 +55,7 @@ public class Solution2 {
             n--;
         }
 
-        return  flag? '0' : '1';
+        return  flag? '1' : '0';
     }
 
     public static void main(String[] args) {
