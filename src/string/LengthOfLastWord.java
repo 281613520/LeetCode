@@ -1,4 +1,4 @@
-package zifuchuan;
+package string;
 
 public class LengthOfLastWord {
     public int lengthOfLastWord(String s) {

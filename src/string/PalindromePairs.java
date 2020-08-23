@@ -1,4 +1,4 @@
-package zifuchuan;
+package string;
 
 
 import java.util.*;
