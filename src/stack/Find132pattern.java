@@ -33,6 +33,8 @@ import java.util.LinkedList;
  * 解释：序列中有 3 个 132 模式的的子序列：[-1, 3, 2]、[-1, 3, 0] 和 [-1, 2, 0] 。
  *
  * 单调栈的一个应用
+ * 思路，参考题解：
+ * 再1，3，2模式中
  *
  */
 public class Find132pattern {
