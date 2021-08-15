@@ -37,7 +37,7 @@ public class Solution3 {
                 i++;
             }
 
-            // 没有任务了 但是还得继续向下走
+            // 没有任务了 直接跳到下一个任务的start time
             if (queue.isEmpty()){
                 now = taskList.get(i).startTime;
                 while (i < tasks.length && taskList.get(i).startTime <= now){
