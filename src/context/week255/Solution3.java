@@ -1,15 +1,15 @@
 package context.week255;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Solution3 {
     int res = Integer.MAX_VALUE;
     Map<Integer, Set<Integer>> map = new HashMap<>();
 
     public int minimizeTheDifference(int[][] mat, int target) {
+        for(int[] cur : mat){
+            Arrays.sort(cur);
+        }
         dfs(mat, 0, target, 0);
         return res;
     }
@@ -27,6 +27,9 @@ public class Solution3 {
 
         for (int k = 0; k < mat[0].length; k++) {
             sum += mat[i][k];
+            if (sum - target > res){
+                break;
+            }
             Set<Integer> tmpSet = map.computeIfAbsent(i, (y) -> new HashSet<>());
             if (tmpSet.add(sum)) {
                 dfs(mat, i + 1, target, sum);
@@ -80,6 +83,6 @@ public class Solution3 {
     //1
     public static void main(String[] args) {
         Solution3 solution3 = new Solution3();
-        solution3.minimizeTheDifference(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, 13);
+        solution3.minimizeTheDifference(new int[][]{{3,5}, {5,10}}, 47);
     }
 }
