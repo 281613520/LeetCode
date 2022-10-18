@@ -104,7 +104,9 @@ public class Solution {
     }
 
     /**
-     * 由于选一个i，就删除两边所有的数字 i-1,i+1，因此可以转换为rob题
+     * 由于选一个i，就删除两边所有的数字 i-1,i+1 -->只能隔一位取数字，因此可以转换为rob题
+     * 同时，需要处理数组为每个位置的个数数组，为after
+     * dp[i] = max(dp[i-1]，dp[i-2] + i * after[i])
      * @param nums
      * @return
      */
