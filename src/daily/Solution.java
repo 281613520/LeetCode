@@ -1,10 +1,7 @@
 package daily;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Solution {
     public boolean possibleBipartition(int n, int[][] dislikes) {
@@ -107,6 +104,7 @@ public class Solution {
      * 由于选一个i，就删除两边所有的数字 i-1,i+1 -->只能隔一位取数字，因此可以转换为rob题
      * 同时，需要处理数组为每个位置的个数数组，为after
      * dp[i] = max(dp[i-1]，dp[i-2] + i * after[i])
+     *
      * @param nums
      * @return
      */
@@ -126,22 +124,57 @@ public class Solution {
         int[] dp = new int[max + 1];
         dp[0] = 0;
         dp[1] = after[1];
-        if (after.length ==2){
+        if (after.length == 2) {
             return after[1];
         }
-        dp[2] = Math.max(after[1], after[2]*2);
+        dp[2] = Math.max(after[1], after[2] * 2);
 
         for (int i = 3; i <= max; i++) {
-            dp[i] = Math.max(dp[i-1] , dp[i-2] + i * after[i]);
+            dp[i] = Math.max(dp[i - 1], dp[i - 2] + i * after[i]);
         }
 
         return dp[max];
     }
 
+    public boolean canJump(int[] nums) {
+        boolean[] dp = new boolean[nums.length];
+        dp[0] = true;
+
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && nums[j] >= i - j) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[nums.length - 1];
+    }
+
+    public int jump(int[] nums) {
+        if (nums.length == 1){
+            return 0;
+        }
+
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp,Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for (int i = 1 ; i < nums.length  ; i++){
+            for (int j = 0 ; j < i; j++){
+                if (i-j <= nums[j]) {
+                    dp[i] = Math.min(dp[i],dp[j]+1);
+                }
+            }
+        }
+        return dp[nums.length - 1];
+    }
+
     public static void main(String[] args) {
         Solution s = new Solution();
         //s.possibleBipartition(3, new int[][]{{1, 2}, {1, 3}, {2, 3}});
-       // s.totalFruit(new int[]{3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4});
-        s.deleteAndEarn(new int[]{2,2,3,3,3,4});
+        // s.totalFruit(new int[]{3, 3, 3, 1, 2, 1, 1, 2, 3, 3, 4});
+        s.jump(new int[]{1,2,3});
     }
 }
