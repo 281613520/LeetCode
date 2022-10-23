@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class Solution {
     public int numSquares(int n) {
-        int[] dp = new int[n+1];
-        Arrays.fill(dp,Integer.MAX_VALUE);
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
         dp[0] = 0;
         dp[1] = 1;
 
-        for (int i = 2;  i <= n ; i ++){
+        for (int i = 2; i <= n; i++) {
             int x = 1;
-            while (i >= x*x){
-                dp[i] = Math.min(dp[i],dp[i-x*x]+1);
+            while (i >= x * x) {
+                dp[i] = Math.min(dp[i], dp[i - x * x] + 1);
                 x++;
             }
         }
@@ -23,11 +23,11 @@ public class Solution {
 
     public int fib(int n) {
         if (n == 0) return n;
-        int[] dp = new int[n+1];
+        int[] dp = new int[n + 1];
         dp[0] = 0;
         dp[1] = 1;
-        for (int i = 2 ; i <= n ; i++){
-            dp[i] = dp[i-1]+ dp[i-2];
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
         }
 
         return dp[n];
@@ -36,29 +36,29 @@ public class Solution {
     public int tribonacci(int n) {
         if (n == 0) return 0;
         if (n == 1 || n == 2) return 0;
-        int[] dp = new int[n+1];
+        int[] dp = new int[n + 1];
         dp[0] = 0;
         dp[1] = 1;
         dp[2] = 1;
 
-        for (int i = 3 ; i <= n ; i++){
-            dp[i] = dp[i-1]+ dp[i-2]+dp[i-3];
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
         }
 
         return dp[n];
     }
 
     public int climbStairs(int n) {
-     // dp[i] = dp[i-1]+ dp[i-2]
+        // dp[i] = dp[i-1]+ dp[i-2]
         if (n == 0 || n == 1) return 1;
-        if (n ==2) return 2;
-        int[] dp = new int[n+1];
+        if (n == 2) return 2;
+        int[] dp = new int[n + 1];
         dp[0] = 1;
         dp[1] = 1;
         dp[2] = 2;
 
-        for (int i = 3; i <= n ; i++){
-            dp[i] = dp[i-1] + dp[i-2];
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
         }
 
         return dp[n];
@@ -66,15 +66,15 @@ public class Solution {
 
     public int minCostClimbingStairs(int[] cost) {
         int n = cost.length;
-        int[] dp = new int[n+1];
+        int[] dp = new int[n + 1];
         if (n < 3) return 0;
 
         // dp[i] = min(dp[i-1] + cost[i-1],dp[i-2] + cost[i-2])
         dp[0] = 0;
         dp[1] = 0;
         dp[2] = 0;
-        for (int i = 3 ; i <= n ; i++){
-            dp[i] = Math.min(dp[i-1]+cost[i-1],dp[i-2]+cost[i-2]);
+        for (int i = 3; i <= n; i++) {
+            dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
         }
 
         return dp[n];
@@ -170,26 +170,156 @@ public class Solution {
     }
 
     public int jump(int[] nums) {
-        if (nums.length == 1){
+        if (nums.length == 1) {
             return 0;
         }
 
         int[] dp = new int[nums.length];
-        Arrays.fill(dp,Integer.MAX_VALUE);
+        Arrays.fill(dp, Integer.MAX_VALUE);
         dp[0] = 0;
 
-        for (int i = 1 ; i < nums.length  ; i++){
-            for (int j = 0 ; j < i; j++){
-                if (i-j <= nums[j]) {
-                    dp[i] = Math.min(dp[i],dp[j]+1);
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (i - j <= nums[j]) {
+                    dp[i] = Math.min(dp[i], dp[j] + 1);
                 }
             }
         }
         return dp[nums.length - 1];
     }
 
+
+    public int maxSubArray(int[] nums) {
+        int max = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] > 0) nums[i] += nums[i - 1];
+            max = Math.max(nums[i], max);
+        }
+
+        return max;
+    }
+
+    public int maxSubarraySumCircular(int[] nums) {
+        int max = nums[0];
+        int sum = nums[0];
+        int tmp = nums[0];
+
+        // 求最大
+        for (int i = 1; i < nums.length; i++) {
+            if (tmp >= 0) {
+                tmp += nums[i];
+            } else {
+                tmp = nums[i];
+            }
+            max = Math.max(tmp, max);
+
+            sum += nums[i];
+        }
+
+        //使用到了环，则必定包含 A[n-1]和 A[0]两个元素且说明从A[1]到A[n-2]这个子数组中必定包含负数
+        tmp = 0;
+        int min = 0;
+        for (int i = 1; i < nums.length -1; i++) {
+            if (tmp <= 0) {
+                tmp +=nums[i];
+            } else {
+                tmp = nums[i];
+            }
+            min = Math.min(tmp, min);
+        }
+
+
+        return Math.max(max, sum - min);
+    }
+
+    public int maxProduct(int[] nums) {
+        int max;
+        int min;
+        int premax = nums[0];
+        int premin = nums[0];
+        int ans = nums[0];
+
+        for (int i = 1 ; i< nums.length ; i++){
+            max = Math.max(Math.max(premax*nums[i] , premin*nums[i]),nums[i]);
+            min = Math.min(Math.min(premin*nums[i],premax*nums[i]),nums[i]);
+
+            premax = max;
+            premin = min;
+            ans = Math.max(premax,ans);
+        }
+
+
+        return ans;
+    }
+
+    public int maxScoreSightseeingPair(int[] values) {
+        int res = 0,max = values[0]+0;
+
+        for (int j = 1 ; j < values.length ; j++){
+            res = Math.max(res,max + values[j] - j);
+            max = Math.max(max,values[j] + j);
+        }
+
+        return res;
+    }
+
+    public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        int min = Integer.MAX_VALUE;
+        for (int price : prices) {
+            if (min > price) {
+                min = price;
+            }
+            if (price - min > maxProfit) {
+                maxProfit = price - min;
+            }
+
+        }
+        return maxProfit;
+    }
+
+
+    public int maxProfit2(int[] prices) {
+        // 0 代表卖出
+        // 1 代表买入
+        int[][] dp = new int[prices.length +1][2];
+
+        dp[1][0] = 0;
+        dp[1][1] = -prices[0];
+
+
+        for (int i = 2 ; i <= prices.length ; i++){
+            dp[i][0] = Math.max(dp[i-1][1] + prices[i-1],dp[i-1][0]);
+            dp[i][1] = Math.max(dp[i-1][0] - prices[i-1],dp[i-1][1]);
+        }
+
+
+        return dp[prices.length][0];
+    }
+
+    public int maxProfit3(int[] prices) {
+        // 0 代表卖出
+        // 1 代表买入
+        // 2 代表冷冻期
+        int[][] dp = new int[prices.length +1][3];
+
+        dp[1][0] = 0;
+        dp[1][1] = -prices[0];
+        dp[1][2] = 0;
+
+        for (int i = 2 ; i <= prices.length ; i++){
+            dp[i][0] = dp[i-1][1] + prices[i-1];
+            dp[i][1] = Math.max(dp[i-1][2] - prices[i-1],dp[i-1][1]);
+            dp[i][2] = Math.max(dp[i-1][0],dp[i-1][2]);
+        }
+
+
+        return Math.max(dp[prices.length][0],dp[prices.length][2]);
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.tribonacci(4);
+        solution.maxSubarraySumCircular(new int[]{9,-4,-7,9});
     }
 }
