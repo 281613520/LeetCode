@@ -76,6 +76,7 @@ public class Solution {
         return ans;
     }
 
+
     public static void main(String[] args) {
         Solution s = new Solution();
         s.countSubarrays(new int[]{1,3,5,2,7,5},1,5);

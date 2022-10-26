@@ -2,6 +2,7 @@ package dongtaiguihua;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Solution {
@@ -316,6 +317,20 @@ public class Solution {
 
 
         return Math.max(dp[prices.length][0],dp[prices.length][2]);
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] res = new boolean[s.length()+1];
+        res[0] = true;
+        for (int i = 1 ; i < s.length() +1 ; i++){
+            for (int j = 0 ; j < i ; j++){
+                if (res[j] && wordDict.contains(s.substring(j,i))){
+                    res[i] = true;
+                    break;
+                }
+            }
+        }
+        return res[s.length()];
     }
 
     public static void main(String[] args) {
