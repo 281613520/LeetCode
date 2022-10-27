@@ -333,6 +333,35 @@ public class Solution {
         return res[s.length()];
     }
 
+
+    public int trap(int[] height) {
+        int[] left = new int[height.length];
+        int[] right = new int[height.length];
+
+        int left_max = height[0];
+        int right_max = height[height.length - 1];
+
+        for (int i = 0 ; i < height.length ; i++){
+            left_max = Math.max(left_max,height[i]);
+            left[i] = left_max;
+        }
+
+        for (int i = height.length - 1 ; i >=0; i--){
+            right_max = Math.max(right_max,height[i]);
+            right[i] = right_max;
+        }
+
+        int res = 0;
+        for (int i = 1 ; i < height.length - 1;i++){
+            int tmp = Math.min(left[i],right[i]);
+            if (tmp > height[i]){
+                res += tmp - height[i];
+            }
+        }
+        return res;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.maxSubarraySumCircular(new int[]{9,-4,-7,9});
