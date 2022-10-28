@@ -221,9 +221,9 @@ public class Solution {
         //使用到了环，则必定包含 A[n-1]和 A[0]两个元素且说明从A[1]到A[n-2]这个子数组中必定包含负数
         tmp = 0;
         int min = 0;
-        for (int i = 1; i < nums.length -1; i++) {
+        for (int i = 1; i < nums.length - 1; i++) {
             if (tmp <= 0) {
-                tmp +=nums[i];
+                tmp += nums[i];
             } else {
                 tmp = nums[i];
             }
@@ -241,13 +241,13 @@ public class Solution {
         int premin = nums[0];
         int ans = nums[0];
 
-        for (int i = 1 ; i< nums.length ; i++){
-            max = Math.max(Math.max(premax*nums[i] , premin*nums[i]),nums[i]);
-            min = Math.min(Math.min(premin*nums[i],premax*nums[i]),nums[i]);
+        for (int i = 1; i < nums.length; i++) {
+            max = Math.max(Math.max(premax * nums[i], premin * nums[i]), nums[i]);
+            min = Math.min(Math.min(premin * nums[i], premax * nums[i]), nums[i]);
 
             premax = max;
             premin = min;
-            ans = Math.max(premax,ans);
+            ans = Math.max(premax, ans);
         }
 
 
@@ -255,11 +255,11 @@ public class Solution {
     }
 
     public int maxScoreSightseeingPair(int[] values) {
-        int res = 0,max = values[0]+0;
+        int res = 0, max = values[0] + 0;
 
-        for (int j = 1 ; j < values.length ; j++){
-            res = Math.max(res,max + values[j] - j);
-            max = Math.max(max,values[j] + j);
+        for (int j = 1; j < values.length; j++) {
+            res = Math.max(res, max + values[j] - j);
+            max = Math.max(max, values[j] + j);
         }
 
         return res;
@@ -284,15 +284,15 @@ public class Solution {
     public int maxProfit2(int[] prices) {
         // 0 代表卖出
         // 1 代表买入
-        int[][] dp = new int[prices.length +1][2];
+        int[][] dp = new int[prices.length + 1][2];
 
         dp[1][0] = 0;
         dp[1][1] = -prices[0];
 
 
-        for (int i = 2 ; i <= prices.length ; i++){
-            dp[i][0] = Math.max(dp[i-1][1] + prices[i-1],dp[i-1][0]);
-            dp[i][1] = Math.max(dp[i-1][0] - prices[i-1],dp[i-1][1]);
+        for (int i = 2; i <= prices.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][1] + prices[i - 1], dp[i - 1][0]);
+            dp[i][1] = Math.max(dp[i - 1][0] - prices[i - 1], dp[i - 1][1]);
         }
 
 
@@ -303,28 +303,28 @@ public class Solution {
         // 0 代表卖出
         // 1 代表买入
         // 2 代表冷冻期
-        int[][] dp = new int[prices.length +1][3];
+        int[][] dp = new int[prices.length + 1][3];
 
         dp[1][0] = 0;
         dp[1][1] = -prices[0];
         dp[1][2] = 0;
 
-        for (int i = 2 ; i <= prices.length ; i++){
-            dp[i][0] = dp[i-1][1] + prices[i-1];
-            dp[i][1] = Math.max(dp[i-1][2] - prices[i-1],dp[i-1][1]);
-            dp[i][2] = Math.max(dp[i-1][0],dp[i-1][2]);
+        for (int i = 2; i <= prices.length; i++) {
+            dp[i][0] = dp[i - 1][1] + prices[i - 1];
+            dp[i][1] = Math.max(dp[i - 1][2] - prices[i - 1], dp[i - 1][1]);
+            dp[i][2] = Math.max(dp[i - 1][0], dp[i - 1][2]);
         }
 
 
-        return Math.max(dp[prices.length][0],dp[prices.length][2]);
+        return Math.max(dp[prices.length][0], dp[prices.length][2]);
     }
 
     public boolean wordBreak(String s, List<String> wordDict) {
-        boolean[] res = new boolean[s.length()+1];
+        boolean[] res = new boolean[s.length() + 1];
         res[0] = true;
-        for (int i = 1 ; i < s.length() +1 ; i++){
-            for (int j = 0 ; j < i ; j++){
-                if (res[j] && wordDict.contains(s.substring(j,i))){
+        for (int i = 1; i < s.length() + 1; i++) {
+            for (int j = 0; j < i; j++) {
+                if (res[j] && wordDict.contains(s.substring(j, i))) {
                     res[i] = true;
                     break;
                 }
@@ -341,20 +341,20 @@ public class Solution {
         int left_max = height[0];
         int right_max = height[height.length - 1];
 
-        for (int i = 0 ; i < height.length ; i++){
-            left_max = Math.max(left_max,height[i]);
+        for (int i = 0; i < height.length; i++) {
+            left_max = Math.max(left_max, height[i]);
             left[i] = left_max;
         }
 
-        for (int i = height.length - 1 ; i >=0; i--){
-            right_max = Math.max(right_max,height[i]);
+        for (int i = height.length - 1; i >= 0; i--) {
+            right_max = Math.max(right_max, height[i]);
             right[i] = right_max;
         }
 
         int res = 0;
-        for (int i = 1 ; i < height.length - 1;i++){
-            int tmp = Math.min(left[i],right[i]);
-            if (tmp > height[i]){
+        for (int i = 1; i < height.length - 1; i++) {
+            int tmp = Math.min(left[i], right[i]);
+            if (tmp > height[i]) {
                 res += tmp - height[i];
             }
         }
@@ -362,8 +362,107 @@ public class Solution {
 
     }
 
+
+    public int numberOfArithmeticSlices(int[] nums) {
+        return 1;
+    }
+
+
+    public int numDecodings(String s) {
+        int[] dp = new int[s.length()];
+
+        if (s.charAt(0) == '0') {
+            dp[0] = 0;
+        } else {
+            dp[0] = 1;
+        }
+
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) != '0') {
+                dp[i] += dp[i - 1];
+            }
+            int pre = s.charAt(i - 1) - '0';
+            int now = s.charAt(i) - '0';
+            int num = pre * 10 + now;
+            if (num >= 10 && num <= 26) {
+                if (i < 2){
+                    dp[i] = dp[i]+1;
+                }else {
+                    dp[i] += dp[i - 2];
+                }
+            }
+        }
+
+
+        return dp[s.length() - 1];
+    }
+
+
+    public int nthUglyNumber(int n) {
+        int[] dp = new int[n+1];
+
+        dp[1] = 1;
+
+        int num2 = 1;
+        int num3 = 1;
+        int num5 = 1;
+
+        for (int i = 2 ; i <= n ; i++){
+            int p2 = dp[num2] * 2;
+            int p3 = dp[num3] *3 ;
+            int p5 = dp[num5] * 5;
+
+
+            dp[i] = Math.min(p2,Math.min(p3,p5));
+
+            if (dp[i] == p2) {
+                num2++;
+            }
+
+            if (dp[i] ==p3){
+                num3++;
+            }
+
+            if (dp[i] == p5){
+                num5++;
+            }
+        }
+
+        return dp[n];
+    }
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int depth = triangle.size();
+        int maxLength = triangle.get(depth-1).size();
+        int[][]dp = new int[triangle.size()][triangle.get(triangle.size() - 1).size()];
+        dp[0][0] = triangle.get(0).get(0);
+
+        for (int i = 1; i < triangle.size() ; i++){
+            dp[i][0] = dp[i-1][0] + triangle.get(i).get(0);
+
+            for (int j = 1 ; j < triangle.get(i).size() -1 ; j++){
+                dp[i][j] = triangle.get(i).get(j) +  Math.min(dp[i-1][j-1],dp[i-1][j]);
+            }
+
+
+            dp[i][i] = dp[i-1][i-1] + triangle.get(i).get(i);
+        }
+
+        int ans = dp[depth-1][0];
+
+
+        for (int i = 1 ; i < maxLength ; i++){
+            ans = Math.min(ans,dp[depth-1][i]);
+        }
+
+        return ans;
+
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.maxSubarraySumCircular(new int[]{9,-4,-7,9});
+        solution.numDecodings("27");
     }
 }
