@@ -385,9 +385,9 @@ public class Solution {
             int now = s.charAt(i) - '0';
             int num = pre * 10 + now;
             if (num >= 10 && num <= 26) {
-                if (i < 2){
-                    dp[i] = dp[i]+1;
-                }else {
+                if (i < 2) {
+                    dp[i] = dp[i] + 1;
+                } else {
                     dp[i] += dp[i - 2];
                 }
             }
@@ -399,7 +399,7 @@ public class Solution {
 
 
     public int nthUglyNumber(int n) {
-        int[] dp = new int[n+1];
+        int[] dp = new int[n + 1];
 
         dp[1] = 1;
 
@@ -407,23 +407,23 @@ public class Solution {
         int num3 = 1;
         int num5 = 1;
 
-        for (int i = 2 ; i <= n ; i++){
+        for (int i = 2; i <= n; i++) {
             int p2 = dp[num2] * 2;
-            int p3 = dp[num3] *3 ;
+            int p3 = dp[num3] * 3;
             int p5 = dp[num5] * 5;
 
 
-            dp[i] = Math.min(p2,Math.min(p3,p5));
+            dp[i] = Math.min(p2, Math.min(p3, p5));
 
             if (dp[i] == p2) {
                 num2++;
             }
 
-            if (dp[i] ==p3){
+            if (dp[i] == p3) {
                 num3++;
             }
 
-            if (dp[i] == p5){
+            if (dp[i] == p5) {
                 num5++;
             }
         }
@@ -433,26 +433,109 @@ public class Solution {
 
     public int minimumTotal(List<List<Integer>> triangle) {
         int depth = triangle.size();
-        int maxLength = triangle.get(depth-1).size();
-        int[][]dp = new int[triangle.size()][triangle.get(triangle.size() - 1).size()];
+        int maxLength = triangle.get(depth - 1).size();
+        int[][] dp = new int[triangle.size()][triangle.get(triangle.size() - 1).size()];
         dp[0][0] = triangle.get(0).get(0);
 
-        for (int i = 1; i < triangle.size() ; i++){
-            dp[i][0] = dp[i-1][0] + triangle.get(i).get(0);
+        for (int i = 1; i < triangle.size(); i++) {
+            dp[i][0] = dp[i - 1][0] + triangle.get(i).get(0);
 
-            for (int j = 1 ; j < triangle.get(i).size() -1 ; j++){
-                dp[i][j] = triangle.get(i).get(j) +  Math.min(dp[i-1][j-1],dp[i-1][j]);
+            for (int j = 1; j < triangle.get(i).size() - 1; j++) {
+                dp[i][j] = triangle.get(i).get(j) + Math.min(dp[i - 1][j - 1], dp[i - 1][j]);
             }
 
 
-            dp[i][i] = dp[i-1][i-1] + triangle.get(i).get(i);
+            dp[i][i] = dp[i - 1][i - 1] + triangle.get(i).get(i);
         }
 
-        int ans = dp[depth-1][0];
+        int ans = dp[depth - 1][0];
 
 
-        for (int i = 1 ; i < maxLength ; i++){
-            ans = Math.min(ans,dp[depth-1][i]);
+        for (int i = 1; i < maxLength; i++) {
+            ans = Math.min(ans, dp[depth - 1][i]);
+        }
+
+        return ans;
+
+    }
+
+    public int minFallingPathSum(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] dp = new int[row][col];
+        System.arraycopy(matrix[0], 0, dp[0], 0, col);
+
+
+        for (int i = 1; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (j == 0) {
+                    dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j + 1]) + matrix[i][j];
+                    continue;
+                }
+
+                if (j == col - 1) {
+                    dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j - 1]) + matrix[i][j];
+                    continue;
+                }
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i - 1][j - 1]), dp[i - 1][j + 1]) + matrix[i][j];
+            }
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        for (int i = 0; i < col; i++) {
+            ans = Math.min(ans, dp[row - 1][i]);
+        }
+        return ans;
+    }
+
+
+    public int[][] matrixBlockSum(int[][] mat, int k) {
+        int row = mat.length;
+        int col = mat[0].length;
+        int[][] preMat = new int[row][col];
+        preMat[0][0] = mat[0][0];
+        for (int i = 1; i < row; i++) {
+            preMat[i][0] = preMat[i - 1][0] + mat[i][0];
+        }
+
+        for (int j = 1; j < col; j++) {
+            preMat[0][j] = preMat[0][j - 1] + mat[0][j];
+        }
+
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                preMat[i][j] = preMat[i - 1][j] + preMat[i][j - 1] - preMat[i-1][j-1] + mat[i][j];
+            }
+        }
+
+        int[][] ans = new int[row][col];
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int left_x = Math.max(i - k, 0);
+                int left_y = Math.max(j - k, 0);
+                int right_x = Math.min(i + k, row - 1);
+                int right_y = Math.min(j + k, col - 1);
+
+                if (left_x == 0 && left_y == 0) {
+                    ans[i][j] = preMat[right_x][right_y];
+                    continue;
+                }
+
+                if (left_x == 0) {
+                    ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y-1];
+                    continue;
+                }
+
+                if (left_y == 0) {
+                    ans[i][j] = preMat[right_x][right_y] - preMat[left_x-1][right_y];
+                    continue;
+                }
+
+                ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y-1] - preMat[left_x-1][right_y] + preMat[left_x-1][left_y-1];
+
+            }
         }
 
         return ans;
@@ -460,9 +543,8 @@ public class Solution {
     }
 
 
-
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.numDecodings("27");
+        solution.matrixBlockSum(new int[][]{{1,2,3},{4,5,6},{7,8,9}},1);
     }
 }
