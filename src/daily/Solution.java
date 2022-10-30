@@ -63,9 +63,34 @@ public class Solution {
         return true;
     }
 
+    public List<String> letterCasePermutation(String s) {
+        List<String> ans = new ArrayList<>();
+        backtrace(s,0,ans,"");
+        return ans;
+    }
+
+    private void backtrace(String s, int location, List<String> ans,String tmp) {
+        StringBuilder tmpBuilder = new StringBuilder(tmp);
+        while (location < s.length() && Character.isDigit(s.charAt(location))){
+            tmpBuilder.append(s.charAt(location));
+            location++;
+        }
+        tmp = tmpBuilder.toString();
+
+        if (location == s.length()){
+            ans.add(tmp);
+            return;
+        }
+
+        tmp += Character.toLowerCase(s.charAt(location));
+        backtrace(s,location+1,ans,tmp);
+        tmp = tmp.substring(0,tmp.length() -1) +  Character.toUpperCase(s.charAt(location));
+        backtrace(s,location+1,ans,tmp);
+    }
 
 
     public static void main(String[] args) {
-
+        Solution solution = new Solution();
+        solution.letterCasePermutation("a1b2");
     }
 }
