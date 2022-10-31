@@ -505,7 +505,7 @@ public class Solution {
 
         for (int i = 1; i < row; i++) {
             for (int j = 1; j < col; j++) {
-                preMat[i][j] = preMat[i - 1][j] + preMat[i][j - 1] - preMat[i-1][j-1] + mat[i][j];
+                preMat[i][j] = preMat[i - 1][j] + preMat[i][j - 1] - preMat[i - 1][j - 1] + mat[i][j];
             }
         }
 
@@ -524,16 +524,16 @@ public class Solution {
                 }
 
                 if (left_x == 0) {
-                    ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y-1];
+                    ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y - 1];
                     continue;
                 }
 
                 if (left_y == 0) {
-                    ans[i][j] = preMat[right_x][right_y] - preMat[left_x-1][right_y];
+                    ans[i][j] = preMat[right_x][right_y] - preMat[left_x - 1][right_y];
                     continue;
                 }
 
-                ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y-1] - preMat[left_x-1][right_y] + preMat[left_x-1][left_y-1];
+                ans[i][j] = preMat[right_x][right_y] - preMat[right_x][left_y - 1] - preMat[left_x - 1][right_y] + preMat[left_x - 1][left_y - 1];
 
             }
         }
@@ -575,8 +575,56 @@ public class Solution {
     }
 
 
+    public int minPathSum(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int[][] dp = new int[row][col];
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < row; i++) {
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+        }
+        for (int j = 1; j < col; j++) {
+            dp[0][j] = dp[0][j - 1] + grid[0][j];
+        }
+
+
+        for (int i = 1; i < row; i++) {
+            for (int j = 1; j < col; j++) {
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+
+        return dp[row - 1][col - 1];
+    }
+
+
+    //https://leetcode.cn/problems/count-square-submatrices-with-all-ones/solution/tong-ji-quan-wei-1-de-zheng-fang-xing-zi-ju-zhen-2/
+    public int maximalSquare(char[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] dp = new int[row][col];
+        int max = 0;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (i == 0 || j == 0) {
+                    if (matrix[i][j] == '1') {
+                        dp[i][j] = 1;
+                        max = Math.max(1, max);
+                    }
+                } else {
+                    if (matrix[i][j] == '1') {
+                        dp[i][j] = Math.min(dp[i - 1][j], Math.min(dp[i][j - 1], dp[i - 1][j - 1])) + 1;
+                        max = Math.max(dp[i][j], max);
+                    }
+                }
+            }
+        }
+        return max * max;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.matrixBlockSum(new int[][]{{1,2,3},{4,5,6},{7,8,9}},1);
+        solution.matrixBlockSum(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, 1);
     }
 }
