@@ -89,8 +89,27 @@ public class Solution {
     }
 
 
+    public int reachNumber(int target) {
+        target = Math.abs(target);
+        int tmp = target;
+        int k = 1;
+
+        while (tmp > 0){
+            tmp -= k;
+            k++;
+        }
+
+        if (tmp == 0){
+            return k-1;
+        }else {
+            int diff = target - tmp;
+            return k-2 + diff*2;
+        }
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.letterCasePermutation("a1b2");
+        solution.reachNumber(4);
     }
 }

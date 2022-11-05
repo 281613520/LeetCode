@@ -623,8 +623,108 @@ public class Solution {
         return max * max;
     }
 
+    public String longestPalindrome(String s) {
+        // dp[i][i] = true
+        // dp[i][j] = dp[i-1][j-1] && s[i] == s[j]
+        // max = 1;
+        // if j-i > max
+        // res = s.sub(i,j)
+        int len = s.length();
+        if (len == 1) return s;
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int maxLen = 0;
+        int begin = 0;
+
+        for (int i = 0; i < len; i++) {
+            for (int j = i; j >= 0; j--) {
+                if (i == j) {
+                    dp[i][i] = true;
+                } else if (i - j == 1) {
+                    dp[j][i] = s.charAt(j) == s.charAt(i);
+                } else {
+                    dp[j][i] = dp[j + 1][i - 1] && s.charAt(j) == s.charAt(i);
+                }
+
+                if (dp[j][i] && i - j + 1 > maxLen) {
+                    maxLen = i - j;
+                    begin = j;
+                }
+            }
+        }
+
+        return s.substring(begin, begin + maxLen + 1);
+    }
+
+
+    public int longestPalindromeSubseq(String s) {
+        int len = s.length();
+        int[][] dp = new int[len][len];
+
+        for (int i = 0; i < len; i++) {
+            for (int j = i; j >= 0; j--) {
+                if (i == j) {
+                    dp[i][i] = 1;
+                } else if (i - j == 1) {
+                    if (s.charAt(i) == s.charAt(j)) {
+                        dp[j][i] = 2;
+                    } else {
+                        dp[j][i] = 1;
+                    }
+                } else {
+                    if (s.charAt(i) == s.charAt(j)) {
+                        dp[j][i] = 2 + dp[j + 1][i - 1];
+                    } else {
+                        dp[j][i] = Math.max(dp[j + 1][i], dp[j][i - 1]);
+                    }
+                }
+            }
+        }
+
+        return dp[0][len - 1];
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int len = nums.length;
+        int[] dp = new int[len];
+        int ans = 1;
+        Arrays.fill(dp, 1);
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    ans = Math.max(ans, dp[i]);
+                }
+            }
+        }
+        return ans;
+    }
+
+    public int wiggleMaxLength(int[] nums) {
+        int len = nums.length;
+        int[][] dp = new int[2][len];
+        // 0 代表最后一个是负数
+        // 1 代表最后一个是正数
+        dp[0][0] = 1;
+        dp[1][0] = 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] < nums[i-1]) {
+                dp[0][i] = Math.max(dp[0][i - 1], dp[1][i - 1] + 1);
+                dp[1][i] = dp[1][i - 1];
+            } else if (nums[i] > nums[i-1]) {
+                dp[1][i] = Math.max(dp[0][i - 1], dp[0][i - 1] + 1);
+                dp[0][i] = dp[0][i - 1];
+            } else {
+                dp[0][i] = dp[0][i - 1];
+                dp[1][i - 1] = dp[1][i - 1];
+
+            }
+        }
+        return Math.max(dp[0][len - 1], dp[1][len - 1]);
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.matrixBlockSum(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}, 1);
+        solution.longestPalindrome("cbbd");
     }
 }
