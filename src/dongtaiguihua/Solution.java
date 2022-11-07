@@ -1,5 +1,8 @@
 package dongtaiguihua;
 
+import context.week5.UndergroundSystem;
+
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -721,6 +724,38 @@ public class Solution {
             }
         }
         return Math.max(dp[0][len - 1], dp[1][len - 1]);
+    }
+
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount +1];
+        Arrays.fill(dp, amount+1);
+        dp[0] = 0;
+
+        for (int i = 1 ; i <= amount ; i++){
+            for (int coin : coins) {
+                if (i >= coin) {
+                    dp[i] = Math.min(dp[i - coin] + 1, dp[i]);
+                }
+            }
+        }
+
+        return dp[amount] > amount ? -1: dp[amount];
+    }
+
+
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount+1];
+
+        dp[0] = 1;
+
+        // dp[i] = dp[i-coins1] + 1 + dp[i-coins2]+1 +... + dp[i-coinsn] +1
+        for (int coin : coins){
+            for (int i = coin ; i <= amount ; i++){
+                dp[i] += dp[i-coin];
+            }
+        }
+
+        return dp[amount];
     }
 
     public static void main(String[] args) {

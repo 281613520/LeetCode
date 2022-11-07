@@ -65,27 +65,27 @@ public class Solution {
 
     public List<String> letterCasePermutation(String s) {
         List<String> ans = new ArrayList<>();
-        backtrace(s,0,ans,"");
+        backtrace(s, 0, ans, "");
         return ans;
     }
 
-    private void backtrace(String s, int location, List<String> ans,String tmp) {
+    private void backtrace(String s, int location, List<String> ans, String tmp) {
         StringBuilder tmpBuilder = new StringBuilder(tmp);
-        while (location < s.length() && Character.isDigit(s.charAt(location))){
+        while (location < s.length() && Character.isDigit(s.charAt(location))) {
             tmpBuilder.append(s.charAt(location));
             location++;
         }
         tmp = tmpBuilder.toString();
 
-        if (location == s.length()){
+        if (location == s.length()) {
             ans.add(tmp);
             return;
         }
 
         tmp += Character.toLowerCase(s.charAt(location));
-        backtrace(s,location+1,ans,tmp);
-        tmp = tmp.substring(0,tmp.length() -1) +  Character.toUpperCase(s.charAt(location));
-        backtrace(s,location+1,ans,tmp);
+        backtrace(s, location + 1, ans, tmp);
+        tmp = tmp.substring(0, tmp.length() - 1) + Character.toUpperCase(s.charAt(location));
+        backtrace(s, location + 1, ans, tmp);
     }
 
 
@@ -94,22 +94,80 @@ public class Solution {
         int tmp = target;
         int k = 1;
 
-        while (tmp > 0){
+        while (tmp > 0) {
             tmp -= k;
             k++;
         }
 
-        if (tmp == 0){
-            return k-1;
-        }else {
+        if (tmp == 0) {
+            return k - 1;
+        } else {
             int diff = target - tmp;
-            return k-2 + diff*2;
+            return k - 2 + diff * 2;
         }
     }
 
 
+    public List<String> ambiguousCoordinates(String s) {
+        List<String> ans = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) {
+                sb.append(s.charAt(i));
+            }
+        }
+
+        String after = sb.toString();
+
+
+        for (int i = 1; i <= after.length(); i++) {
+            String first = after.substring(0, i);
+            String second = after.substring(i);
+            if (second.equals("")) {
+                continue;
+            }
+            if (Integer.parseInt(first) == 0 && first.length() > 1 || Integer.parseInt(second) == 0 && second.length() > 1) {
+                continue;
+            } else {
+                List<String> a = new ArrayList<>();
+                List<String> b = new ArrayList<>();
+
+                decode(first, a);
+                decode(second, b);
+
+                for (String item : a) {
+                    for (String value : b) {
+                        ans.add("(" + item + ", " + value + ")");
+                    }
+                }
+
+            }
+        }
+
+        return ans;
+    }
+    //(0,1.23)
+
+    private void decode(String str, List<String> list) {
+        for (int i = 1; i <= str.length(); i++) {
+            String first = str.substring(0, i);
+            String second = str.substring(i);
+            if (second.equals("")) {
+                if (!(first.startsWith("0") && first.length() > 1)) {
+                    list.add(first);
+                }
+            } else {
+                if (first.startsWith("0") && first.length() > 1 || second.endsWith("0")) {
+                } else {
+                    list.add(first + "." + second);
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.reachNumber(4);
+        solution.ambiguousCoordinates("(0123)");
     }
 }
