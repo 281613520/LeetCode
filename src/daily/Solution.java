@@ -166,6 +166,96 @@ public class Solution {
         }
     }
 
+
+    public int numTilings(int n) {
+        int mod = 1000000007;
+        int[][] dp = new int[n + 1][4];
+
+        dp[0][0] = 0;
+        dp[0][1] = 0;
+        dp[0][2] = 0;
+        dp[0][3] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            dp[i][0] = dp[i - 1][3];
+            dp[i][1] = (dp[i - 1][0] + dp[i - 1][2]) % mod;
+            dp[i][2] = (dp[i - 1][0] + dp[i - 1][1]) % mod;
+            dp[i][3] = (((dp[i - 1][0] + dp[i - 1][1]) % mod + dp[i - 1][2]) % mod + dp[i - 1][3]) % mod;
+        }
+
+        return dp[n][3];
+    }
+
+
+    public boolean splitArraySameAverage(int[] nums) {
+        if (nums.length == 1) {
+            return false;
+        }
+        // 问题可以转化为 求前半数组是否有和0 或者不为0就爆保存下来 看后半数组有没有能和他+起来为0
+        //如果 不折半 则需要 枚举所有的状态， 如果为n 则为 2^n次方 折半了就是 2 * 2^(n/2) 有效缩减
+        int n = nums.length, m = n / 2;
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        for (int i = 0; i < n; i++) {
+            nums[i] = nums[i] * n - sum;
+        }
+
+        Set<Integer> left = new HashSet<Integer>();
+        // 这里则是使用二进制来进行枚举，总共有2^(1<<m)种状态
+        // 每次0 检查i的每一位 为true 则选这一位 ，加上 这样就全部枚举了
+        for (int i = 1; i < (1 << m); i++) {
+            int tot = 0;
+            for (int j = 0; j < m; j++) {
+                if ((i & (1 << j)) != 0) {
+                    tot += nums[j];
+                }
+            }
+            if (tot == 0) {
+                return true;
+            }
+            left.add(tot);
+        }
+        int rsum = 0;
+        for (int i = m; i < n; i++) {
+            rsum += nums[i];
+        }
+        for (int i = 1; i < (1 << (n - m)); i++) {
+            int tot = 0;
+            for (int j = m; j < n; j++) {
+                if ((i & (1 << (j - m))) != 0) {
+                    tot += nums[j];
+                }
+            }
+            if (tot == 0 || (rsum != tot && left.contains(-tot))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public int maximumUnits(int[][] boxTypes, int truckSize) {
+        Arrays.sort(boxTypes, (o1, o2) -> o2[1] - o1[1]);
+
+        int ans = 0;
+        for (int[] boxType : boxTypes) {
+            int numberOfBoxes = boxType[0];
+            int numberOfUnitsPerBox = boxType[1];
+
+            if (numberOfBoxes < truckSize) {
+                ans += numberOfBoxes * numberOfUnitsPerBox;
+                truckSize -= numberOfBoxes;
+            } else {
+                ans += truckSize * numberOfUnitsPerBox;
+                break;
+            }
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.ambiguousCoordinates("(0123)");
