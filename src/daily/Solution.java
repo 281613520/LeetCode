@@ -166,8 +166,29 @@ public class Solution {
         }
     }
 
+    public boolean isIdealPermutation(int[] nums) {
+        int countAll = 0;
+        int countPart = 0;
+
+        for (int i = 0; i < nums.length - 1; i++) {
+            int num = nums[i];
+            if (num > i) {
+                countAll += num - i;
+            }
+            if (num > nums[i + 1]) {
+                if(num == i){
+                    countAll ++;
+                }
+                countPart++;
+            }
+        }
+
+        return countPart == countAll;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.ambiguousCoordinates("(0123)");
+        solution.isIdealPermutation(new int[]{1, 0, 2});
     }
 }
