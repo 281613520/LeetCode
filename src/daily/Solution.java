@@ -256,6 +256,52 @@ public class Solution {
         return ans;
     }
 
+    public boolean isIdealPermutation(int[] nums) {
+        int countAll = 0;
+        int countPart = 0;
+
+        for (int i = 0; i < nums.length - 1; i++) {
+            int num = nums[i];
+            if (num > i) {
+                countAll += num - i;
+            }
+            if (num > nums[i + 1]) {
+                if (num == i) {
+                    countAll++;
+                }
+                countPart++;
+            }
+        }
+
+        return countPart == countAll;
+
+    }
+
+    public double largestSumOfAverages(int[] nums, int k) {
+        double[] preSum = new double[nums.length];
+        preSum[0] = 0;
+        for (int i = 1 ; i<= nums.length;i++){
+            preSum[i] = nums[i-1] + preSum[i-1];
+        }
+
+        double[][] dp = new double[nums.length+10][k+10];
+
+        for (int i = 1; i <= nums.length;i++){
+            for (int j = 1 ; j <= Math.min(i,k);j++){
+                if (j == 1){
+                    dp[i][j] = preSum[i]/i;
+                }else {
+                   for (int l = 2 ; l <= i;l++){
+                       dp[i][j] = Math.max(dp[i][j],dp[l-1][j-1] + (preSum[i] - preSum[l-1])/(i-l+1));
+                   }
+                }
+            }
+        }
+
+        return dp[nums.length][k];
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.ambiguousCoordinates("(0123)");
