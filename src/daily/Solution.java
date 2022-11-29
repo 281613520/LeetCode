@@ -302,6 +302,34 @@ public class Solution {
 
     }
 
+
+    
+    public int minOperations(String s) {
+        int res_10 = 0;
+        int res_01 = 0;
+        //10
+        //01
+        for (int i = 0 ; i < s.length() ; i++){
+            if(i %2 == 0 ){
+                if (s.charAt(i) != '1'){
+                    res_10++;
+                }else if (s.charAt(i) != '0'){
+                    res_01++;
+                }
+            }else {
+                if (s.charAt(i) != '0'){
+                    res_10++;
+                }else if (s.charAt(i) != '1'){
+                    res_01++;
+                }
+            }
+        }
+
+        return Math.min(res_01,res_10);
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.ambiguousCoordinates("(0123)");

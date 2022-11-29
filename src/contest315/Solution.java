@@ -71,8 +71,6 @@ public class Solution {
             ans += Math.max(0,Math.min(minI,maxI) - i0);
 
         }
-
-
         return ans;
     }
 
