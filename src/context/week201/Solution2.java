@@ -1,6 +1,6 @@
 package context.week201;
 
-import com.sun.corba.se.impl.ior.ObjectIdImpl;
+
 
 /**
  * 给你两个正整数 n 和 k，二进制字符串 Sn 的形成规则如下：
