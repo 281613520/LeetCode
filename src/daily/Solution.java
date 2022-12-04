@@ -328,10 +328,40 @@ public class Solution {
         return Math.min(res_01,res_10);
     }
 
+    int res;
+    public int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
+        res = Integer.MAX_VALUE;
+        for (int cur : baseCosts){
+            closestCostBacktrace(0,toppingCosts,cur,target);
+        }
+
+        return res;
+    }
+
+    private void closestCostBacktrace(int location, int[] toppingCosts,int cur,int target) {
+
+        if (Math.abs(res - target) <cur - target){
+            return;
+        } else if (Math.abs(res - target) >= Math.abs(cur - target)){
+            if (Math.abs(res - target) > Math.abs(cur - target)){
+                res = cur;
+            }else {
+                res = Math.min(cur,res);
+            }
+        }
+
+        if (location  == toppingCosts.length){
+            return;
+        }
+
+        closestCostBacktrace(location + 1,toppingCosts,cur , target);
+        closestCostBacktrace(location + 1,toppingCosts,cur + toppingCosts[location], target);
+        closestCostBacktrace(location + 1,toppingCosts,cur + toppingCosts[location]*2, target);
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.ambiguousCoordinates("(0123)");
+        System.out.println(solution.closestCost(new int[]{1,7},new int[]{3,4},10));
     }
 }
