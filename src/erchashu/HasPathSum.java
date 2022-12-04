@@ -1,7 +1,6 @@
 package erchashu;
 
 import math.TreeNode;
-import sun.reflect.generics.tree.Tree;
 
 public class HasPathSum {
     public boolean hasPathSum(TreeNode root, int sum) {
