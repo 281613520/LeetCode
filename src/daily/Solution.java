@@ -360,6 +360,58 @@ public class Solution {
     }
 
 
+    public int boxDelivering(int[][] boxes, int portsCount, int maxBoxes, int maxWeight) {
+        int n = boxes.length;
+        int[] p = new int[n+1];
+        int[] w = new int[n+1];
+        int[] neg = new int[n+1];
+        long[] W = new long[n+1];
+        for (int i = 1 ; i < n ; i++){
+            p[i] = boxes[i][0];
+            w[i] = boxes[i][1];
+            if (i>1){
+                neg[i] = neg[i-1] + (p[i-1] != p[i] ? 1:0);
+            }
+            W[i] = W[i-1]+w[i];
+
+        }
+        //j < i
+        // f[i] = min(f[j] + neg[j+1,i])+2
+        // f[i] = min(f[j] + neg[i] - neg[j+1] ) + 2
+        // f[i] = min(f[j] - neg[j+1]) + neg[i] +2
+        // f[i] = min[g[j]] + neg[i] + 2;
+
+        //  g[j] = f[j] - neg[j+1]
+        //  i - j <= MaxBoxes
+        //  Wi - Wj <= maxWeight
+        //  kede  : j  >= i-maxBoxes
+        //          wj >= wi-maxWeight
+        //维持g[j] 的单调性
+
+        Deque<Integer> opt = new ArrayDeque<>();
+        opt.addLast(0);
+        int[] f = new int[n+1];
+        int[] g = new int[n+1];
+
+        for (int i = 1 ; i <= n ; i++){
+            while (i - opt.peekFirst() > maxBoxes || W[i] - W[opt.peekFirst()] > maxWeight) {
+                opt.pollFirst();
+            }
+
+            f[i] = g[opt.peekFirst()] + neg[i] + 2;
+
+            if (i != n) {
+                g[i] = f[i] - neg[i + 1];
+                while (!opt.isEmpty() && g[i] <= g[opt.peekLast()]) {
+                    opt.pollLast();
+                }
+                opt.offerLast(i);
+            }
+        }
+        return f[n];
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         System.out.println(solution.closestCost(new int[]{1,7},new int[]{3,4},10));
