@@ -375,8 +375,11 @@ public class Solution {
             W[i] = W[i-1]+w[i];
 
         }
+        // 1.原始
         //j < i
         // f[i] = min(f[j] + neg[j+1,i])+2
+
+        // 2.优化
         // f[i] = min(f[j] + neg[i] - neg[j+1] ) + 2
         // f[i] = min(f[j] - neg[j+1]) + neg[i] +2
         // f[i] = min[g[j]] + neg[i] + 2;
@@ -386,7 +389,11 @@ public class Solution {
         //  Wi - Wj <= maxWeight
         //  kede  : j  >= i-maxBoxes
         //          wj >= wi-maxWeight
-        //维持g[j] 的单调性
+        //  维持g[j] 的单调性
+        //  考虑g[j0] 和 g[j1] j0 < j1
+        //  如果g[j0] >= g[j1]  去掉g[j0]  因为i增大，j0会先不满足，而且g[j1]是更优解
+        //  如果g[j0] <  g[j1]  g[j0],g[j1]都保留
+        //  每次从队列前面取值进行转移计算（min），注意要满足条件
 
         Deque<Integer> opt = new ArrayDeque<>();
         opt.addLast(0);
