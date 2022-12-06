@@ -419,8 +419,37 @@ public class Solution {
     }
 
 
+    public int numDifferentIntegers(String word) {
+        int i = 0 ;
+        int j = 0 ;
+        Set<String> nums = new HashSet<>();
+
+        while (i< word.length() && j < word.length()){
+            i = j;
+            while (i< word.length() && !Character.isDigit(word.charAt(i))){
+                i++;
+            }
+            j = i;
+
+            while ( j < word.length() && Character.isDigit(word.charAt(j))){
+                j++;
+            }
+
+            while ( j-i > 1 && word.charAt(i) == '0' ){
+                i++;
+            }
+            if (i< word.length() || j < word.length()) {
+                nums.add(word.substring(i, j));
+            }
+
+        }
+
+        return nums.size();
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.closestCost(new int[]{1,7},new int[]{3,4},10));
+        solution.numDifferentIntegers( "0a0");
     }
 }
