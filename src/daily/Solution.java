@@ -1,6 +1,7 @@
 package daily;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -280,20 +281,20 @@ public class Solution {
     public double largestSumOfAverages(int[] nums, int k) {
         double[] preSum = new double[nums.length];
         preSum[0] = 0;
-        for (int i = 1 ; i<= nums.length;i++){
-            preSum[i] = nums[i-1] + preSum[i-1];
+        for (int i = 1; i <= nums.length; i++) {
+            preSum[i] = nums[i - 1] + preSum[i - 1];
         }
 
-        double[][] dp = new double[nums.length+10][k+10];
+        double[][] dp = new double[nums.length + 10][k + 10];
 
-        for (int i = 1; i <= nums.length;i++){
-            for (int j = 1 ; j <= Math.min(i,k);j++){
-                if (j == 1){
-                    dp[i][j] = preSum[i]/i;
-                }else {
-                   for (int l = 2 ; l <= i;l++){
-                       dp[i][j] = Math.max(dp[i][j],dp[l-1][j-1] + (preSum[i] - preSum[l-1])/(i-l+1));
-                   }
+        for (int i = 1; i <= nums.length; i++) {
+            for (int j = 1; j <= Math.min(i, k); j++) {
+                if (j == 1) {
+                    dp[i][j] = preSum[i] / i;
+                } else {
+                    for (int l = 2; l <= i; l++) {
+                        dp[i][j] = Math.max(dp[i][j], dp[l - 1][j - 1] + (preSum[i] - preSum[l - 1]) / (i - l + 1));
+                    }
                 }
             }
         }
@@ -303,76 +304,76 @@ public class Solution {
     }
 
 
-    
     public int minOperations(String s) {
         int res_10 = 0;
         int res_01 = 0;
         //10
         //01
-        for (int i = 0 ; i < s.length() ; i++){
-            if(i %2 == 0 ){
-                if (s.charAt(i) != '1'){
+        for (int i = 0; i < s.length(); i++) {
+            if (i % 2 == 0) {
+                if (s.charAt(i) != '1') {
                     res_10++;
-                }else if (s.charAt(i) != '0'){
+                } else if (s.charAt(i) != '0') {
                     res_01++;
                 }
-            }else {
-                if (s.charAt(i) != '0'){
+            } else {
+                if (s.charAt(i) != '0') {
                     res_10++;
-                }else if (s.charAt(i) != '1'){
+                } else if (s.charAt(i) != '1') {
                     res_01++;
                 }
             }
         }
 
-        return Math.min(res_01,res_10);
+        return Math.min(res_01, res_10);
     }
 
     int res;
+
     public int closestCost(int[] baseCosts, int[] toppingCosts, int target) {
         res = Integer.MAX_VALUE;
-        for (int cur : baseCosts){
-            closestCostBacktrace(0,toppingCosts,cur,target);
+        for (int cur : baseCosts) {
+            closestCostBacktrace(0, toppingCosts, cur, target);
         }
 
         return res;
     }
 
-    private void closestCostBacktrace(int location, int[] toppingCosts,int cur,int target) {
+    private void closestCostBacktrace(int location, int[] toppingCosts, int cur, int target) {
 
-        if (Math.abs(res - target) <cur - target){
+        if (Math.abs(res - target) < cur - target) {
             return;
-        } else if (Math.abs(res - target) >= Math.abs(cur - target)){
-            if (Math.abs(res - target) > Math.abs(cur - target)){
+        } else if (Math.abs(res - target) >= Math.abs(cur - target)) {
+            if (Math.abs(res - target) > Math.abs(cur - target)) {
                 res = cur;
-            }else {
-                res = Math.min(cur,res);
+            } else {
+                res = Math.min(cur, res);
             }
         }
 
-        if (location  == toppingCosts.length){
+        if (location == toppingCosts.length) {
             return;
         }
 
-        closestCostBacktrace(location + 1,toppingCosts,cur , target);
-        closestCostBacktrace(location + 1,toppingCosts,cur + toppingCosts[location], target);
-        closestCostBacktrace(location + 1,toppingCosts,cur + toppingCosts[location]*2, target);
+        closestCostBacktrace(location + 1, toppingCosts, cur, target);
+        closestCostBacktrace(location + 1, toppingCosts, cur + toppingCosts[location], target);
+        closestCostBacktrace(location + 1, toppingCosts, cur + toppingCosts[location] * 2, target);
     }
 
 
     public int boxDelivering(int[][] boxes, int portsCount, int maxBoxes, int maxWeight) {
         int n = boxes.length;
-        int[] p = new int[n+1];
-        int[] w = new int[n+1];
-        int[] neg = new int[n+1];
-        long[] W = new long[n+1];
-        for (int i = 1 ; i < n ; i++){
+        int[] p = new int[n + 1];
+        int[] w = new int[n + 1];
+        int[] neg = new int[n + 1];
+        long[] W = new long[n + 1];
+        for (int i = 1; i < n; i++) {
             p[i] = boxes[i][0];
             w[i] = boxes[i][1];
-            if (i>1){
-                neg[i] = neg[i-1] + (p[i-1] != p[i] ? 1:0);
+            if (i > 1) {
+                neg[i] = neg[i - 1] + (p[i - 1] != p[i] ? 1 : 0);
             }
-            W[i] = W[i-1]+w[i];
+            W[i] = W[i - 1] + w[i];
 
         }
         // 1.原始
@@ -397,10 +398,10 @@ public class Solution {
 
         Deque<Integer> opt = new ArrayDeque<>();
         opt.addLast(0);
-        int[] f = new int[n+1];
-        int[] g = new int[n+1];
+        int[] f = new int[n + 1];
+        int[] g = new int[n + 1];
 
-        for (int i = 1 ; i <= n ; i++){
+        for (int i = 1; i <= n; i++) {
             while (i - opt.peekFirst() > maxBoxes || W[i] - W[opt.peekFirst()] > maxWeight) {
                 opt.pollFirst();
             }
@@ -418,9 +419,50 @@ public class Solution {
         return f[n];
     }
 
+    public int minOperations(int[] nums1, int[] nums2) {
+
+        if (6 * nums1.length < nums2.length || 6 * nums2.length < nums1.length) return -1;
+        int sum1 = Arrays.stream(nums1).sum();
+        int sum2 = Arrays.stream(nums2).sum();
+        int diff = sum1 - sum2;
+        if (diff < 0) {
+            diff = -diff;
+            int[] tmp = nums1;
+            nums1 = nums2;
+            nums2 = tmp;
+        }
+
+        if (diff == 0) {
+            return 0;
+        }
+        int ans = 0;
+
+        // 记录变化量
+        int[] count = new int[7];
+
+        for (int num : nums1) count[num - 1]++;
+        for (int num : nums2) count[6 - num]++;
+
+        for (int i = 5; i >= 1; i--) {
+            int q = count[i];
+            if (diff < q * i) {
+                ans += diff / i+ (diff % i == 0 ? 0 : 1);
+                break;
+            } else if (diff > q * i) {
+                diff = diff - q * i;
+                ans += q;
+            } else {
+                ans = ans + q;
+                break;
+            }
+        }
+
+        return ans;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        System.out.println(solution.closestCost(new int[]{1,7},new int[]{3,4},10));
+        solution.minOperations(new int[]{5, 6, 4, 3, 1, 2}, new int[]{6, 3, 3, 1, 4, 5, 3, 4, 1, 3, 4});
     }
 }
