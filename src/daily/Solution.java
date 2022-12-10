@@ -461,6 +461,38 @@ public class Solution {
     }
 
 
+    public int maxHeight(int[][] cuboids) {
+        // 先确定好长宽高 想要最长一定需要为最长的边作为高
+        for (int[] cur : cuboids){
+            Arrays.sort(cur);
+        }
+
+        // 排好相对顺序，小的在前面，大的在后面
+        Arrays.sort(cuboids , Comparator.comparingInt(a -> a[0] + a[1] + a[2]));
+
+        int[] dp = new int[cuboids.length];
+
+        int ans = 0;
+
+
+        for (int i = 0 ; i < cuboids.length ; i++){
+            dp[i] = cuboids[i][2];
+
+            for (int j = 0 ; j < i ; j++){
+                if (cuboids[i][0] >= cuboids[j][0] &&
+                        cuboids[i][1] >= cuboids[j][1] &&
+                        cuboids[i][2] >= cuboids[j][2]){
+                    dp[i] = Math.max(dp[i],dp[j] + cuboids[i][2]);
+                }
+            }
+
+            ans = Math.max(ans,dp[i]);
+        }
+
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.minOperations(new int[]{5, 6, 4, 3, 1, 2}, new int[]{6, 3, 3, 1, 4, 5, 3, 4, 1, 3, 4});
