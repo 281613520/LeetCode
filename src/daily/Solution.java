@@ -418,6 +418,79 @@ public class Solution {
         return f[n];
     }
 
+    public int minOperations(int[] nums1, int[] nums2) {
+
+        if (6 * nums1.length < nums2.length || 6 * nums2.length < nums1.length) return -1;
+        int sum1 = Arrays.stream(nums1).sum();
+        int sum2 = Arrays.stream(nums2).sum();
+        int diff = sum1 - sum2;
+        if (diff < 0) {
+            diff = -diff;
+            int[] tmp = nums1;
+            nums1 = nums2;
+            nums2 = tmp;
+        }
+
+        if (diff == 0) {
+            return 0;
+        }
+        int ans = 0;
+
+        // 记录变化量
+        int[] count = new int[7];
+
+        for (int num : nums1) count[num - 1]++;
+        for (int num : nums2) count[6 - num]++;
+
+        for (int i = 5; i >= 1; i--) {
+            int q = count[i];
+            if (diff < q * i) {
+                ans += diff / i+ (diff % i == 0 ? 0 : 1);
+                break;
+            } else if (diff > q * i) {
+                diff = diff - q * i;
+                ans += q;
+            } else {
+                ans = ans + q;
+                break;
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int maxHeight(int[][] cuboids) {
+        // 先确定好长宽高 想要最长一定需要为最长的边作为高
+        for (int[] cur : cuboids){
+            Arrays.sort(cur);
+        }
+
+        // 排好相对顺序，小的在前面，大的在后面
+        Arrays.sort(cuboids , Comparator.comparingInt(a -> a[0] + a[1] + a[2]));
+
+        int[] dp = new int[cuboids.length];
+
+        int ans = 0;
+
+
+        for (int i = 0 ; i < cuboids.length ; i++){
+            dp[i] = cuboids[i][2];
+
+            for (int j = 0 ; j < i ; j++){
+                if (cuboids[i][0] >= cuboids[j][0] &&
+                        cuboids[i][1] >= cuboids[j][1] &&
+                        cuboids[i][2] >= cuboids[j][2]){
+                    dp[i] = Math.max(dp[i],dp[j] + cuboids[i][2]);
+                }
+            }
+
+            ans = Math.max(ans,dp[i]);
+        }
+
+        return ans;
+    }
+
 
     public int numDifferentIntegers(String word) {
         int i = 0 ;
@@ -450,6 +523,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
+        solution.minOperations(new int[]{5, 6, 4, 3, 1, 2}, new int[]{6, 3, 3, 1, 4, 5, 3, 4, 1, 3, 4});
         solution.numDifferentIntegers( "0a0");
     }
 }
