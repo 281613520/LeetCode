@@ -545,8 +545,8 @@ public class Solution {
                 int min = Integer.MAX_VALUE;
                 for (int k = 0; k < 26; k++) {
                     max = Math.max(max, preSum[k][j] - preSum[k][i]);
-                    if (preSum[k][j] - preSum[k][i] != 0){
-                        min = Math.min(min , preSum[k][j] - preSum[k][i]);
+                    if (preSum[k][j] - preSum[k][i] != 0) {
+                        min = Math.min(min, preSum[k][j] - preSum[k][i]);
                     }
                 }
 
@@ -558,8 +558,47 @@ public class Solution {
         return ans;
     }
 
+    public boolean canChoose(int[][] groups, int[] nums) {
+        int count = groups.length;
+
+        int startLocation = 0;
+
+        for (int[] cur : groups) {
+            while (startLocation < nums.length) {
+                boolean nextNums = false;
+                if (nums[startLocation] == cur[0]) {
+                    int i = startLocation;
+                    boolean flag = true;
+                    if (nums.length - startLocation >= cur.length) {
+                        for (int j = 0; j < cur.length && i < nums.length; j++, i++) {
+                            if (nums[i] != cur[j]) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }else {
+                        flag = false;
+                    }
+                    if (flag) {
+                        nextNums =true;
+                        count--;
+                        i--;
+                        startLocation = i;
+                    }
+                }
+                startLocation++;
+                if (nextNums){
+                    break;
+                }
+            }
+        }
+
+        return count == 0;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.beautySum("aabcb");
+        solution.canChoose(new int[][]{{21,22,21,22,21,30}},new int[]{21,22,21,22,21,22,21,30});
     }
 }
