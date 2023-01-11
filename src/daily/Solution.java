@@ -597,8 +597,59 @@ public class Solution {
     }
 
 
+    public boolean digitCount(String num) {
+        Map<Integer,Integer> map = new HashMap<>();
+
+        for (int i = 0 ; i < num.length() ; i++){
+            int cur = num.charAt(i) - '0';
+            map.put(cur,map.getOrDefault(cur,0) +1);
+        }
+
+
+        for (int i = 0 ; i < num.length() ; i++){
+            int cur = num.charAt(i) - '0';
+            if (map.getOrDefault(i,0) != cur){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public int reinitializePermutation(int n) {
+        int ans = 0;
+        int[] perm = new int[n];
+        int[] target = new int[n];
+        for (int i = 0; i < n; i++) {
+            perm[i] = i;
+            target[i] = i;
+        }
+
+        while (true){
+            ans++;
+            int[] arr = new int[n];
+            for (int i = 0 ; i < n ; i++){
+                if (i%2 == 0  ){
+                    arr[i] = perm[i/2];
+                }else {
+                    arr[i] = perm[n / 2 + (i - 1) / 2];
+                }
+            }
+
+            perm = arr;
+
+            if (Arrays.equals(perm,target)){
+                break;
+            }
+        }
+
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.canChoose(new int[][]{{21,22,21,22,21,30}},new int[]{21,22,21,22,21,22,21,30});
+        solution.reinitializePermutation(4);
     }
 }
