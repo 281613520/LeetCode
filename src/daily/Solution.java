@@ -1,5 +1,6 @@
 package daily;
 
+import contest316.ListNode;
 import context.week5.UndergroundSystem;
 
 import javax.swing.*;
@@ -645,6 +646,24 @@ public class Solution {
         }
 
         return ans;
+    }
+
+
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode preA = list1;
+        for (int i = 0; i < a - 1; i++) {
+            preA = preA.next;
+        }
+        ListNode preB = preA;
+        for (int i = 0; i < b - a + 2; i++) {
+            preB = preB.next;
+        }
+        preA.next = list2;
+        while (list2.next != null) {
+            list2 = list2.next;
+        }
+        list2.next = preB;
+        return list1;
     }
 
 
