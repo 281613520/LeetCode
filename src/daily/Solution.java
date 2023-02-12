@@ -1,9 +1,12 @@
 package daily;
 
+import com.sun.org.apache.regexp.internal.RE;
 import context.week5.UndergroundSystem;
 
 import javax.swing.*;
 import java.util.*;
+
+import static java.util.Comparator.comparingInt;
 
 public class Solution {
     public boolean possibleBipartition(int n, int[][] dislikes) {
@@ -469,7 +472,7 @@ public class Solution {
         }
 
         // 排好相对顺序，小的在前面，大的在后面
-        Arrays.sort(cuboids, Comparator.comparingInt(a -> a[0] + a[1] + a[2]));
+        Arrays.sort(cuboids, comparingInt(a -> a[0] + a[1] + a[2]));
 
         int[] dp = new int[cuboids.length];
 
@@ -576,18 +579,18 @@ public class Solution {
                                 break;
                             }
                         }
-                    }else {
+                    } else {
                         flag = false;
                     }
                     if (flag) {
-                        nextNums =true;
+                        nextNums = true;
                         count--;
                         i--;
                         startLocation = i;
                     }
                 }
                 startLocation++;
-                if (nextNums){
+                if (nextNums) {
                     break;
                 }
             }
@@ -598,17 +601,17 @@ public class Solution {
 
 
     public boolean digitCount(String num) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
 
-        for (int i = 0 ; i < num.length() ; i++){
+        for (int i = 0; i < num.length(); i++) {
             int cur = num.charAt(i) - '0';
-            map.put(cur,map.getOrDefault(cur,0) +1);
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
         }
 
 
-        for (int i = 0 ; i < num.length() ; i++){
+        for (int i = 0; i < num.length(); i++) {
             int cur = num.charAt(i) - '0';
-            if (map.getOrDefault(i,0) != cur){
+            if (map.getOrDefault(i, 0) != cur) {
                 return false;
             }
         }
@@ -626,20 +629,20 @@ public class Solution {
             target[i] = i;
         }
 
-        while (true){
+        while (true) {
             ans++;
             int[] arr = new int[n];
-            for (int i = 0 ; i < n ; i++){
-                if (i%2 == 0  ){
-                    arr[i] = perm[i/2];
-                }else {
+            for (int i = 0; i < n; i++) {
+                if (i % 2 == 0) {
+                    arr[i] = perm[i / 2];
+                } else {
                     arr[i] = perm[n / 2 + (i - 1) / 2];
                 }
             }
 
             perm = arr;
 
-            if (Arrays.equals(perm,target)){
+            if (Arrays.equals(perm, target)) {
                 break;
             }
         }
@@ -648,8 +651,134 @@ public class Solution {
     }
 
 
+    public int fillCups(int[] amount) {
+
+        List<Integer> queue = new ArrayList<>();
+
+        for (int i = 0; i < amount.length; i++) {
+            if (amount[i] != 0) {
+                queue.add(amount[i]);
+            }
+        }
+
+        int ans = 0;
+
+        while (queue.size() >= 2) {
+            queue.sort(Comparator.comparingInt(o -> o));
+            int first = queue.get(0);
+
+            int last = queue.get(queue.size() - 1);
+
+            first--;
+            last--;
+            ans++;
+
+            queue.remove(0);
+            queue.remove(queue.size() - 1);
+            if (first > 0) {
+                queue.add(first);
+            }
+            queue.add(last);
+        }
+
+
+        return ans + (queue.size() == 1 ? queue.get(0) : 0);
+    }
+
+
+    public String alphabetBoardPath(String target) {
+        StringBuilder sb = new StringBuilder();
+
+        char lastChar = 'a';
+
+        for (int i = 0; i < target.length(); i++) {
+            char curTarget = target.charAt(i);
+
+            int dis = Math.abs(curTarget - 'a');
+
+            int nx = dis % 5;
+            int ny = dis / 5;
+
+            int preDis = Math.abs(lastChar - 'a');
+
+            int px = preDis % 5;
+            int py = preDis / 5;
+
+            lastChar = curTarget;
+            if (ny < py) {
+                for (int j = 0; j < py - ny; j++) {
+                    sb.append("U");
+                }
+            }
+
+            if (nx < px) {
+                for (int j = 0; j < px - nx; j++) {
+                    sb.append("L");
+                }
+            }
+
+            if (ny > py) {
+                for (int j = 0; j < ny - py; j++) {
+                    sb.append("D");
+                }
+            }
+
+            if (nx > px) {
+                for (int j = 0; j < nx - px; j++) {
+                    sb.append("R");
+                }
+            }
+
+
+            sb.append("!");
+
+        }
+
+
+        return sb.toString();
+    }
+
+
+    //20 [8,5,10,8,7,2]
+    public int dieSimulator(int n, int[] rollMax) {
+        long res = 0;
+        int m = 6;
+        int[][][] cache = new int[n][m][15];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                Arrays.fill(cache[i][j], -1);
+            }
+        }
+
+        for (int j = 1; j <= 6; j++) {
+            res = (res + dfs(j, 1, n - 1, rollMax,cache)) % 1000000007;
+        }
+
+        return (int)res % 1000000007;
+    }
+
+    private int dfs(int num, int cnt, int loopTime, int[] rollMax,int[][][] cache) {
+        if (loopTime == 0) {
+            return 1;
+        }
+        if (cache[loopTime][num-1][rollMax[num-1] - cnt] >= 0) return cache[loopTime][num-1][rollMax[num-1] - cnt];
+        long res = 0;
+        for (int i = 1; i <= 6; i++) {
+            if (num == i) {
+                if (cnt < rollMax[i - 1]) {
+                    res += dfs(i, cnt + 1, loopTime - 1, rollMax,cache);
+                }
+            } else {
+                res += dfs(i, 1, loopTime - 1, rollMax,cache);
+            }
+        }
+        cache[loopTime][num-1][rollMax[num-1] - cnt]= (int) res % 1000000007;
+
+        return (int) res % 1000000007;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.reinitializePermutation(4);
+        solution.alphabetBoardPath("leet");
     }
 }
