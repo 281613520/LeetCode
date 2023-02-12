@@ -1,6 +1,7 @@
 package daily;
 
 import com.sun.org.apache.regexp.internal.RE;
+import contest316.ListNode;
 import context.week5.UndergroundSystem;
 
 import javax.swing.*;
@@ -472,7 +473,7 @@ public class Solution {
         }
 
         // 排好相对顺序，小的在前面，大的在后面
-        Arrays.sort(cuboids, comparingInt(a -> a[0] + a[1] + a[2]));
+        Arrays.sort(cuboids, Comparator.comparingInt(a -> a[0] + a[1] + a[2]));
 
         int[] dp = new int[cuboids.length];
 
@@ -579,18 +580,18 @@ public class Solution {
                                 break;
                             }
                         }
-                    } else {
+                    }else {
                         flag = false;
                     }
                     if (flag) {
-                        nextNums = true;
+                        nextNums =true;
                         count--;
                         i--;
                         startLocation = i;
                     }
                 }
                 startLocation++;
-                if (nextNums) {
+                if (nextNums){
                     break;
                 }
             }
@@ -601,17 +602,17 @@ public class Solution {
 
 
     public boolean digitCount(String num) {
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer,Integer> map = new HashMap<>();
 
-        for (int i = 0; i < num.length(); i++) {
+        for (int i = 0 ; i < num.length() ; i++){
             int cur = num.charAt(i) - '0';
-            map.put(cur, map.getOrDefault(cur, 0) + 1);
+            map.put(cur,map.getOrDefault(cur,0) +1);
         }
 
 
-        for (int i = 0; i < num.length(); i++) {
+        for (int i = 0 ; i < num.length() ; i++){
             int cur = num.charAt(i) - '0';
-            if (map.getOrDefault(i, 0) != cur) {
+            if (map.getOrDefault(i,0) != cur){
                 return false;
             }
         }
@@ -629,13 +630,13 @@ public class Solution {
             target[i] = i;
         }
 
-        while (true) {
+        while (true){
             ans++;
             int[] arr = new int[n];
-            for (int i = 0; i < n; i++) {
-                if (i % 2 == 0) {
-                    arr[i] = perm[i / 2];
-                } else {
+            for (int i = 0 ; i < n ; i++){
+                if (i%2 == 0  ){
+                    arr[i] = perm[i/2];
+                }else {
                     arr[i] = perm[n / 2 + (i - 1) / 2];
                 }
             }
@@ -776,6 +777,24 @@ public class Solution {
 
         return (int) res % 1000000007;
     }
+
+    public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
+        ListNode preA = list1;
+        for (int i = 0; i < a - 1; i++) {
+            preA = preA.next;
+        }
+        ListNode preB = preA;
+        for (int i = 0; i < b - a + 2; i++) {
+            preB = preB.next;
+        }
+        preA.next = list2;
+        while (list2.next != null) {
+            list2 = list2.next;
+        }
+        list2.next = preB;
+        return list1;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
