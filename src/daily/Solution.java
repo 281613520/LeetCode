@@ -3,6 +3,7 @@ package daily;
 import com.sun.org.apache.regexp.internal.RE;
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
+import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
 
 import javax.swing.*;
 import java.util.*;
@@ -580,18 +581,18 @@ public class Solution {
                                 break;
                             }
                         }
-                    }else {
+                    } else {
                         flag = false;
                     }
                     if (flag) {
-                        nextNums =true;
+                        nextNums = true;
                         count--;
                         i--;
                         startLocation = i;
                     }
                 }
                 startLocation++;
-                if (nextNums){
+                if (nextNums) {
                     break;
                 }
             }
@@ -602,17 +603,17 @@ public class Solution {
 
 
     public boolean digitCount(String num) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
 
-        for (int i = 0 ; i < num.length() ; i++){
+        for (int i = 0; i < num.length(); i++) {
             int cur = num.charAt(i) - '0';
-            map.put(cur,map.getOrDefault(cur,0) +1);
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
         }
 
 
-        for (int i = 0 ; i < num.length() ; i++){
+        for (int i = 0; i < num.length(); i++) {
             int cur = num.charAt(i) - '0';
-            if (map.getOrDefault(i,0) != cur){
+            if (map.getOrDefault(i, 0) != cur) {
                 return false;
             }
         }
@@ -630,13 +631,13 @@ public class Solution {
             target[i] = i;
         }
 
-        while (true){
+        while (true) {
             ans++;
             int[] arr = new int[n];
-            for (int i = 0 ; i < n ; i++){
-                if (i%2 == 0  ){
-                    arr[i] = perm[i/2];
-                }else {
+            for (int i = 0; i < n; i++) {
+                if (i % 2 == 0) {
+                    arr[i] = perm[i / 2];
+                } else {
                     arr[i] = perm[n / 2 + (i - 1) / 2];
                 }
             }
@@ -752,28 +753,29 @@ public class Solution {
         }
 
         for (int j = 1; j <= 6; j++) {
-            res = (res + dfs(j, 1, n - 1, rollMax,cache)) % 1000000007;
+            res = (res + dfs(j, 1, n - 1, rollMax, cache)) % 1000000007;
         }
 
-        return (int)res % 1000000007;
+        return (int) res % 1000000007;
     }
 
-    private int dfs(int num, int cnt, int loopTime, int[] rollMax,int[][][] cache) {
+    private int dfs(int num, int cnt, int loopTime, int[] rollMax, int[][][] cache) {
         if (loopTime == 0) {
             return 1;
         }
-        if (cache[loopTime][num-1][rollMax[num-1] - cnt] >= 0) return cache[loopTime][num-1][rollMax[num-1] - cnt];
+        if (cache[loopTime][num - 1][rollMax[num - 1] - cnt] >= 0)
+            return cache[loopTime][num - 1][rollMax[num - 1] - cnt];
         long res = 0;
         for (int i = 1; i <= 6; i++) {
             if (num == i) {
                 if (cnt < rollMax[i - 1]) {
-                    res += dfs(i, cnt + 1, loopTime - 1, rollMax,cache);
+                    res += dfs(i, cnt + 1, loopTime - 1, rollMax, cache);
                 }
             } else {
-                res += dfs(i, 1, loopTime - 1, rollMax,cache);
+                res += dfs(i, 1, loopTime - 1, rollMax, cache);
             }
         }
-        cache[loopTime][num-1][rollMax[num-1] - cnt]= (int) res % 1000000007;
+        cache[loopTime][num - 1][rollMax[num - 1] - cnt] = (int) res % 1000000007;
 
         return (int) res % 1000000007;
     }
@@ -796,8 +798,101 @@ public class Solution {
     }
 
 
+    public int longestWPI(int[] hours) {
+
+        int[] preSum = new int[hours.length + 1];
+
+        int ans = 0;
+
+        for (int i = 1; i <= hours.length; i++) {
+            if (hours[i-1] > 8) {
+                preSum[i] = preSum[i - 1] + 1;
+            } else {
+                preSum[i] = preSum[i - 1] - 1;
+            }
+        }
+
+        Deque<Integer> queue = new ArrayDeque<>();
+        queue.add(0);
+
+        for (int i = 1 ; i < preSum.length ; i++){
+            if (preSum[i] < preSum[queue.peekLast()]){
+                queue.add(i);
+            }
+        }
+
+
+        for (int i = preSum.length - 1; i >= 0 ; i--){
+            while (!queue.isEmpty() && preSum[queue.peekLast()] < preSum[i]){
+                int idx = queue.pollLast();
+                ans = Math.max(ans , i  - idx);
+            }
+        }
+
+
+        return ans;
+    }
+
+
+    public int balancedString(String s) {
+        int[] nums = new int[4];
+
+        for (int i = 0; i < s.length(); i++) {
+            char curChar = s.charAt(i);
+            nums[getIdx(curChar)]++;
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        int avg = s.length() / 4;
+        int i = 0;
+
+        if (nums[0] == avg && nums[1] == avg && nums[2] == avg && nums[3] == avg) {
+            return 0;
+        }
+
+        for (int j = 0; j < s.length(); j++) {
+            char curChar = s.charAt(j);
+            nums[getIdx(curChar)]--;
+
+            while (i <= j && nums[0] <= avg && nums[1] <= avg && nums[2] <= avg && nums[3] <= avg) {
+                ans = Math.min(ans, j - i + 1);
+                nums[getIdx(s.charAt(i))]++;
+                i++;
+            }
+        }
+
+
+        return ans;
+    }
+
+    int getIdx(char c) {
+        if (c == 'Q') {
+            return 0;
+        }
+
+        if (c == 'W') {
+            return 1;
+        }
+
+        if (c == 'E') {
+            return 2;
+        }
+
+        if (c == 'R') {
+            return 3;
+        }
+
+        return 0;
+    }
+
+    public int maxWidthRamp(int[] nums) {
+        return 1;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.alphabetBoardPath("leet");
+        solution.longestWPI(new int[]{6,6,9});
     }
 }
