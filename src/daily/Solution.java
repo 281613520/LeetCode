@@ -805,7 +805,7 @@ public class Solution {
         int ans = 0;
 
         for (int i = 1; i <= hours.length; i++) {
-            if (hours[i-1] > 8) {
+            if (hours[i - 1] > 8) {
                 preSum[i] = preSum[i - 1] + 1;
             } else {
                 preSum[i] = preSum[i - 1] - 1;
@@ -815,17 +815,17 @@ public class Solution {
         Deque<Integer> queue = new ArrayDeque<>();
         queue.add(0);
 
-        for (int i = 1 ; i < preSum.length ; i++){
-            if (preSum[i] < preSum[queue.peekLast()]){
+        for (int i = 1; i < preSum.length; i++) {
+            if (preSum[i] < preSum[queue.peekLast()]) {
                 queue.add(i);
             }
         }
 
 
-        for (int i = preSum.length - 1; i >= 0 ; i--){
-            while (!queue.isEmpty() && preSum[queue.peekLast()] < preSum[i]){
+        for (int i = preSum.length - 1; i >= 0; i--) {
+            while (!queue.isEmpty() && preSum[queue.peekLast()] < preSum[i]) {
                 int idx = queue.pollLast();
-                ans = Math.max(ans , i  - idx);
+                ans = Math.max(ans, i - idx);
             }
         }
 
@@ -887,12 +887,63 @@ public class Solution {
     }
 
     public int maxWidthRamp(int[] nums) {
-        return 1;
+        int ans = 0;
+
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        deque.add(0);
+
+        for (int i = 1; i < nums.length ; i++){
+            if (nums[deque.peekLast()] > nums[i]){
+                deque.add(i);
+            }
+        }
+
+        for (int j = nums.length - 1 ; j >= 0 ; j--){
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[j]){
+               int idx = deque.pollLast();
+               ans = Math.max(ans,j-idx +1);
+            }
+        }
+
+
+        return ans;
+    }
+
+
+    public boolean isGoodArray(int[] nums) {
+        int ans = nums[0];
+        int i = 1;
+        while (i < nums.length) {
+            ans = GCD(nums[i],ans);
+
+            if (ans == 1){
+                break;
+            }
+            i++;
+        }
+
+        return ans == 1;
+    }
+
+    private int GCD(int max, int min) {
+        if (max < min){
+            int tmp = max;
+            max = min;
+            min = tmp;
+        }
+        int t = max % min;
+        while (t != 0) {
+            max = min;
+            min = t;
+            t = max % min;
+        }
+        return min;
     }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.longestWPI(new int[]{6,6,9});
+        solution.longestWPI(new int[]{6, 6, 9});
     }
 }
