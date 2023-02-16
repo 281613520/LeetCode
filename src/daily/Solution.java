@@ -942,6 +942,25 @@ public class Solution {
     }
 
 
+    public int[] numberOfPairs(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<>();
+
+        for (int cur : nums){
+            map.put(cur,map.getOrDefault(cur,0)+1);
+        }
+
+        int[] ans = new int[2];
+
+        for (Map.Entry<Integer,Integer> kv : map.entrySet()){
+            int s = kv.getValue();
+            ans[0] += s/2;
+            ans[0] += s%2;
+        }
+
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.longestWPI(new int[]{6, 6, 9});
