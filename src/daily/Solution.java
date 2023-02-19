@@ -893,16 +893,16 @@ public class Solution {
 
         deque.add(0);
 
-        for (int i = 1; i < nums.length ; i++){
-            if (nums[deque.peekLast()] > nums[i]){
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[deque.peekLast()] > nums[i]) {
                 deque.add(i);
             }
         }
 
-        for (int j = nums.length - 1 ; j >= 0 ; j--){
-            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[j]){
-               int idx = deque.pollLast();
-               ans = Math.max(ans,j-idx +1);
+        for (int j = nums.length - 1; j >= 0; j--) {
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[j]) {
+                int idx = deque.pollLast();
+                ans = Math.max(ans, j - idx + 1);
             }
         }
 
@@ -915,9 +915,9 @@ public class Solution {
         int ans = nums[0];
         int i = 1;
         while (i < nums.length) {
-            ans = GCD(nums[i],ans);
+            ans = GCD(nums[i], ans);
 
-            if (ans == 1){
+            if (ans == 1) {
                 break;
             }
             i++;
@@ -927,7 +927,7 @@ public class Solution {
     }
 
     private int GCD(int max, int min) {
-        if (max < min){
+        if (max < min) {
             int tmp = max;
             max = min;
             min = tmp;
@@ -943,26 +943,93 @@ public class Solution {
 
 
     public int[] numberOfPairs(int[] nums) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
 
-        for (int cur : nums){
-            map.put(cur,map.getOrDefault(cur,0)+1);
+        for (int cur : nums) {
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
         }
 
         int[] ans = new int[2];
 
-        for (Map.Entry<Integer,Integer> kv : map.entrySet()){
+        for (Map.Entry<Integer, Integer> kv : map.entrySet()) {
             int s = kv.getValue();
-            ans[0] += s/2;
-            ans[0] += s%2;
+            ans[0] += s / 2;
+            ans[0] += s % 2;
         }
 
         return ans;
     }
 
 
+    public int largest1BorderedSquare(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] up = new int[m + 1][n + 1];
+        int[][] left = new int[m + 1][n + 1];
+
+        int ans = 0;
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+
+                if (grid[i - 1][j - 1] == 1) {
+                    up[i][j] = up[i - 1][j] + 1;
+                    left[i][j] = left[i][j - 1]+1;
+
+                    int max = Math.min(up[i][j], left[i][j]);
+
+                    while (left[i - max + 1][j] < max || up[i][j - max + 1] < max) {
+                        max--;
+                    }
+
+                    ans = Math.max(max, ans);
+                }
+            }
+        }
+
+        return ans * ans;
+    }
+
+
+    public double maxAverageRatio(int[][] classes, int extraStudents) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            long val1 = (long) (b[1] + 1) * b[1] * (a[1] - a[0]);
+            long val2 = (long) (a[1] + 1) * a[1] * (b[1] - b[0]);
+            if (val1 == val2) {
+                return 0;
+            }
+            return val1 < val2 ? 1 : -1;
+        });
+
+
+        for (int[] curClass : classes) {
+            pq.add(new int[]{curClass[0], curClass[1]});
+        }
+
+
+        int tmp = extraStudents;
+
+        while (tmp > 0) {
+            int[] curClass = pq.poll();
+
+            pq.add(new int[]{curClass[0] + 1, curClass[1] + 1});
+            tmp--;
+        }
+
+        double avg = 0.0;
+
+        while (!pq.isEmpty()) {
+            int[] curClass = pq.poll();
+
+            avg += (double) curClass[0] / curClass[1];
+        }
+
+        return avg / classes.length;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.longestWPI(new int[]{6, 6, 9});
+        solution.largest1BorderedSquare(new int[][]{{1,1,1},{1,0,1},{1,1,1}});
     }
 }
