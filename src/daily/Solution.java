@@ -974,7 +974,7 @@ public class Solution {
 
                 if (grid[i - 1][j - 1] == 1) {
                     up[i][j] = up[i - 1][j] + 1;
-                    left[i][j] = left[i][j - 1]+1;
+                    left[i][j] = left[i][j - 1] + 1;
 
                     int max = Math.min(up[i][j], left[i][j]);
 
@@ -1027,9 +1027,81 @@ public class Solution {
         return avg / classes.length;
     }
 
+    public int movesToMakeZigzag(int[] nums) {
+        if (nums.length == 1 || nums.length == 0) return 0;
+        int oddMax = 0;
+        int evenMax = 0;
+        // 偶数
+        for (int i = 1; i < nums.length; i += 2) {
+            evenMax = helper(nums, evenMax, i);
+        }
+        // 奇数
+        for (int i = 0; i < nums.length; i += 2) {
+
+
+            if (i == 0) {
+                if (nums[0] >= nums[1]) {
+                    oddMax += nums[0] - nums[1] + 1;
+                }
+                continue;
+            }
+            oddMax = helper(nums, oddMax, i);
+        }
+
+        return Math.min(oddMax, evenMax);
+    }
+
+    private int helper(int[] nums, int num, int i) {
+        if (i == nums.length - 1) {
+            if (nums[i] - nums[i - 1] >= 0) {
+                num += nums[i] - nums[i - 1] + 1;
+            }
+            return num;
+        }
+        int left = nums[i - 1];
+        int right = nums[i + 1];
+        int cur = nums[i];
+        int delta = 0;
+
+        if (left <= cur) {
+            delta = cur - left + 1;
+        }
+        if (right <= cur) {
+            delta = Math.max(delta, cur - right + 1);
+        }
+
+        num += delta;
+        return num;
+    }
+
+    public String[] getFolderNames(String[] names) {
+        Map<String, Integer> map = new HashMap<>();
+
+        String[] ans = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            String cur = names[i];
+            if (map.containsKey(cur)) {
+                int count = map.get(cur) + 1;
+                String tmp = cur + "(" + count + ")";
+                while (map.containsKey(tmp)){
+                    count++;
+                    tmp = cur + "(" + count + ")";
+                }
+                map.put(tmp, 0);
+                map.put(cur,count);
+                ans[i] = tmp;
+            } else {
+                map.put(cur, 0);
+                ans[i] = cur;
+            }
+        }
+
+        return ans;
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.largest1BorderedSquare(new int[][]{{1,1,1},{1,0,1},{1,1,1}});
+        solution.getFolderNames(new String[]{"wano","wano","wano","wano"});
     }
 }
