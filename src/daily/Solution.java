@@ -1083,12 +1083,12 @@ public class Solution {
             if (map.containsKey(cur)) {
                 int count = map.get(cur) + 1;
                 String tmp = cur + "(" + count + ")";
-                while (map.containsKey(tmp)){
+                while (map.containsKey(tmp)) {
                     count++;
                     tmp = cur + "(" + count + ")";
                 }
                 map.put(tmp, 0);
-                map.put(cur,count);
+                map.put(cur, count);
                 ans[i] = tmp;
             } else {
                 map.put(cur, 0);
@@ -1103,17 +1103,17 @@ public class Solution {
     public int countSubstrings(String s, String t) {
         int res = 0;
 
-        for(int i = 0 ; i < s.length() ; i++){
-            for (int j = 0 ; j < t.length() ; j++){
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = 0; j < t.length(); j++) {
                 int diff = 0;
-                for (int k = 0 ; i + k < s.length() && j+k < t.length(); k++){
-                    if (s.charAt(i+k) != t.charAt(j+k)){
+                for (int k = 0; i + k < s.length() && j + k < t.length(); k++) {
+                    if (s.charAt(i + k) != t.charAt(j + k)) {
                         diff++;
                     }
 
-                    if (diff > 1){
+                    if (diff > 1) {
                         break;
-                    }else if (diff == 1){
+                    } else if (diff == 1) {
                         res++;
                     }
                 }
@@ -1129,26 +1129,26 @@ public class Solution {
 
         int m = s.length();
         int n = t.length();
-        int[][] dpr = new int[m+1][n+1];
-        int[][] dpl = new int[m+1][n+1];
+        int[][] dpr = new int[m + 1][n + 1];
+        int[][] dpl = new int[m + 1][n + 1];
 
-        for (int i = 0 ; i < m ; i++){
-            for (int j = 0 ; j < n ;j++ ){
-                dpl[i+1][j+1] = s.charAt(i) == t.charAt(j)?(dpl[i][j]+1):0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dpl[i + 1][j + 1] = s.charAt(i) == t.charAt(j) ? (dpl[i][j] + 1) : 0;
             }
         }
 
-        for (int i = m-1 ; i >= 0 ; i--){
-            for (int j = n-1 ; j >= 0  ;j-- ){
-                dpr[i][j] = s.charAt(i) == t.charAt(j)?(dpr[i+1][j+1]+1):0;
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                dpr[i][j] = s.charAt(i) == t.charAt(j) ? (dpr[i + 1][j + 1] + 1) : 0;
             }
         }
 
 
-        for (int i = 0 ; i < m ; i++){
-            for (int j = 0 ; j < n ; j++){
-                if (s.charAt(i) != t.charAt(j)){
-                    res += (dpl[i][j] + 1) *(dpr[i+1][j+1] + 1);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (s.charAt(i) != t.charAt(j)) {
+                    res += (dpl[i][j] + 1) * (dpr[i + 1][j + 1] + 1);
                 }
             }
         }
@@ -1158,8 +1158,76 @@ public class Solution {
     }
 
 
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+
+
+    public String shortestCommonSupersequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+
+        int i = m;
+        int j = n;
+
+        while (i > 0 && j > 0) {
+            if (i > 0 && j > 0 && text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                res.append(text1.charAt(i - 1));
+                i--;
+                j--;
+            } else if (dp[i][j] == dp[i - 1][j]) {
+                res.append(text1.charAt(i - 1));
+                i--;
+            } else {
+                res.append(text2.charAt(j - 1));
+                j--;
+            }
+        }
+
+        while (i > 0) {
+            res.append(text1.charAt(i - 1));
+            i--;
+        }
+        // s2[0:j-1]均未对lcs做出贡献，属于s2独有，全部保留
+        while (j > 0) {
+            res.append(text2.charAt(j - 1));
+            j--;
+        }
+
+
+        return res.reverse().toString();
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.getFolderNames(new String[]{"wano","wano","wano","wano"});
+        solution.shortestCommonSupersequence("abac", "cab");
     }
 }
