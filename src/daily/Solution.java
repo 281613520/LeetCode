@@ -1224,6 +1224,29 @@ public class Solution {
 
         return res.reverse().toString();
     }
+    public int countVowelStrings(int n) {
+        int[] dp_a = new int[n+1];
+        int[] dp_e = new int[n+1];
+        int[] dp_i = new int[n+1];
+        int[] dp_o = new int[n+1];
+        int[] dp_u = new int[n+1];
+        dp_a[1] = 1;
+        dp_e[1] = 1;
+        dp_i[1] = 1;
+        dp_o[1] = 1;
+        dp_u[1] = 1;
+
+        for (int i = 2; i <= n ; i++){
+            dp_a[i] = dp_a[i-1]+dp_e[i-1]+dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
+            dp_e[i] = dp_e[i-1]+dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
+            dp_i[i] = dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
+            dp_o[i] = dp_o[i-1]+dp_u[i-1];
+            dp_u[i] = dp_u[i-1];
+        }
+
+
+        return dp_a[n]+dp_e[n]+dp_i[n]+dp_o[n]+dp_u[n];
+    }
 
 
     public static void main(String[] args) {
