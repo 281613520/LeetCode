@@ -1249,6 +1249,38 @@ public class Solution {
     }
 
 
+    int[] v;
+
+    int[][] cache;
+
+    public int minScoreTriangulation(int[] values) {
+        v = values;
+        int n = v.length;
+        cache  = new int[n][n];
+
+        for (int i =0 ; i < n ; i++){
+            Arrays.fill(cache[i],-1);
+        }
+
+        return dfsMinScoreTriangulation(0,n-1);
+    }
+
+    private int dfsMinScoreTriangulation(int i, int j) {
+        if (i+1 == j){
+            return 0;
+        }
+
+        if (cache[i][j] != -1) return cache[i][j];
+
+        int res = Integer.MAX_VALUE;
+        for (int k = i+1  ; k < j ; k++ ){
+            res = Math.min(res,dfsMinScoreTriangulation(i,k) +dfsMinScoreTriangulation(k,j) + v[i]* v[j] * v[k]);
+        }
+        return cache[i][j] = res;
+
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.shortestCommonSupersequence("abac", "cab");
