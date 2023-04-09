@@ -1,14 +1,8 @@
 package daily;
 
-import com.sun.org.apache.regexp.internal.RE;
+
 import contest316.ListNode;
-import context.week5.UndergroundSystem;
-import jdk.management.resource.internal.inst.FileOutputStreamRMHooks;
-
-import javax.swing.*;
 import java.util.*;
-
-import static java.util.Comparator.comparingInt;
 
 public class Solution {
     public boolean possibleBipartition(int n, int[][] dislikes) {
