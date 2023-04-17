@@ -46,7 +46,7 @@ public class Solution {
         int max = 0;
 
         for (int j : treeList[i]){
-            int len = dfs(j,treeList,s);
+            int len = dfs(j,treeList,s)+1;
             if (s.charAt(i) != s.charAt(j)){
                 ans2 = Math.max(ans2, max + len);
                 max = Math.max(max, len);
