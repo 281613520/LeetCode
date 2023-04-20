@@ -2,6 +2,7 @@ package daily;
 
 
 import contest316.ListNode;
+
 import java.util.*;
 
 public class Solution {
@@ -1218,28 +1219,29 @@ public class Solution {
 
         return res.reverse().toString();
     }
+
     public int countVowelStrings(int n) {
-        int[] dp_a = new int[n+1];
-        int[] dp_e = new int[n+1];
-        int[] dp_i = new int[n+1];
-        int[] dp_o = new int[n+1];
-        int[] dp_u = new int[n+1];
+        int[] dp_a = new int[n + 1];
+        int[] dp_e = new int[n + 1];
+        int[] dp_i = new int[n + 1];
+        int[] dp_o = new int[n + 1];
+        int[] dp_u = new int[n + 1];
         dp_a[1] = 1;
         dp_e[1] = 1;
         dp_i[1] = 1;
         dp_o[1] = 1;
         dp_u[1] = 1;
 
-        for (int i = 2; i <= n ; i++){
-            dp_a[i] = dp_a[i-1]+dp_e[i-1]+dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
-            dp_e[i] = dp_e[i-1]+dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
-            dp_i[i] = dp_i[i-1]+dp_o[i-1]+dp_u[i-1];
-            dp_o[i] = dp_o[i-1]+dp_u[i-1];
-            dp_u[i] = dp_u[i-1];
+        for (int i = 2; i <= n; i++) {
+            dp_a[i] = dp_a[i - 1] + dp_e[i - 1] + dp_i[i - 1] + dp_o[i - 1] + dp_u[i - 1];
+            dp_e[i] = dp_e[i - 1] + dp_i[i - 1] + dp_o[i - 1] + dp_u[i - 1];
+            dp_i[i] = dp_i[i - 1] + dp_o[i - 1] + dp_u[i - 1];
+            dp_o[i] = dp_o[i - 1] + dp_u[i - 1];
+            dp_u[i] = dp_u[i - 1];
         }
 
 
-        return dp_a[n]+dp_e[n]+dp_i[n]+dp_o[n]+dp_u[n];
+        return dp_a[n] + dp_e[n] + dp_i[n] + dp_o[n] + dp_u[n];
     }
 
 
@@ -1250,33 +1252,73 @@ public class Solution {
     public int minScoreTriangulation(int[] values) {
         v = values;
         int n = v.length;
-        cache  = new int[n][n];
+        cache = new int[n][n];
 
-        for (int i =0 ; i < n ; i++){
-            Arrays.fill(cache[i],-1);
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(cache[i], -1);
         }
 
-        return dfsMinScoreTriangulation(0,n-1);
+        return dfsMinScoreTriangulation(0, n - 1);
     }
 
     private int dfsMinScoreTriangulation(int i, int j) {
-        if (i+1 == j){
+        if (i + 1 == j) {
             return 0;
         }
 
         if (cache[i][j] != -1) return cache[i][j];
 
         int res = Integer.MAX_VALUE;
-        for (int k = i+1  ; k < j ; k++ ){
-            res = Math.min(res,dfsMinScoreTriangulation(i,k) +dfsMinScoreTriangulation(k,j) + v[i]* v[j] * v[k]);
+        for (int k = i + 1; k < j; k++) {
+            res = Math.min(res, dfsMinScoreTriangulation(i, k) + dfsMinScoreTriangulation(k, j) + v[i] * v[j] * v[k]);
         }
         return cache[i][j] = res;
 
     }
 
 
+    public int maxAncestorDiff(TreeNode root) {
+        return dfsTreeForDiff(root, root.val, root.val);
+    }
+
+    private int dfsTreeForDiff(TreeNode node, int min, int max) {
+        if (node == null) {
+            return 0;
+        }
+
+        int diff = Math.max(Math.abs(node.val - min), Math.abs(node.val - max));
+        min = Math.min(node.val, min);
+        max = Math.max(node.val, max);
+        diff = Math.max(diff, dfsTreeForDiff(node.left, min, max));
+        diff = Math.max(diff, dfsTreeForDiff(node.right, min, max));
+
+
+        return diff;
+    }
+
+
+    public int maxSumAfterPartitioning(int[] arr, int k) {
+        // 区间内的最大值
+        int n = arr.length;
+        int[] dp = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            int max = arr[i - 1];
+            for (int j = i - 1; j >= 0 && j >= i - k; j--) {
+                dp[i] = Math.max(dp[i], dp[j] + max * (i - j));
+                if (j>0) {
+                    max = Math.max(arr[j-1], max);
+                }
+            }
+        }
+
+
+        return dp[n];
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.shortestCommonSupersequence("abac", "cab");
+        solution.maxSumAfterPartitioning(new int[]{1, 15, 7, 9, 2, 5, 10}, 3);
     }
 }
