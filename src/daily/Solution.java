@@ -2,6 +2,7 @@ package daily;
 
 
 import contest316.ListNode;
+import context.week5.UndergroundSystem;
 
 import java.util.*;
 
@@ -1306,8 +1307,8 @@ public class Solution {
             int max = arr[i - 1];
             for (int j = i - 1; j >= 0 && j >= i - k; j--) {
                 dp[i] = Math.max(dp[i], dp[j] + max * (i - j));
-                if (j>0) {
-                    max = Math.max(arr[j-1], max);
+                if (j > 0) {
+                    max = Math.max(arr[j - 1], max);
                 }
             }
         }
@@ -1316,9 +1317,94 @@ public class Solution {
         return dp[n];
     }
 
+    public int longestArithSeqLength(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][1001];
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                int diff = nums[i] - nums[j] + 500;
+                dp[i][diff] = Math.max(dp[i][diff], dp[j][diff] == 0 ? 2 : dp[j][diff] + 1);
+                ans = Math.max(ans, dp[i][diff]);
+            }
+        }
+
+
+        return ans;
+    }
+
+
+    public int minHeightShelves(int[][] books, int shelfWidth) {
+        int n = books.length;
+        int[] dp = new int[n + 1];
+
+        Arrays.fill(dp, 1000000);
+        dp[0] = 0;
+
+        for (int i = 0; i <= n; i++) {
+            int curWidth = 0;
+            int maxHeight = 0;
+
+            for (int j = i; j > 0; j--) {
+                curWidth += books[j][0];
+
+                if (curWidth > shelfWidth) {
+                    break;
+                }
+
+                maxHeight = Math.max(maxHeight, books[j][1]);
+
+                dp[i + 1] = Math.min(dp[i + 1], maxHeight + dp[j]);
+
+            }
+        }
+
+        return dp[n];
+    }
+
+
+    // todo 有更优的解法
+    public boolean queryString(String s, int n) {
+        for (int i = 1; i <= n; i++) {
+            String str = Integer.toBinaryString(i);
+            if (!s.contains(str)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public int numPairsDivisibleBy60(int[] time) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int n = time.length;
+        int first = time[0];
+
+        int ans = 0;
+
+        map.put(first % 60, 1);
+
+        for (int i = 1; i < n; i++) {
+            int cur = time[i]%60;
+            int rest = cur == 0? cur : 60 - cur;
+
+            ans += map.getOrDefault(rest,0);
+            map.put(cur,map.getOrDefault(cur,0)+1);
+
+        }
+        return ans;
+    }
+
+
+    public int smallestRepunitDivByK(int k) {
+
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.maxSumAfterPartitioning(new int[]{1, 15, 7, 9, 2, 5, 10}, 3);
+        solution.numPairsDivisibleBy60(new int[]{60,60,60});
     }
 }
