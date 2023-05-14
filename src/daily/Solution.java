@@ -4,6 +4,7 @@ package daily;
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
 
+import javax.crypto.MacSpi;
 import java.util.*;
 
 public class Solution {
@@ -1387,24 +1388,55 @@ public class Solution {
         map.put(first % 60, 1);
 
         for (int i = 1; i < n; i++) {
-            int cur = time[i]%60;
-            int rest = cur == 0? cur : 60 - cur;
+            int cur = time[i] % 60;
+            int rest = cur == 0 ? cur : 60 - cur;
 
-            ans += map.getOrDefault(rest,0);
-            map.put(cur,map.getOrDefault(cur,0)+1);
+            ans += map.getOrDefault(rest, 0);
+            map.put(cur, map.getOrDefault(cur, 0) + 1);
 
         }
         return ans;
     }
 
+    public int[] rearrangeBarcodes(int[] barcodes) {
 
-    public int smallestRepunitDivByK(int k) {
-
+        Map<Integer, Integer> count = new HashMap<>();
+        for (int b : barcodes) {
+            if (!count.containsKey(b)) {
+                count.put(b, 0);
+            }
+            count.put(b, count.get(b) + 1);
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
+        for (Map.Entry<Integer, Integer> entry : count.entrySet()) {
+            pq.offer(new int[]{entry.getValue(), entry.getKey()});
+        }
+        int n = barcodes.length;
+        int[] res = new int[n];
+        for (int i = 0; i < n; ++i) {
+            int[] p = pq.poll();
+            int cx = p[0], x = p[1];
+            if (i == 0 || res[i - 1] != x) {
+                res[i] = x;
+                if (cx > 1) {
+                    pq.offer(new int[]{cx - 1, x});
+                }
+            } else {
+                int[] p2 = pq.poll();
+                int cy = p2[0], y = p2[1];
+                res[i] = y;
+                if (cy > 1) {
+                    pq.offer(new int[]{cy - 1, y});
+                }
+                pq.offer(new int[]{cx, x});
+            }
+        }
+        return res;
     }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.numPairsDivisibleBy60(new int[]{60,60,60});
+        solution.numPairsDivisibleBy60(new int[]{60, 60, 60});
     }
 }
