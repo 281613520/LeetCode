@@ -3,6 +3,7 @@ package daily;
 
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import javax.crypto.MacSpi;
 import java.util.*;
@@ -1432,6 +1433,37 @@ public class Solution {
             }
         }
         return res;
+    }
+
+
+
+    public int maxEqualRowsAfterFlips(int[][] matrix) {
+        Map<String,Integer> map = new HashMap<>();
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        for (int[] ints : matrix) {
+            StringBuilder cur = new StringBuilder();
+
+            for (int j = 0; j < n; j++) {
+                cur.append(ints[j] ^ ints[0]);
+            }
+
+            String curStr = cur.toString();
+            map.put(curStr, map.getOrDefault(curStr, 0) + 1);
+        }
+
+        int ans = 0;
+
+
+        for (Map.Entry<String,Integer> entry : map.entrySet()){
+            ans = Math.max(ans,entry.getValue());
+        }
+
+        return ans;
+
+
     }
 
 
