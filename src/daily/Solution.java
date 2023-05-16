@@ -1462,8 +1462,39 @@ public class Solution {
         }
 
         return ans;
+    }
 
 
+    public int minDifficulty(int[] jobDifficulty, int d) {
+        int n = jobDifficulty.length;
+
+        if (n < d) return -1;
+        int[][] dp = new int[d+1][n];
+
+       // dp[i][j] = min(dp[i-1][k] + fmax(k+1,j))
+
+        for (int i = 0 ; i <= d ; i++){
+            Arrays.fill(dp[i],Integer.MAX_VALUE);
+        }
+
+        int max = 0;
+
+        for (int i = 0 ; i < n ; i++){
+            max = Math.max(max,jobDifficulty[i]);
+            dp[0][i] = max;
+        }
+
+        for (int i = 1 ; i <= d ; i++){
+            for (int j = i ; j < n ; j++){
+                max = 0;
+                for (int k = j ; k >= i ; k--){
+                    max = Math.max(max,jobDifficulty[k]);
+                    dp[i][j] = Math.min(dp[i-1][k-1] + max , dp[i][j]);
+                }
+            }
+        }
+
+        return dp[d-1][n-1];
     }
 
 
