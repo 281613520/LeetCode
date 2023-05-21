@@ -1436,9 +1436,8 @@ public class Solution {
     }
 
 
-
     public int maxEqualRowsAfterFlips(int[][] matrix) {
-        Map<String,Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
 
         int m = matrix.length;
         int n = matrix[0].length;
@@ -1457,8 +1456,8 @@ public class Solution {
         int ans = 0;
 
 
-        for (Map.Entry<String,Integer> entry : map.entrySet()){
-            ans = Math.max(ans,entry.getValue());
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            ans = Math.max(ans, entry.getValue());
         }
 
         return ans;
@@ -1469,34 +1468,91 @@ public class Solution {
         int n = jobDifficulty.length;
 
         if (n < d) return -1;
-        int[][] dp = new int[d+1][n];
+        int[][] dp = new int[d + 1][n];
 
-       // dp[i][j] = min(dp[i-1][k] + fmax(k+1,j))
+        // dp[i][j] = min(dp[i-1][k] + fmax(k+1,j))
 
-        for (int i = 0 ; i <= d ; i++){
-            Arrays.fill(dp[i],Integer.MAX_VALUE);
+        for (int i = 0; i <= d; i++) {
+            Arrays.fill(dp[i], Integer.MAX_VALUE);
         }
 
         int max = 0;
 
-        for (int i = 0 ; i < n ; i++){
-            max = Math.max(max,jobDifficulty[i]);
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, jobDifficulty[i]);
             dp[0][i] = max;
         }
 
-        for (int i = 1 ; i <= d ; i++){
-            for (int j = i ; j < n ; j++){
+        for (int i = 1; i <= d; i++) {
+            for (int j = i; j < n; j++) {
                 max = 0;
-                for (int k = j ; k >= i ; k--){
-                    max = Math.max(max,jobDifficulty[k]);
-                    dp[i][j] = Math.min(dp[i-1][k-1] + max , dp[i][j]);
+                for (int k = j; k >= i; k--) {
+                    max = Math.max(max, jobDifficulty[k]);
+                    dp[i][j] = Math.min(dp[i - 1][k - 1] + max, dp[i][j]);
                 }
             }
         }
 
-        return dp[d-1][n-1];
+        return dp[d - 1][n - 1];
     }
 
+
+    public int storeWater(int[] bucket, int[] vat) {
+        //枚举蓄水操作次数
+        int n = bucket.length;
+        int maxK = Arrays.stream(vat).max().getAsInt();
+
+        if (maxK == 0) {
+            return 0;
+        }
+
+
+        int res = Integer.MAX_VALUE;
+
+        for (int k = 1; k <= maxK && k < res; k++) {
+            int t = 0;
+            for (int j = 0; j < n; j++) {
+                t += Math.max(0, (vat[j] + k - 1) / k - bucket[j]);
+            }
+
+            res = Math.min(res, t + k);
+        }
+        return res;
+    }
+
+
+    public boolean haveConflict(String[] event1, String[] event2) {
+        return !(event1[1].compareTo(event2[0]) < 0 || event2[1].compareTo(event1[0]) < 0);
+    }
+
+    public int numTilePossibilities(String tiles) {
+        Map<Character, Integer> count = new HashMap<>();
+        for (int i = 0; i < tiles.length(); i++) {
+            count.put(tiles.charAt(i), count.getOrDefault(tiles.charAt(i), 0) + 1);
+        }
+
+        Set<Character> set = new HashSet<>(count.keySet());
+
+        return dfs(tiles.length(), count, set);
+    }
+
+    private int dfs(int i, Map<Character, Integer> count, Set<Character> set) {
+        if (i == 0) {
+            return 1;
+        }
+
+
+        int res = 1;
+        for (char c : set){
+            if (count.get(c) > 0){
+                count.put(c,count.get(c) -1);
+                res += dfs(i-1,count,set);
+                count.put(c,count.get(c) +1);
+            }
+        }
+
+        return res;
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
