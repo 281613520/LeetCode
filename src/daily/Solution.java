@@ -6,6 +6,7 @@ import context.week5.UndergroundSystem;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import javax.crypto.MacSpi;
+import java.awt.datatransfer.StringSelection;
 import java.util.*;
 
 public class Solution {
@@ -1554,8 +1555,121 @@ public class Solution {
         return res;
     }
 
+    public TreeNode sufficientSubset(TreeNode root, int limit) {
+            boolean flag = dfs(root,limit,0);
+            return flag? root:null;
+    }
+
+    private boolean dfs(TreeNode root, int limit,int sum) {
+        if (root == null){
+            return false;
+        }
+
+        if (root.left == null && root.right == null){
+            return root.val + sum >= limit;
+        }
+
+
+        boolean left = dfs(root.left,limit,sum + root.val);
+        boolean right = dfs(root.right,limit,sum + root.val);
+
+
+        if (!left){
+            root.left = null;
+        }
+
+        if (!right){
+            root.right = null;
+        }
+
+        return left || right;
+    }
+
+    public int largestValsFromLabels(int[] values, int[] labels, int numWanted, int useLimit) {
+        int n = values.length;
+        Integer[] id = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            id[i] = i;
+        }
+        Arrays.sort(id, (a, b) -> values[b] - values[a]);
+
+        int ans = 0, choose = 0;
+        Map<Integer, Integer> cnt = new HashMap<>();
+        for (int i = 0 ; i < n && choose <= numWanted ; i++){
+            int label = labels[id[i]];
+
+            if (cnt.getOrDefault(label,0) == useLimit){
+                continue;
+            }
+
+            choose++;
+            ans += values[id[i]];
+            cnt.put(label,cnt.getOrDefault(label,0) +1);
+        }
+        return ans;
+    }
+
+
+    public String oddString(String[] words) {
+        Set<int[]> map = new HashSet<>();
+        String res = "";
+        for (String curWord : words){
+            int[] curInt = new int[curWord.length()-1];
+            for (int i = 1; i < curWord.length() ; i++){
+                curInt[0] = curWord.charAt(i) - curWord.charAt(i-1);
+            }
+
+            if (map.contains(curInt)){
+                continue;
+            }else {
+                map.add(curInt);
+                res = curWord;
+            }
+        }
+        return res;
+    }
+
+
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        if (grid[0][0] == 1) {
+            return -1;
+        }
+        int n = grid.length;
+        int[][] dist = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dist[i], Integer.MAX_VALUE);
+        }
+        Queue<int[]> queue = new ArrayDeque<int[]>();
+        queue.offer(new int[]{0, 0});
+        dist[0][0] = 1;
+        while (!queue.isEmpty()) {
+            int[] arr = queue.poll();
+            int x = arr[0], y = arr[1];
+            if (x == n - 1 && y == n - 1) {
+                return dist[x][y];
+            }
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (x + dx < 0 || x + dx >= n || y + dy < 0 || y + dy >= n) { // 越界
+                        continue;
+                    }
+                    if (grid[x + dx][y + dy] == 1 || dist[x + dx][y + dy] <= dist[x][y] + 1) { // 单元格值不为 0 或已被访问
+                        continue;
+                    }
+                    dist[x + dx][y + dy] = dist[x][y] + 1;
+                    queue.offer(new int[]{x + dx, y + dy});
+                }
+            }
+        }
+        return -1;
+    }
+
+    public double[] sampleStats(int[] count) {
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.numPairsDivisibleBy60(new int[]{60, 60, 60});
+        solution.oddString(new String[]{"aaa","bob","ccc","ddd"});
     }
 }
