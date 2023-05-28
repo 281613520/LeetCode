@@ -1544,11 +1544,11 @@ public class Solution {
 
 
         int res = 1;
-        for (char c : set){
-            if (count.get(c) > 0){
-                count.put(c,count.get(c) -1);
-                res += dfs(i-1,count,set);
-                count.put(c,count.get(c) +1);
+        for (char c : set) {
+            if (count.get(c) > 0) {
+                count.put(c, count.get(c) - 1);
+                res += dfs(i - 1, count, set);
+                count.put(c, count.get(c) + 1);
             }
         }
 
@@ -1556,29 +1556,29 @@ public class Solution {
     }
 
     public TreeNode sufficientSubset(TreeNode root, int limit) {
-            boolean flag = dfs(root,limit,0);
-            return flag? root:null;
+        boolean flag = dfs(root, limit, 0);
+        return flag ? root : null;
     }
 
-    private boolean dfs(TreeNode root, int limit,int sum) {
-        if (root == null){
+    private boolean dfs(TreeNode root, int limit, int sum) {
+        if (root == null) {
             return false;
         }
 
-        if (root.left == null && root.right == null){
+        if (root.left == null && root.right == null) {
             return root.val + sum >= limit;
         }
 
 
-        boolean left = dfs(root.left,limit,sum + root.val);
-        boolean right = dfs(root.right,limit,sum + root.val);
+        boolean left = dfs(root.left, limit, sum + root.val);
+        boolean right = dfs(root.right, limit, sum + root.val);
 
 
-        if (!left){
+        if (!left) {
             root.left = null;
         }
 
-        if (!right){
+        if (!right) {
             root.right = null;
         }
 
@@ -1595,16 +1595,16 @@ public class Solution {
 
         int ans = 0, choose = 0;
         Map<Integer, Integer> cnt = new HashMap<>();
-        for (int i = 0 ; i < n && choose <= numWanted ; i++){
+        for (int i = 0; i < n && choose <= numWanted; i++) {
             int label = labels[id[i]];
 
-            if (cnt.getOrDefault(label,0) == useLimit){
+            if (cnt.getOrDefault(label, 0) == useLimit) {
                 continue;
             }
 
             choose++;
             ans += values[id[i]];
-            cnt.put(label,cnt.getOrDefault(label,0) +1);
+            cnt.put(label, cnt.getOrDefault(label, 0) + 1);
         }
         return ans;
     }
@@ -1613,15 +1613,15 @@ public class Solution {
     public String oddString(String[] words) {
         Set<int[]> map = new HashSet<>();
         String res = "";
-        for (String curWord : words){
-            int[] curInt = new int[curWord.length()-1];
-            for (int i = 1; i < curWord.length() ; i++){
-                curInt[0] = curWord.charAt(i) - curWord.charAt(i-1);
+        for (String curWord : words) {
+            int[] curInt = new int[curWord.length() - 1];
+            for (int i = 1; i < curWord.length(); i++) {
+                curInt[0] = curWord.charAt(i) - curWord.charAt(i - 1);
             }
 
-            if (map.contains(curInt)){
+            if (map.contains(curInt)) {
                 continue;
-            }else {
+            } else {
                 map.add(curInt);
                 res = curWord;
             }
@@ -1665,11 +1665,56 @@ public class Solution {
     }
 
     public double[] sampleStats(int[] count) {
+        int n = count.length;
+        int total = Arrays.stream(count).sum();
+        double max = 0;
+        double min = 256;
+        double mean = 0;
+        double median = 0;
+        double mode = 0;
+        long sum = 0;
+        int maxFreq = 0;
+        int cnt = 0;
 
+        int left = (total + 1) / 2;
+        int right = (total + 2) / 2;
+        for (int i = 0; i < n; i++) {
+            sum = sum + (long) count[i] * i;
+
+            if (count[i] > maxFreq) {
+                maxFreq = count[i];
+                mode = i;
+            }
+
+            if (count[i] > 0) {
+                if (min == 256) {
+                    min = i;
+                }
+                max = i;
+            }
+
+
+            // 累计到达中位数
+            if (cnt < right && cnt + count[i] >= right) {
+                median += i;
+            }
+
+            if (cnt < left && cnt + count[i] >= left) {
+                median += i;
+            }
+
+            cnt += count[i];
+        }
+
+        median = median/2.0;
+        mean = (double) sum / total;
+
+
+        return new double[]{min, max, mean, median, mode};
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.oddString(new String[]{"aaa","bob","ccc","ddd"});
+        solution.oddString(new String[]{"aaa", "bob", "ccc", "ddd"});
     }
 }
