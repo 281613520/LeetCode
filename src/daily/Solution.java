@@ -1713,6 +1713,50 @@ public class Solution {
         return new double[]{min, max, mean, median, mode};
     }
 
+    public int distinctAverages(int[] nums) {
+        Arrays.sort(nums);
+        Set<Integer> seen = new HashSet<Integer>();
+        for (int i = 0, j = nums.length - 1; i < j; ++i, --j) {
+            seen.add(nums[i] + nums[j]);
+        }
+        return seen.size();
+    }
+
+
+    public int[] vowelStrings(String[] words, int[][] queries) {
+        Set<Character> set = new HashSet<>();
+        set.add('a');
+        set.add('e');
+        set.add('i');
+        set.add('o');
+        set.add('u');
+
+        int[] preSum = new int[words.length+1];
+        for (int i = 0 ; i < words.length ; i++){
+            String word = words[i];
+            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length()-1))){
+                if (i == 0){
+                    preSum[i+1] = 1;
+                }else {
+                    preSum[i+1] = preSum[i]+1;
+                }
+            }else {
+                preSum[i+1] = preSum[i];
+            }
+
+        }
+
+
+        int[] ans = new int[queries.length];
+
+        for (int i = 0 ; i < queries.length ; i++){
+            int[] thisQuery = queries[i];
+            ans[i] = preSum[thisQuery[1]+1] - preSum[thisQuery[0]];
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.oddString(new String[]{"aaa", "bob", "ccc", "ddd"});
