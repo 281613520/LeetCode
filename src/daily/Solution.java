@@ -1757,6 +1757,97 @@ public class Solution {
         return ans;
     }
 
+    public int[] applyOperations(int[] nums) {
+        for (int i = 1 ; i < nums.length ; i++){
+            if (nums[i-1] == nums[i]){
+                nums[i-1] = nums[i-1]*2;
+                nums[i] = 0;
+            }
+        }
+
+        int[] res = new int[nums.length];
+
+        for (int i = 0 , j = 0 ; i < nums.length ; i++){
+            if (nums[i] != 0){
+                res[j] = nums[i];
+                j++;
+            }
+        }
+
+        return res;
+    }
+
+
+    public int equalPairs(int[][] grid) {
+        int res = 0;
+        int n = grid.length;
+
+        for(int i = 0 ; i < n ; i++){
+            for (int j = 0 ; j < n ; j++){
+                if (matrixEqual(i,j,grid)){
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private boolean matrixEqual(int row, int col, int[][] grid) {
+        int n = grid.length;
+        for (int i = 0 ; i < n ; i++){
+            if (grid[row][i] != grid[i][col]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int miceAndCheese(int[] reward1, int[] reward2, int k) {
+        int n = reward1.length;
+        int[] diff = new int[n];
+        int sum = 0;
+
+        for (int i = 0 ; i < n ; i++){
+            sum+= reward2[i];
+            diff[i] = reward1[i] - reward2[i];
+        }
+
+        int res = sum;
+
+        Arrays.sort(diff);
+
+        for (int i = 1 ; i <= k ; i++){
+            res += diff[n-i];
+        }
+
+        return res;
+    }
+
+    public ListNode removeZeroSumSublists(ListNode head) {
+        int preSum = 0;
+        Map<Integer,ListNode> map = new HashMap<>();
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode node = dummy;
+        while (node != null){
+            preSum += node.val;
+            map.put(preSum,node);
+            node = node.next;
+        }
+
+        preSum = 0;
+        node = dummy;
+
+        while (node != null){
+            preSum+= node.val;
+            node.next = map.get(preSum).next;
+            node = node.next;
+        }
+
+        return dummy.next;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.oddString(new String[]{"aaa", "bob", "ccc", "ddd"});
