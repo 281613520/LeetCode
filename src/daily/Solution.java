@@ -667,6 +667,102 @@ public class Solution {
     }
 
 
+    public int[] shortestAlternatingPaths(int n, int[][] redEdges, int[][] blueEdges) {
+        // 0 red 1 blue
+        List<Integer>[][] graph = new List[2][n];
+
+        for (int i = 0 ; i < 2 ; i++){
+            for (int j = 0 ; j < n ; j++){
+                graph[i][j] = new ArrayList<>();
+            }
+        }
+
+        for (int[] edge : redEdges){
+            graph[0][edge[0]].add(edge[1]);
+        }
+
+        for (int[] edge : blueEdges){
+            graph[1][edge[0]].add(edge[1]);
+        }
+
+        int[][] dist  = new int[2][n];
+
+        for (int i = 0 ; i < 2 ; i++){
+            Arrays.fill(dist[i],Integer.MAX_VALUE);
+        }
+        dist[1][0] = 0;
+        dist[0][0] = 0;
+
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[]{0,0});
+        queue.add(new int[]{0,1});
+
+        while (!queue.isEmpty()){
+            int[] cur = queue.poll();
+            int x = cur[0];
+            int c = cur[1];
+
+            for (int y : graph[1-c][x]){
+                if (dist[1-c][y]!= Integer.MAX_VALUE){
+                    continue;
+                }
+                dist[1-c][y] = dist[c][x] + 1;
+                queue.add(new int[]{1-c,y});
+            }
+        }
+        int[] answer = new int[n];
+        for (int i = 0; i < n; i++) {
+            answer[i] = Math.min(dist[0][i], dist[1][i]);
+            if (answer[i] == Integer.MAX_VALUE) {
+                answer[i] = -1;
+            }
+        }
+        return answer;
+    }
+
+
+    public List<String> alertNames(String[] keyName, String[] keyTime) {
+        Map<String,List<Integer>> map = new HashMap<>();
+        for (int i = 0 ; i < keyName.length;i++){
+            if (!map.containsKey(keyName[i])){
+                map.put(keyName[i],new ArrayList<>());
+            }
+            String[] curTime = keyTime[i].split(":");
+            int time = Integer.parseInt(curTime[0]) * 60 +Integer.parseInt(curTime[1]);
+            map.get(keyName[i]).add(time);
+        }
+
+        List<String> res = new ArrayList<>();
+
+        map.forEach((name,list) ->{
+            int t = 2;
+            Collections.sort(list);
+            for (;t < list.size() ; t++){
+                if (list.get(t) - list.get(t-2) <= 60){
+                    res.add(name);
+                    break;
+                }
+            }
+        });
+
+
+        Collections.sort(res);
+        return res;
+    }
+
+    public List<String> removeSubfolders(String[] folder) {
+        Arrays.sort(folder);
+        List<String> ans = new ArrayList<String>();
+        ans.add(folder[0]);
+        for (int i = 1; i < folder.length; ++i) {
+            int pre = ans.get(ans.size() - 1).length();
+            if (!(pre < folder[i].length() && ans.get(ans.size() - 1).equals(folder[i].substring(0, pre)) && folder[i].charAt(pre) == '/')) {
+                ans.add(folder[i]);
+            }
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.reinitializePermutation(4);
