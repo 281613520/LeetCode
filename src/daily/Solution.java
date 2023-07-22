@@ -1706,7 +1706,7 @@ public class Solution {
             cnt += count[i];
         }
 
-        median = median/2.0;
+        median = median / 2.0;
         mean = (double) sum / total;
 
 
@@ -1731,17 +1731,17 @@ public class Solution {
         set.add('o');
         set.add('u');
 
-        int[] preSum = new int[words.length+1];
-        for (int i = 0 ; i < words.length ; i++){
+        int[] preSum = new int[words.length + 1];
+        for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length()-1))){
-                if (i == 0){
-                    preSum[i+1] = 1;
-                }else {
-                    preSum[i+1] = preSum[i]+1;
+            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length() - 1))) {
+                if (i == 0) {
+                    preSum[i + 1] = 1;
+                } else {
+                    preSum[i + 1] = preSum[i] + 1;
                 }
-            }else {
-                preSum[i+1] = preSum[i];
+            } else {
+                preSum[i + 1] = preSum[i];
             }
 
         }
@@ -1749,26 +1749,26 @@ public class Solution {
 
         int[] ans = new int[queries.length];
 
-        for (int i = 0 ; i < queries.length ; i++){
+        for (int i = 0; i < queries.length; i++) {
             int[] thisQuery = queries[i];
-            ans[i] = preSum[thisQuery[1]+1] - preSum[thisQuery[0]];
+            ans[i] = preSum[thisQuery[1] + 1] - preSum[thisQuery[0]];
         }
 
         return ans;
     }
 
     public int[] applyOperations(int[] nums) {
-        for (int i = 1 ; i < nums.length ; i++){
-            if (nums[i-1] == nums[i]){
-                nums[i-1] = nums[i-1]*2;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == nums[i]) {
+                nums[i - 1] = nums[i - 1] * 2;
                 nums[i] = 0;
             }
         }
 
         int[] res = new int[nums.length];
 
-        for (int i = 0 , j = 0 ; i < nums.length ; i++){
-            if (nums[i] != 0){
+        for (int i = 0, j = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
                 res[j] = nums[i];
                 j++;
             }
@@ -1782,9 +1782,9 @@ public class Solution {
         int res = 0;
         int n = grid.length;
 
-        for(int i = 0 ; i < n ; i++){
-            for (int j = 0 ; j < n ; j++){
-                if (matrixEqual(i,j,grid)){
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrixEqual(i, j, grid)) {
                     res++;
                 }
             }
@@ -1795,8 +1795,8 @@ public class Solution {
 
     private boolean matrixEqual(int row, int col, int[][] grid) {
         int n = grid.length;
-        for (int i = 0 ; i < n ; i++){
-            if (grid[row][i] != grid[i][col]){
+        for (int i = 0; i < n; i++) {
+            if (grid[row][i] != grid[i][col]) {
                 return false;
             }
         }
@@ -1808,8 +1808,8 @@ public class Solution {
         int[] diff = new int[n];
         int sum = 0;
 
-        for (int i = 0 ; i < n ; i++){
-            sum+= reward2[i];
+        for (int i = 0; i < n; i++) {
+            sum += reward2[i];
             diff[i] = reward1[i] - reward2[i];
         }
 
@@ -1817,8 +1817,8 @@ public class Solution {
 
         Arrays.sort(diff);
 
-        for (int i = 1 ; i <= k ; i++){
-            res += diff[n-i];
+        for (int i = 1; i <= k; i++) {
+            res += diff[n - i];
         }
 
         return res;
@@ -1826,26 +1826,94 @@ public class Solution {
 
     public ListNode removeZeroSumSublists(ListNode head) {
         int preSum = 0;
-        Map<Integer,ListNode> map = new HashMap<>();
+        Map<Integer, ListNode> map = new HashMap<>();
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         ListNode node = dummy;
-        while (node != null){
+        while (node != null) {
             preSum += node.val;
-            map.put(preSum,node);
+            map.put(preSum, node);
             node = node.next;
         }
 
         preSum = 0;
         node = dummy;
 
-        while (node != null){
-            preSum+= node.val;
+        while (node != null) {
+            preSum += node.val;
             node.next = map.get(preSum).next;
             node = node.next;
         }
 
         return dummy.next;
+    }
+
+    public int unequalTriplets(int[] nums) {
+        int count = 0;
+        int n = nums.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (nums[i] != nums[j]) {
+                    for (int k = j + 1; k < n; k++) {
+                        if (nums[i] != nums[k] && nums[j] != nums[k]) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public int unequalTriplets2(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+
+        for (int cur : nums) {
+            map.merge(cur, 1, Integer::sum);
+        }
+
+        int a = 0;
+        int b = nums.length;
+        int ans = 0;
+        for (Map.Entry<Integer,Integer> entry : map.entrySet()){
+            ans += entry.getValue() * a * (b-a-entry.getValue());
+            a+=entry.getValue();
+        }
+
+        return ans;
+    }
+
+    public boolean lemonadeChange(int[] bills) {
+
+        int five = 0;
+        int ten = 0;
+        int n = bills.length;
+
+        for (int i = 0 ; i < bills.length;i++){
+            int cur = bills[i];
+            if (cur == 5){
+                five ++;
+            }else if (cur == 10){
+                if (five == 0){
+                    return false;
+                }
+
+                ten++;
+                five--;
+            }else {
+                if (ten>0 && five > 0){
+                    ten--;
+                    five--;
+                }else if (five >= 3){
+                    five -= 3;
+                }else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static void main(String[] args) {
