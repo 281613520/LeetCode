@@ -2,8 +2,10 @@ package daily;
 
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
+import context.week7.FindDiagonalOrder;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -763,8 +765,57 @@ public class Solution {
         return ans;
     }
 
+    public int[] minInterval(int[][] intervals, int[] queries) {
+        int n = intervals.length;
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        List<int[]> list = new ArrayList<>();
+        for (int i = 0 ; i < queries.length ; i++){
+            list.add(new int[]{queries[i],i});
+        }
+
+        list.sort(Comparator.comparingInt(o -> o[0]));
+        int[] ans = new int[queries.length];
+        Arrays.fill(ans, -1);
+        int i = 0;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+
+        for (int[] q: list){
+            while (i < n && intervals[i][0] <= q[0]){
+                int a = intervals[i][0];
+                int b = intervals[i][1];
+                pq.offer(new int[]{b-a+1,b});
+                i++;
+            }
+
+
+            while (!pq.isEmpty() && pq.peek()[1] < q[0]){
+                pq.poll();
+            }
+
+            if (!pq.isEmpty()){
+                ans[q[1]] = pq.peek()[0];
+            }
+        }
+        return ans;
+    }
+
+
+    public int maxSubArray(int[] nums) {
+        int continus = 0;
+        int res = Integer.MIN_VALUE;
+
+
+        for (int i = 0 ; i < nums.length ; i++){
+            int after = continus + nums[i];
+            continus = Math.max(after,nums[i]);
+            res = Math.max(res,continus);
+        }
+
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.reinitializePermutation(4);
+        solution.minInterval(new int[][]{{1,4},{2,4},{3,6},{4,4}},new int[]{2,3,4,5});
     }
 }
