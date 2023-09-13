@@ -2,11 +2,8 @@ package daily;
 
 
 import contest316.ListNode;
-import context.week5.UndergroundSystem;
-import org.omg.PortableInterceptor.INACTIVE;
+import math.TreeNode;
 
-import javax.crypto.MacSpi;
-import java.awt.datatransfer.StringSelection;
 import java.util.*;
 
 public class Solution {
@@ -1706,7 +1703,7 @@ public class Solution {
             cnt += count[i];
         }
 
-        median = median/2.0;
+        median = median / 2.0;
         mean = (double) sum / total;
 
 
@@ -1731,17 +1728,17 @@ public class Solution {
         set.add('o');
         set.add('u');
 
-        int[] preSum = new int[words.length+1];
-        for (int i = 0 ; i < words.length ; i++){
+        int[] preSum = new int[words.length + 1];
+        for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length()-1))){
-                if (i == 0){
-                    preSum[i+1] = 1;
-                }else {
-                    preSum[i+1] = preSum[i]+1;
+            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length() - 1))) {
+                if (i == 0) {
+                    preSum[i + 1] = 1;
+                } else {
+                    preSum[i + 1] = preSum[i] + 1;
                 }
-            }else {
-                preSum[i+1] = preSum[i];
+            } else {
+                preSum[i + 1] = preSum[i];
             }
 
         }
@@ -1749,26 +1746,26 @@ public class Solution {
 
         int[] ans = new int[queries.length];
 
-        for (int i = 0 ; i < queries.length ; i++){
+        for (int i = 0; i < queries.length; i++) {
             int[] thisQuery = queries[i];
-            ans[i] = preSum[thisQuery[1]+1] - preSum[thisQuery[0]];
+            ans[i] = preSum[thisQuery[1] + 1] - preSum[thisQuery[0]];
         }
 
         return ans;
     }
 
     public int[] applyOperations(int[] nums) {
-        for (int i = 1 ; i < nums.length ; i++){
-            if (nums[i-1] == nums[i]){
-                nums[i-1] = nums[i-1]*2;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == nums[i]) {
+                nums[i - 1] = nums[i - 1] * 2;
                 nums[i] = 0;
             }
         }
 
         int[] res = new int[nums.length];
 
-        for (int i = 0 , j = 0 ; i < nums.length ; i++){
-            if (nums[i] != 0){
+        for (int i = 0, j = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
                 res[j] = nums[i];
                 j++;
             }
@@ -1782,9 +1779,9 @@ public class Solution {
         int res = 0;
         int n = grid.length;
 
-        for(int i = 0 ; i < n ; i++){
-            for (int j = 0 ; j < n ; j++){
-                if (matrixEqual(i,j,grid)){
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrixEqual(i, j, grid)) {
                     res++;
                 }
             }
@@ -1795,21 +1792,250 @@ public class Solution {
 
     private boolean matrixEqual(int row, int col, int[][] grid) {
         int n = grid.length;
-        for (int i = 0 ; i < n ; i++){
-            if (grid[row][i] != grid[i][col]){
+        for (int i = 0; i < n; i++) {
+            if (grid[row][i] != grid[i][col]) {
                 return false;
             }
         }
         return true;
     }
 
+
+    public int maxSubarraySumCircular(int[] nums) {
+        // 123123
+        // 算两个值 一个最小和 一个最大和
+        int sum = Arrays.stream(nums).sum();
+        int continus = 0;
+        int max = Integer.MIN_VALUE;
+
+
+        for (int i = 0; i < nums.length; i++) {
+            int after = continus + nums[i];
+            continus = Math.max(after, nums[i]);
+            max = Math.max(max, continus);
+        }
+
+        continus = 0;
+        int min = Integer.MAX_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            int after = continus + nums[i];
+            continus = Math.min(after, nums[i]);
+            min = Math.min(min, continus);
+        }
+
+        return max > 0 ? Math.max(max, sum - min) : max;
+
+    }
+
+
+    public int minimumTime(int n, int[][] relations, int[] time) {
+        List<Integer>[] g = new List[n];
+        Arrays.setAll(g, k -> new ArrayList<>());
+
+        int[] indeg = new int[n];
+        for (int[] e : relations) {
+            int a = e[0] - 1, b = e[1] - 1;
+            g[a].add(b);
+            ++indeg[b];
+        }
+
+        Deque<Integer> q = new ArrayDeque<>();
+        int[] f = new int[n];
+
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            int v = indeg[i], t = time[i];
+            if (v == 0) {
+                q.offer(i);
+                f[i] = t;
+                ans = Math.max(ans, t);
+            }
+        }
+
+        while (!q.isEmpty()) {
+            int i = q.pollFirst();
+            for (int j : g[i]) {
+                f[j] = Math.max(f[j], f[i] + time[j]);
+                ans = Math.max(f[j], ans);
+
+                indeg[j]--;
+                if (indeg[j] == 0) {
+                    q.offer(j);
+                }
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int flipgame(int[] fronts, int[] backs) {
+        Set<Integer> set = new HashSet<>();
+
+        for (int i = 0; i < fronts.length; i++) {
+            if (fronts[i] == backs[i]) {
+                set.add(fronts[i]);
+            }
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        for (int i = 0; i < fronts.length; i++) {
+            if (!set.contains(fronts[i])) {
+                ans = Math.min(fronts[i], ans);
+            }
+        }
+
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+
+    }
+
+    public int subtractProductAndSum(int n) {
+        int m = 1;
+        int s = 0;
+        while (n != 0) {
+            int cur = n % 10;
+            n = n / 10;
+            m *= cur;
+            s += cur;
+        }
+
+        return m - s;
+    }
+
+
+    public int maxAbsoluteSum(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][2];
+
+
+        // f(i) 代表以i为结尾的最大绝对值
+
+        dp[0][0] = nums[0];
+        dp[0][1] = nums[0];
+        int res = Math.max(dp[0][0], Math.abs(dp[0][1]));
+
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0] + nums[i], nums[i]);
+            dp[i][1] = Math.min(dp[i - 1][1] + nums[i], nums[i]);
+            res = Math.max(dp[i][0], Math.max(res, Math.abs(dp[i][1])));
+        }
+        return res;
+
+    }
+
+
+    public int minFallingPathSum(int[][] grid) {
+        int n = grid.length;
+
+        int[][] dp = new int[n][n];
+
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i][j] = Integer.MAX_VALUE;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            dp[0][i] = grid[0][i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                for (int k = 0; k < n; k++) {
+                    if (j == k) {
+                        continue;
+                    }
+
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][k] + grid[i][j]);
+                }
+            }
+        }
+
+        int res = Integer.MAX_VALUE;
+
+        for (int j = 0; j < n; j++) {
+            res = Math.min(res, dp[n - 1][j]);
+        }
+
+        return res;
+    }
+
+
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) {
+            return root2;
+        }
+
+        if (root2 == null) {
+            return root1;
+        }
+
+        TreeNode merged = new TreeNode(root1.val + root2.val);
+        merged.left = mergeTrees(root1.left, root2.left);
+        merged.right = mergeTrees(root1.right, root2.right);
+
+        return merged;
+    }
+
+
+    public int minAbsoluteDifference(List<Integer> nums, int x) {
+        int n = nums.size();
+        TreeSet<Integer> treeSet = new TreeSet<>();
+
+        int res = Integer.MAX_VALUE;
+
+        for (int j = x; j < n; j++) {
+            treeSet.add(nums.get(j - x));
+
+            int cur = nums.get(j);
+            // 找当前最接近cur的值
+
+            Integer floor = treeSet.floor(cur);
+
+            if (floor != null) {
+                res = Math.min(res, cur - floor);
+            }
+
+            Integer ceiling = treeSet.ceiling(cur);
+
+            if (ceiling != null) {
+                res = Math.min(res, ceiling - cur);
+            }
+        }
+
+
+        return res;
+    }
+
+    private static final long MOD = (long) 1e9 + 7;
+    private static final int MX = (int) 1e5 + 1;
+    private static final int[] omega = new int[MX];
+
+    static {
+        for (int i = 2; i < MX; i++)
+            if (omega[i] == 0) // i 是质数
+                for (int j = i; j < MX; j += i)
+                    omega[j]++; // i 是 j 的一个质因子
+    }
+
+    public int maximumScore(List<Integer> nums, int k) {
+        //先预处理质数分数，然后计算每一个质数分数能够被选择多少次，排序最大的，从最大的开始计算，累乘
+        int n = nums.size();
+        return 1;
+    }
+
+
     public int miceAndCheese(int[] reward1, int[] reward2, int k) {
         int n = reward1.length;
         int[] diff = new int[n];
         int sum = 0;
 
-        for (int i = 0 ; i < n ; i++){
-            sum+= reward2[i];
+        for (int i = 0; i < n; i++) {
+            sum += reward2[i];
             diff[i] = reward1[i] - reward2[i];
         }
 
@@ -1817,8 +2043,8 @@ public class Solution {
 
         Arrays.sort(diff);
 
-        for (int i = 1 ; i <= k ; i++){
-            res += diff[n-i];
+        for (int i = 1; i <= k; i++) {
+            res += diff[n - i];
         }
 
         return res;
@@ -1826,21 +2052,21 @@ public class Solution {
 
     public ListNode removeZeroSumSublists(ListNode head) {
         int preSum = 0;
-        Map<Integer,ListNode> map = new HashMap<>();
+        Map<Integer, ListNode> map = new HashMap<>();
         ListNode dummy = new ListNode(0);
         dummy.next = head;
         ListNode node = dummy;
-        while (node != null){
+        while (node != null) {
             preSum += node.val;
-            map.put(preSum,node);
+            map.put(preSum, node);
             node = node.next;
         }
 
         preSum = 0;
         node = dummy;
 
-        while (node != null){
-            preSum+= node.val;
+        while (node != null) {
+            preSum += node.val;
             node.next = map.get(preSum).next;
             node = node.next;
         }
@@ -1848,8 +2074,91 @@ public class Solution {
         return dummy.next;
     }
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        solution.oddString(new String[]{"aaa", "bob", "ccc", "ddd"});
+
+    public String findReplaceString(String s, int[] indices, String[] sources, String[] targets) {
+        int n = s.length(), m = indices.length;
+        Map<Integer, List<Integer>> ops = new HashMap<>();
+        for (int i = 0; i < m; ++i) {
+            ops.putIfAbsent(indices[i], new ArrayList<>());
+            ops.get(indices[i]).add(i);
+        }
+
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < n; ) {
+            boolean success = false;
+            if (ops.containsKey(i)) {
+                for (int pt : ops.get(i)) {
+                    if (s.substring(i, Math.min(i + sources[pt].length(), n)).equals(sources[pt])) {
+                        success = true;
+                        ans.append(targets[pt]);
+                        i += sources[pt].length();
+                        break;
+                    }
+                }
+            }
+
+            if (!success) {
+                ans.append(s.charAt(i));
+                i++;
+            }
+        }
+
+        return ans.toString();
     }
+
+    public int numFactoredBinaryTrees(int[] arr) {
+        int mod = 1000000007;
+        long res = 0;
+
+        Arrays.sort(arr);
+        long[] dp = new long[arr.length];//存储每个位置有多少子数组
+
+        for (int i = 0; i < arr.length; i++) {
+            dp[i] = 1;
+            for (int left = 0, right = i - 1; left <= right; left++) {
+                while (right >= left && (long) arr[left] * arr[right] > arr[i]) {
+                    right--;
+                }
+
+                if (right >= left && (long) arr[left] * arr[right] == arr[i]) {
+                    if (left != right) {
+                        dp[i] = (dp[i] + (dp[left] * dp[right]) * 2) % mod;
+                    } else {
+                        dp[i] = (dp[i] + dp[left] * dp[right]) % mod;
+                    }
+                }
+            }
+
+            res = (res + dp[i]) % mod;
+        }
+
+        return (int) res;
+    }
+
+
+    public boolean checkValidGrid(int[][] grid) {
+        if(grid[0][0] != 0){
+            return false;
+        }
+
+        int n = grid.length;
+        int[][] indices = new int[n * n][2];
+
+        for (int i = 0 ; i < n ; i++){
+            for (int j = 0 ; j< n ; j++){
+                indices[grid[i][j]][0] = i;
+                indices[grid[i][j]][1] = j;
+            }
+        }
+
+        for (int i = 1; i < n * n; i++) {
+            int dx = Math.abs(indices[i][0] - indices[i - 1][0]);
+            int dy = Math.abs(indices[i][1] - indices[i - 1][1]);
+            if (dx * dy != 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
