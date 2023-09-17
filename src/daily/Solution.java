@@ -2161,4 +2161,81 @@ public class Solution {
         return true;
     }
 
+    public int giveGem(int[] gem, int[][] operations) {
+        for (int[] operation : operations) {
+            int x  = operation[0];
+            int y = operation[1];
+            int transfer = gem[x]/2;
+            gem[x] -= transfer;
+            gem[y] += transfer;
+        }
+        Arrays.sort(gem);
+
+        return gem[gem.length - 1] - gem[0];
+    }
+
+    public int rob(int[] nums) {
+        int[]dp = new int[nums.length];
+
+        dp[0] = nums[0];
+
+        dp[1] = Math.max(nums[0],nums[1]);
+
+        for (int i = 2 ; i < nums.length ; i++){
+           dp[i] = Math.max(dp[i-1] , dp[i-2] + nums[i]);
+        }
+
+        return dp[nums.length - 1];
+    }
+
+
+    public int rob2(int[] nums) {
+        int n = nums.length;
+        return Math.max(nums[0] + rob1(nums, 2, n - 1), rob1(nums, 1, n));
+    }
+
+    // 198. 打家劫舍
+    private int rob1(int[] nums, int start, int end) { // [start,end) 左闭右开
+        int f0 = 0, f1 = 0;
+        for (int i = start; i < end; ++i) {
+            int newF = Math.max(f1, f0 + nums[i]);
+            f0 = f1;
+            f1 = newF;
+        }
+        return f1;
+    }
+
+
+    public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
+        Map<Integer,int[]> candidates  = new HashMap<>();
+        int kx = king[0],ky = king[1];
+
+        for (int[] queen : queens) {
+            int qx = queen[0],qy = queen[1];
+            int x = qx - kx;
+            int y = qy - ky;
+            if (x == 0 || y == 0 || Math.abs(x) == Math.abs(y)){
+                int dx = sgn(x), dy = sgn(y);
+                int key = dx * 10 + dy;
+                if (!candidates.containsKey(key) || candidates.get(key)[2] > Math.abs(x) + Math.abs(y)) {
+                    candidates.put(key, new int[]{queen[0], queen[1], Math.abs(x) + Math.abs(y)});
+                }
+            }
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+        for (Map.Entry<Integer, int[]> entry : candidates.entrySet()) {
+            int[] value = entry.getValue();
+            List<Integer> posList = new ArrayList<>();
+            posList.add(value[0]);
+            posList.add(value[1]);
+            ans.add(posList);
+        }
+        return ans;
+    }
+
+    public int sgn(int x) {
+        return x > 0 ? 1 : (x == 0 ? 0 : -1);
+    }
+
 }
