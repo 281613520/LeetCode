@@ -2104,6 +2104,7 @@ public class Solution {
         }
 
         return ans.toString();
+    }
     public int unequalTriplets(int[] nums) {
         int count = 0;
         int n = nums.length;
@@ -2170,11 +2171,6 @@ public class Solution {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        solution.oddString(new String[]{"aaa", "bob", "ccc", "ddd"});
     }
 
     public int numFactoredBinaryTrees(int[] arr) {
@@ -2308,5 +2304,37 @@ public class Solution {
     public int sgn(int x) {
         return x > 0 ? 1 : (x == 0 ? 0 : -1);
     }
+
+    public int minCount(int[] coins) {
+        int ans = 0;
+        for (int coin : coins) {
+            ans += coin /2 + coin%2;
+        }
+
+        return ans;
+    }
+
+    public int distMoney(int money, int children) {
+        if (money < children){
+            return -1;
+        }
+
+        money -= children;
+        int cnt = Math.min(money/7,children);
+        money -= cnt * 7;
+        children -= cnt;
+
+        if (money >0 && children == 0){
+            cnt--;
+        }
+
+        if (cnt == 1 && money == 3){
+            cnt--;
+        }
+
+        return cnt;
+    }
+
+
 
 }

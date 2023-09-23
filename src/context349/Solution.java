@@ -1,11 +1,6 @@
 package context349;
 
-import context.week5.UndergroundSystem;
-
-import javax.print.attribute.standard.RequestingUserName;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Solution {
     public int findNonMinOrMax(int[] nums) {
@@ -78,8 +73,5 @@ public class Solution {
 
     }
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        solution.minCost(new int[]{20,1,5},5);
-    }
+
 }
