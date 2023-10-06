@@ -1703,7 +1703,7 @@ public class Solution {
             cnt += count[i];
         }
 
-        median = median/2.0;
+        median = median / 2.0;
         mean = (double) sum / total;
 
 
@@ -1728,17 +1728,17 @@ public class Solution {
         set.add('o');
         set.add('u');
 
-        int[] preSum = new int[words.length+1];
-        for (int i = 0 ; i < words.length ; i++){
+        int[] preSum = new int[words.length + 1];
+        for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length()-1))){
-                if (i == 0){
-                    preSum[i+1] = 1;
-                }else {
-                    preSum[i+1] = preSum[i]+1;
+            if (set.contains(word.charAt(0)) && set.contains(word.charAt(word.length() - 1))) {
+                if (i == 0) {
+                    preSum[i + 1] = 1;
+                } else {
+                    preSum[i + 1] = preSum[i] + 1;
                 }
-            }else {
-                preSum[i+1] = preSum[i];
+            } else {
+                preSum[i + 1] = preSum[i];
             }
 
         }
@@ -1746,26 +1746,26 @@ public class Solution {
 
         int[] ans = new int[queries.length];
 
-        for (int i = 0 ; i < queries.length ; i++){
+        for (int i = 0; i < queries.length; i++) {
             int[] thisQuery = queries[i];
-            ans[i] = preSum[thisQuery[1]+1] - preSum[thisQuery[0]];
+            ans[i] = preSum[thisQuery[1] + 1] - preSum[thisQuery[0]];
         }
 
         return ans;
     }
 
     public int[] applyOperations(int[] nums) {
-        for (int i = 1 ; i < nums.length ; i++){
-            if (nums[i-1] == nums[i]){
-                nums[i-1] = nums[i-1]*2;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i - 1] == nums[i]) {
+                nums[i - 1] = nums[i - 1] * 2;
                 nums[i] = 0;
             }
         }
 
         int[] res = new int[nums.length];
 
-        for (int i = 0 , j = 0 ; i < nums.length ; i++){
-            if (nums[i] != 0){
+        for (int i = 0, j = 0; i < nums.length; i++) {
+            if (nums[i] != 0) {
                 res[j] = nums[i];
                 j++;
             }
@@ -1779,9 +1779,9 @@ public class Solution {
         int res = 0;
         int n = grid.length;
 
-        for(int i = 0 ; i < n ; i++){
-            for (int j = 0 ; j < n ; j++){
-                if (matrixEqual(i,j,grid)){
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrixEqual(i, j, grid)) {
                     res++;
                 }
             }
@@ -2105,6 +2105,7 @@ public class Solution {
 
         return ans.toString();
     }
+
     public int unequalTriplets(int[] nums) {
         int count = 0;
         int n = nums.length;
@@ -2133,9 +2134,9 @@ public class Solution {
         int a = 0;
         int b = nums.length;
         int ans = 0;
-        for (Map.Entry<Integer,Integer> entry : map.entrySet()){
-            ans += entry.getValue() * a * (b-a-entry.getValue());
-            a+=entry.getValue();
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            ans += entry.getValue() * a * (b - a - entry.getValue());
+            a += entry.getValue();
         }
 
         return ans;
@@ -2147,24 +2148,24 @@ public class Solution {
         int ten = 0;
         int n = bills.length;
 
-        for (int i = 0 ; i < bills.length;i++){
+        for (int i = 0; i < bills.length; i++) {
             int cur = bills[i];
-            if (cur == 5){
-                five ++;
-            }else if (cur == 10){
-                if (five == 0){
+            if (cur == 5) {
+                five++;
+            } else if (cur == 10) {
+                if (five == 0) {
                     return false;
                 }
 
                 ten++;
                 five--;
-            }else {
-                if (ten>0 && five > 0){
+            } else {
+                if (ten > 0 && five > 0) {
                     ten--;
                     five--;
-                }else if (five >= 3){
+                } else if (five >= 3) {
                     five -= 3;
-                }else {
+                } else {
                     return false;
                 }
             }
@@ -2204,15 +2205,15 @@ public class Solution {
 
 
     public boolean checkValidGrid(int[][] grid) {
-        if(grid[0][0] != 0){
+        if (grid[0][0] != 0) {
             return false;
         }
 
         int n = grid.length;
         int[][] indices = new int[n * n][2];
 
-        for (int i = 0 ; i < n ; i++){
-            for (int j = 0 ; j< n ; j++){
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 indices[grid[i][j]][0] = i;
                 indices[grid[i][j]][1] = j;
             }
@@ -2230,9 +2231,9 @@ public class Solution {
 
     public int giveGem(int[] gem, int[][] operations) {
         for (int[] operation : operations) {
-            int x  = operation[0];
+            int x = operation[0];
             int y = operation[1];
-            int transfer = gem[x]/2;
+            int transfer = gem[x] / 2;
             gem[x] -= transfer;
             gem[y] += transfer;
         }
@@ -2242,14 +2243,14 @@ public class Solution {
     }
 
     public int rob(int[] nums) {
-        int[]dp = new int[nums.length];
+        int[] dp = new int[nums.length];
 
         dp[0] = nums[0];
 
-        dp[1] = Math.max(nums[0],nums[1]);
+        dp[1] = Math.max(nums[0], nums[1]);
 
-        for (int i = 2 ; i < nums.length ; i++){
-           dp[i] = Math.max(dp[i-1] , dp[i-2] + nums[i]);
+        for (int i = 2; i < nums.length; i++) {
+            dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i]);
         }
 
         return dp[nums.length - 1];
@@ -2274,14 +2275,14 @@ public class Solution {
 
 
     public List<List<Integer>> queensAttacktheKing(int[][] queens, int[] king) {
-        Map<Integer,int[]> candidates  = new HashMap<>();
-        int kx = king[0],ky = king[1];
+        Map<Integer, int[]> candidates = new HashMap<>();
+        int kx = king[0], ky = king[1];
 
         for (int[] queen : queens) {
-            int qx = queen[0],qy = queen[1];
+            int qx = queen[0], qy = queen[1];
             int x = qx - kx;
             int y = qy - ky;
-            if (x == 0 || y == 0 || Math.abs(x) == Math.abs(y)){
+            if (x == 0 || y == 0 || Math.abs(x) == Math.abs(y)) {
                 int dx = sgn(x), dy = sgn(y);
                 int key = dx * 10 + dy;
                 if (!candidates.containsKey(key) || candidates.get(key)[2] > Math.abs(x) + Math.abs(y)) {
@@ -2308,33 +2309,139 @@ public class Solution {
     public int minCount(int[] coins) {
         int ans = 0;
         for (int coin : coins) {
-            ans += coin /2 + coin%2;
+            ans += coin / 2 + coin % 2;
         }
 
         return ans;
     }
 
     public int distMoney(int money, int children) {
-        if (money < children){
+        if (money < children) {
             return -1;
         }
 
         money -= children;
-        int cnt = Math.min(money/7,children);
+        int cnt = Math.min(money / 7, children);
         money -= cnt * 7;
         children -= cnt;
 
-        if (money >0 && children == 0){
+        if (money > 0 && children == 0) {
             cnt--;
         }
 
-        if (cnt == 1 && money == 3){
+        if (cnt == 1 && money == 3) {
             cnt--;
         }
 
         return cnt;
     }
 
+    public int maxProfit(int[] prices, int fee) {
+        int n = prices.length;
+        int[][] dp = new int[prices.length][2];
+        dp[0][0] = 0;
+        dp[0][1] = -prices[0];
+
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i] - fee);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] - prices[i]);
+        }
+
+        return Math.max(dp[n - 1][0], dp[n - 1][1]);
+    }
+
+
+    public int maxProfit3(int[] prices) {
+        int[][] dp = new int[2 + 2][2];
+
+        for (int i = 0; i <= 2 + 1; i++) {
+            dp[i][1] = Integer.MIN_VALUE;
+        }
+        dp[0][0] = Integer.MIN_VALUE / 2;
+
+        for (int price : prices) {
+            for (int j = 2 +1; j > 0; j--) {
+                dp[j][0] = Math.max(dp[j][0], dp[j][1] + price);
+                dp[j][1] = Math.max(dp[j][1], dp[j - 1][0] - price);
+            }
+        }
+        return dp[2 +1][0];
+
+    }
+
+    public int maxProfit4(int k, int[] prices) {
+        /*int n = prices.length;
+
+        int[][][] dp = new int[n][k+1][2];
+
+        dp[0][0][0] = 0;
+        dp[0][0][1] = -prices[0];
+        dp[0][1][0] = 0;
+
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= k; j++) {
+                dp[i][j][0] = Math.max(dp[i-1][j][0], dp[i-1][j][1] + prices[i]);
+                dp[i][j][1] = Math.max(dp[i-1][j][1], dp[i-1][j - 1][0] - prices[i]);
+            }
+        }
+        return dp[n-1][k][0];*/
+
+        // 注意边界值，直接多给一位能省很多事情 一般初始化很麻烦
+        int n = prices.length;
+        int[][] dp = new int[k + 1][2];
+
+        for (int i = 0; i <= k; i++) {
+            dp[i][1] = Integer.MIN_VALUE;
+        }
+        dp[0][0] = Integer.MIN_VALUE / 2;
+
+        for (int price : prices) {
+            for (int j = k; j >= 0; j--) {
+                dp[j][0] = Math.max(dp[j][0], dp[j][1] + price);
+                dp[j][1] = Math.max(dp[j][1], dp[j - 1][0] - price);
+            }
+        }
+        return dp[k][0];
+    }
+
+
+    public int maxProfit300(int[] prices) {
+        /*int n = prices.length;
+        int[][] dp = new int[prices.length][3];
+        dp[0][0] = 0; // 没有股票
+        dp[0][1] = -prices[0]; // 有股票
+        dp[0][2] = 0; // 冷冻期
+
+        for (int i = 1; i < n; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][1] + prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][2] - prices[i]);
+            dp[i][2] = Math.max(dp[i - 1][0], dp[i - 1][2]);
+        }
+
+        return Math.max(dp[n - 1][0], dp[n - 1][2]);*/
+
+        int n = prices.length;
+        int f0 = 0;
+        int f1 = -prices[0];
+        int f2 = 0;
+
+        for (int price : prices) {
+           int newf0 = Math.max(f0,f1 + price);
+           int newf1 = Math.max(f1,f2 - price);
+           int newf2 = Math.max(f0,f2);
+           f0 = newf0;
+           f1 = newf1;
+           f2 = newf2;
+        }
+
+        return Math.max(f0,f2);
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        solution.maxProfit4(2, new int[]{2, 4, 1});
+    }
 
 
 }
