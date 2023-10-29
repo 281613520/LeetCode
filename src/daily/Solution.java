@@ -2438,6 +2438,42 @@ public class Solution {
         return Math.max(f0,f2);
     }
 
+
+    public long maxKelements(int[] nums, int k) {
+        PriorityQueue<Integer> q = new PriorityQueue<Integer>((a, b) -> b - a);
+        for (int num : nums) {
+            q.offer(num);
+        }
+        long ans = 0;
+        for (int i = 0; i < k; ++i) {
+            int x = q.poll();
+            ans += x;
+            q.offer((x + 2) / 3);
+        }
+        return ans;
+    }
+
+
+    public int tupleSameProduct(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<>();
+
+        for (int i = 0 ; i < nums.length ; i++) {
+            for (int j = i+1 ; j < nums.length ; j++){
+                map.put(nums[i] * nums[j],map.getOrDefault(nums[i] * nums[j] , 0)+1);
+            }
+        }
+
+        int res = 0;
+
+        for (Integer v : map.values()) {
+            res += v *(v-1) * 4;
+        }
+
+
+        return res;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.maxProfit4(2, new int[]{2, 4, 1});
