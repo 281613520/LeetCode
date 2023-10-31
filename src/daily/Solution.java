@@ -2490,9 +2490,75 @@ public class Solution {
         return f[n][target];
     }
 
+
+    public int[] smallestMissingValueSubtree(int[] parents, int[] nums) {
+
+
+        // 找子数组 然后找对应的数字  缺失情况
+        // 1.能够快速找到节点种类
+        // 2.能够快速计算出缺了哪个
+        // 从根节点向下搜索
+
+        int n = parents.length;
+        List<Integer>[] children = new List[n];
+
+        for (int i = 0; i < n; i++) {
+            children[i] = new ArrayList<>();
+        }
+
+
+        for (int i = 1 ; i < n ; i++){
+            children[parents[i]].add(i);
+        }
+
+        int[] res = new int[n];
+
+        Arrays.fill(res,1);
+
+        Set<Integer> geneSet = new HashSet<>();
+        boolean[] visited = new boolean[n];
+
+
+        int ans = 1;
+        int node = -1;
+
+        for (int i = 0 ; i < n ; i++){
+            if (nums[i] == 1){
+                node = i;
+                break;
+            }
+        }
+
+
+        while (node != -1){
+            dfs2003(node,nums,children,geneSet,visited);
+
+            while (geneSet.contains(ans)){
+                ans++;
+            }
+            res[node] = ans;
+            node = parents[node];
+        }
+
+        return res;
+    }
+
+    private void dfs2003(int node, int[] nums, List<Integer>[] children, Set<Integer> geneSet, boolean[] visited) {
+        if (visited[node]){
+            return;
+        }
+
+        visited[node] = true;
+
+        geneSet.add(nums[node]);
+        for (int child : children[node]){
+            dfs2003(child,nums,children,geneSet,visited);
+        }
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.maxProfit4(2, new int[]{2, 4, 1});
+        solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
     }
 
 
