@@ -2556,6 +2556,29 @@ public class Solution {
         }
     }
 
+    public int countPoints(String rings) {
+        Set<Character>[] sets = new Set[10];
+        for (int i = 0 ; i < 10 ; i++){
+            sets[i] = new HashSet<>();
+        }
+        for (int i = 0 ; i < rings.length();i+=2){
+            Character color = rings.charAt(i);
+            Character index = rings.charAt(i+1);
+            sets[index-'0'].add(color);
+        }
+
+        int res = 0;
+
+        for (int i = 0 ; i < 10 ; i++){
+            if (sets[i].size() ==3){
+                res++;
+            }
+        }
+
+        return res;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
