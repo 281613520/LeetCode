@@ -2,6 +2,7 @@ package daily;
 
 
 import contest316.ListNode;
+import context.week5.UndergroundSystem;
 import math.TreeNode;
 
 import java.util.*;
@@ -2577,6 +2578,79 @@ public class Solution {
 
         return res;
 
+    }
+
+
+
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+
+
+    public Node connect(Node root) {
+        if (root == null) {
+            return null;
+        }
+        Queue<Node> queue = new ArrayDeque<Node>();
+        queue.offer(root);
+        while (!queue.isEmpty()){
+            int n = queue.size();
+            Node last = null;
+
+            for (int i = 0 ; i < n ; i++){
+                Node f = queue.poll();
+                if (f.left != null){
+                    queue.offer(f.left);
+                }
+                if (f.right != null){
+                    queue.offer(f.right);
+                }
+
+                if (i != 0){
+                    last.next = f;
+                }
+                last = f;
+            }
+        }
+
+        return root;
+    }
+
+
+    public List<String> findRepeatedDnaSequences(String s) {
+        List<String> ans = new ArrayList<>();
+
+        if (s.length() < 10){
+            return ans;
+        }
+
+        Map<String, Integer> map = new HashMap<>();
+
+        for (int i =10 ; i <= s.length() ; i++){
+            String tmp = s.substring(i-10,i);
+            map.put(tmp,map.getOrDefault(tmp,0) +1);
+            if (map.get(tmp) == 2){
+                ans.add(tmp);
+            }
+        }
+        return ans;
     }
 
     public static void main(String[] args) {
