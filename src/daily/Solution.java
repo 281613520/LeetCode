@@ -2579,6 +2579,31 @@ public class Solution {
 
     }
 
+
+    public int maxProduct(String[] words) {
+        int[] word2int = new int[words.length];
+
+        for (int i = 0 ; i < words.length;i++){
+            String word = words[i];
+            for (int j = 0 ; j < word.length() ; j++){
+                word2int[i] |= 1 <<(word.charAt(j) -'a');
+            }
+        }
+
+        int ans = 0;
+
+        for (int i = 0 ; i < words.length ; i++){
+            for (int j = i+1 ; j < words.length;j++){
+                if ((word2int[i] & word2int[j]) == 0){
+                    ans = Math.max(ans,words[i].length() * words[j].length());
+                }
+            }
+        }
+
+        return ans;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
