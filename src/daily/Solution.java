@@ -2360,12 +2360,12 @@ public class Solution {
         dp[0][0] = Integer.MIN_VALUE / 2;
 
         for (int price : prices) {
-            for (int j = 2 +1; j > 0; j--) {
+            for (int j = 2 + 1; j > 0; j--) {
                 dp[j][0] = Math.max(dp[j][0], dp[j][1] + price);
                 dp[j][1] = Math.max(dp[j][1], dp[j - 1][0] - price);
             }
         }
-        return dp[2 +1][0];
+        return dp[2 + 1][0];
 
     }
 
@@ -2427,15 +2427,15 @@ public class Solution {
         int f2 = 0;
 
         for (int price : prices) {
-           int newf0 = Math.max(f0,f1 + price);
-           int newf1 = Math.max(f1,f2 - price);
-           int newf2 = Math.max(f0,f2);
-           f0 = newf0;
-           f1 = newf1;
-           f2 = newf2;
+            int newf0 = Math.max(f0, f1 + price);
+            int newf1 = Math.max(f1, f2 - price);
+            int newf2 = Math.max(f0, f2);
+            f0 = newf0;
+            f1 = newf1;
+            f2 = newf2;
         }
 
-        return Math.max(f0,f2);
+        return Math.max(f0, f2);
     }
 
 
@@ -2455,18 +2455,18 @@ public class Solution {
 
 
     public int tupleSameProduct(int[] nums) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
 
-        for (int i = 0 ; i < nums.length ; i++) {
-            for (int j = i+1 ; j < nums.length ; j++){
-                map.put(nums[i] * nums[j],map.getOrDefault(nums[i] * nums[j] , 0)+1);
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                map.put(nums[i] * nums[j], map.getOrDefault(nums[i] * nums[j], 0) + 1);
             }
         }
 
         int res = 0;
 
         for (Integer v : map.values()) {
-            res += v *(v-1) * 4;
+            res += v * (v - 1) * 4;
         }
 
 
@@ -2475,6 +2475,7 @@ public class Solution {
     }
 
     static final int MOD_2 = 1000000007;
+
     public int numRollsToTarget(int n, int k, int target) {
         int[][] f = new int[n + 1][target + 1];
         f[0][0] = 1;
@@ -2507,13 +2508,13 @@ public class Solution {
         }
 
 
-        for (int i = 1 ; i < n ; i++){
+        for (int i = 1; i < n; i++) {
             children[parents[i]].add(i);
         }
 
         int[] res = new int[n];
 
-        Arrays.fill(res,1);
+        Arrays.fill(res, 1);
 
         Set<Integer> geneSet = new HashSet<>();
         boolean[] visited = new boolean[n];
@@ -2522,18 +2523,18 @@ public class Solution {
         int ans = 1;
         int node = -1;
 
-        for (int i = 0 ; i < n ; i++){
-            if (nums[i] == 1){
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 1) {
                 node = i;
                 break;
             }
         }
 
 
-        while (node != -1){
-            dfs2003(node,nums,children,geneSet,visited);
+        while (node != -1) {
+            dfs2003(node, nums, children, geneSet, visited);
 
-            while (geneSet.contains(ans)){
+            while (geneSet.contains(ans)) {
                 ans++;
             }
             res[node] = ans;
@@ -2544,33 +2545,33 @@ public class Solution {
     }
 
     private void dfs2003(int node, int[] nums, List<Integer>[] children, Set<Integer> geneSet, boolean[] visited) {
-        if (visited[node]){
+        if (visited[node]) {
             return;
         }
 
         visited[node] = true;
 
         geneSet.add(nums[node]);
-        for (int child : children[node]){
-            dfs2003(child,nums,children,geneSet,visited);
+        for (int child : children[node]) {
+            dfs2003(child, nums, children, geneSet, visited);
         }
     }
 
     public int countPoints(String rings) {
         Set<Character>[] sets = new Set[10];
-        for (int i = 0 ; i < 10 ; i++){
+        for (int i = 0; i < 10; i++) {
             sets[i] = new HashSet<>();
         }
-        for (int i = 0 ; i < rings.length();i+=2){
+        for (int i = 0; i < rings.length(); i += 2) {
             Character color = rings.charAt(i);
-            Character index = rings.charAt(i+1);
-            sets[index-'0'].add(color);
+            Character index = rings.charAt(i + 1);
+            sets[index - '0'].add(color);
         }
 
         int res = 0;
 
-        for (int i = 0 ; i < 10 ; i++){
-            if (sets[i].size() ==3){
+        for (int i = 0; i < 10; i++) {
+            if (sets[i].size() == 3) {
                 res++;
             }
         }
@@ -2583,19 +2584,19 @@ public class Solution {
     public int maxProduct(String[] words) {
         int[] word2int = new int[words.length];
 
-        for (int i = 0 ; i < words.length;i++){
+        for (int i = 0; i < words.length; i++) {
             String word = words[i];
-            for (int j = 0 ; j < word.length() ; j++){
-                word2int[i] |= 1 <<(word.charAt(j) -'a');
+            for (int j = 0; j < word.length(); j++) {
+                word2int[i] |= 1 << (word.charAt(j) - 'a');
             }
         }
 
         int ans = 0;
 
-        for (int i = 0 ; i < words.length ; i++){
-            for (int j = i+1 ; j < words.length;j++){
-                if ((word2int[i] & word2int[j]) == 0){
-                    ans = Math.max(ans,words[i].length() * words[j].length());
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if ((word2int[i] & word2int[j]) == 0) {
+                    ans = Math.max(ans, words[i].length() * words[j].length());
                 }
             }
         }
@@ -2604,9 +2605,36 @@ public class Solution {
 
     }
 
+
+    public int findTheLongestBalancedSubstring(String s) {
+        int ans = 0;
+        int count0 = 0;
+        int count1 = 0;
+        int n = s.length();
+
+        for (int i = 0; i < n; i++) {
+            int cur = s.charAt(i) - '0';
+
+            if (cur == 0) {
+                if (count1 == 0) {
+                    count0++;
+                } else {
+                    count1 = 0;
+                    count0 = 1;
+                }
+            } else if (cur == 1) {
+                count1++;
+                ans = Math.max(ans, Math.min(count0, count1) * 2);
+            }
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
+        //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
+        solution.findTheLongestBalancedSubstring("01000111");
     }
 
 
