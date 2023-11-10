@@ -2631,11 +2631,83 @@ public class Solution {
         return ans;
     }
 
+
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        Arrays.sort(potions);
+        TreeMap<Long,Integer> set = new TreeMap<>();
+
+        int n = potions.length;
+
+        for (int i = 0 ; i < potions.length ; i++){
+            long key = potions[i];
+            if (!set.containsKey(key)){
+                set.put(key,i);
+            }
+        }
+
+        int[] ans = new int[spells.length];
+
+        for (int i = 0 ; i < spells.length ; i++){
+           long t = (long)Math.ceil((double) success / (double)spells[i]) ;
+           Long m = set.ceilingKey(t);
+           if (m == null){
+               ans[i] = 0;
+               continue;
+           }
+           int location = set.get(m);
+           ans[i] = n - location;
+        }
+
+        return ans;
+
+    }
+
+
+
+
+
+    public int[] successfulPairs2(int[] spells, int[] potions, long success) {
+        Arrays.sort(potions);
+        int[] ans = new int[spells.length];
+
+        for (int i = 0 ; i < spells.length ; i++){
+            int cur = spells[i];
+
+            int location = binarySearch2300(success,potions,cur);
+
+            ans[i] = potions.length - location;
+        }
+
+        return ans;
+    }
+
+    //最左边
+    private int binarySearch2300(long success, int[] potions, int cur) {
+        int ans = potions.length;
+        int l = 0;
+        int h = potions.length-1 ;
+        while ( l <= h){
+            int mid = l + (h - l)/2;
+            int target = potions[mid];
+            if ((long)target * cur >= success){
+                ans = mid;
+                h = mid-1;
+            }else {
+                l = mid +1;
+            }
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
-        solution.findTheLongestBalancedSubstring("01000111");
+        //solution.findTheLongestBalancedSubstring("01000111");
+        solution.successfulPairs(new int[]{3,1,2},new int[]{8,5,8},16);
     }
 
+
+    
 
 }
