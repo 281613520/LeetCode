@@ -1,6 +1,7 @@
 package daily;
 
 
+import banzi.UnionFind;
 import contest316.ListNode;
 import math.TreeNode;
 
@@ -2698,6 +2699,20 @@ public class Solution {
         }
 
         return ans;
+    }
+
+
+    public int minSwapsCouples(int[] row) {
+         int len = row.length;
+         int N = len/2;
+
+        UnionFind unionFind = new UnionFind(N);
+
+        for (int i= 0 ; i < len ; i+=2){
+            unionFind.union(row[i] / 2, row[i + 1] / 2);
+        }
+
+        return N - unionFind.getCount();
     }
 
     public static void main(String[] args) {
