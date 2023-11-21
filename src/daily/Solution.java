@@ -5,6 +5,7 @@ import banzi.UnionFind;
 import contest316.ListNode;
 import math.TreeNode;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Solution {
@@ -2713,6 +2714,134 @@ public class Solution {
         }
 
         return N - unionFind.getCount();
+    }
+
+
+    public int maximumSum(int[] nums) {
+        Map<Integer,Integer> cnt = new HashMap<>();
+        int res = 0;
+
+        for (int i = 0 ; i < nums.length ; i++){
+            int cur = nums[i];
+            int s = 0;
+            while (cur > 0){
+                s += cur%10;
+                cur /= 10;
+            }
+
+            if (cnt.containsKey(s)){
+                res = Math.max(res,cnt.get(s) + nums[i]);
+            }
+            cnt.put(s,Math.max(nums[i],cnt.getOrDefault(s,0)));
+        }
+        return res;
+    }
+
+
+    public int[] maxSumOfThreeSubarrays1(int[] nums, int k) {
+        int sum1 = 0, maxSum1 = 0, maxSum1Idx = 0;
+        int sum2 = 0, maxSum12 = 0, maxSum12Idx1 = 0, maxSum12Idx2 = 0;
+        int sum3 = 0, maxTotal = 0;
+
+        int[] ans = new int[3];
+
+        for (int i = 2*k ;  i < nums.length ; i++){
+            sum1 += nums[i - 2*k];
+            sum2 += nums[i-k];
+            sum3 += nums[i];
+
+            if (i >= k*3 - 1){
+                if (sum1 > maxSum1){
+                    maxSum1 = sum1;
+                    maxSum1Idx = i - 3 * k +1;
+                }
+                if (maxSum1 + sum2 > maxSum12){
+                    maxSum12 = maxSum1 + sum2;
+                    maxSum12Idx1 = maxSum1Idx;
+                    maxSum12Idx2 = i - 2*k +1;
+                }
+
+                if (maxSum12 + sum3 > maxTotal){
+                    maxTotal = sum3 + maxSum12;
+                    ans[0] = maxSum12Idx1;
+                    ans[1] = maxSum12Idx2;
+                    ans[2] = i - k + 1;;
+                }
+                sum1-= nums[i-3*k+1];
+                sum2-= nums[i-2*k+1];
+                sum3-= nums[i-k+1];
+            }
+
+        }
+
+        return ans;
+    }
+
+    public int[] maxSumOfThreeSubarrays2(int[] nums, int k) {
+        int n = nums.length;
+        long[][] dp = new long[n+1][4];
+        long[] sum = new long[n+1];
+        for (int i = 1 ; i <= n ; i++ ){
+            sum[i] = sum[i-1] + nums[i];
+        }
+
+        for (int i = n-k +1 ; i >= 0 ;i--){
+            for (int j = 1 ; j < 4 ; j++){
+                dp[i][j] = Math.max(dp[i+1][j],dp[i+k][j-1] + sum[i+k-1] - sum[i-1]);
+            }
+        }
+
+        int[] ans = new int[3];
+        int i = 1, j = 3, idx = 0;
+        //倒过来找
+        while (j > 0) {
+            if (dp[i + 1][j] > dp[i + k][j - 1] + sum[i + k - 1] - sum[i - 1]) {
+                //没找到重叠的 就往后挪动
+                i++;
+            } else {
+                // 找到一个不重叠的 就记录下来 同时向后跳k个 且j-- 表示已找到一个了
+                ans[idx++] = i - 1;
+                i += k; j--;
+            }
+        }
+        return ans;
+    }
+
+    public int maxSubArray(int[] nums) {
+        int ans = Integer.MIN_VALUE;
+        int tmp = 0;
+        for (int i = 0 ; i < nums.length ; i++){
+            int cur = tmp + nums[i];
+            tmp = Math.max(cur,nums[i]);
+            ans = Math.max(ans,tmp);
+        }
+        return ans;
+    }
+
+    public int maxSubArray2(int[] nums) {
+        int n = nums.length;
+       int[] dp = new int[n];
+       dp[0] = nums[0];
+
+       for (int i = 1 ; i < n ; i++){
+           dp[i] = Math.max(nums[i],dp[i-1]+nums[i]);
+       }
+
+       int ans = Integer.MIN_VALUE;
+
+       for (int i = 0 ; i < n ; i++){
+           ans = Math.max(ans,dp[i]);
+       }
+       return ans;
+    }
+
+
+    public int minDeletion(int[] nums) {
+        int ans = 0;
+
+
+
+        return ans;
     }
 
     public static void main(String[] args) {
