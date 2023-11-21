@@ -2838,10 +2838,100 @@ public class Solution {
 
     public int minDeletion(int[] nums) {
         int ans = 0;
+        int n = nums.length;
 
+        for (int i = 0 ; i < n-1 ; i++){
+            //当前是否为偶数
+            if ((i-ans) % 2 == 0){
+                // 判断是不是不满足条件，不满足就ans++
+                if (nums[i] == nums[i+1]){
+                    ans++;
+                }
+            }
+        }
 
-
+        if ((n-ans) % 2 != 0){
+            ans++;
+        }
         return ans;
+    }
+
+    public int maxEnvelopes(int[][] envelopes) {
+        if (envelopes.length == 0){
+            return 0;
+        }
+        int n = envelopes.length;
+        Arrays.sort(envelopes, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] e1, int[] e2) {
+                if (e1[0] != e2[0]) {
+                    return e1[0] - e2[0];
+                } else {
+                    return e2[1] - e1[1];
+                }
+            }
+        });
+
+
+        // dp
+        // 以i为结尾的信封 最长的套娃是
+        //int[] dp = new int[n]; yidingchaoshi
+        // 考虑f【j】 长度为j的子序列中，的最小值
+        // 这样遇到比他大的 就能直接接在后面
+        // 遇到 比最后一个小的 就二分找前面的  找到恰好 f【i】< h <= f[i+1]的值，并更新掉i+1
+        List<Integer> f = new ArrayList<>();
+        f.add(envelopes[0][1]);
+        for (int i = 1; i < n ; i++){
+            int num = envelopes[i][1];
+            if (num > f.get(f.size()-1)){
+                f.add(envelopes[i][1]);
+            }else {
+                int index = bs(f,num);
+                f.set(index,num);
+            }
+        }
+
+        return f.size();
+    }
+
+    private int bs(List<Integer> f, int num) {
+        int l = 0 ;
+        int r = f.size()- 1;
+
+        while ( l < r){
+            int mid = (r-l)/2+l;
+            if (f.get(mid) < num){
+                l = mid +1;
+            }else {
+                r = mid;
+            }
+        }
+
+        return l;
+    }
+
+    // dp + 二分
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0){
+            return 0;
+        }
+        int n = nums.length;
+
+        List<Integer> dp = new ArrayList<>();
+
+        dp.add(nums[0]);
+
+        for (int i = 1; i < n ; i++){
+            int num = nums[i];
+            if (num > dp.get(dp.size()-1)){
+                dp.add(num);
+            }else {
+                int index = bs(dp,num);
+                dp.set(index,num);
+            }
+        }
+        return dp.size();
+
     }
 
     public static void main(String[] args) {
