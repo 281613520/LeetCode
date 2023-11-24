@@ -2966,6 +2966,39 @@ public class Solution {
         return ans;
     }
 
+
+    public String entityParser(String text) {
+        Map<String, String> map = new HashMap<>(){{
+            put("&quot;", "\"");
+            put("&apos;", "'");
+            put("&amp;", "&");
+            put("&gt;", ">");
+            put("&lt;", "<");
+            put("&frasl;", "/");
+        }};
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0 ; i < text.length() ;i++){
+            char cur = text.charAt(i);
+            if (cur == '&'){
+                int j = i + 1;
+                while (j < text.length() && j - i < 6 && text.charAt(j) != ';') j++;
+                String sub = text.substring(i, Math.min(j + 1, text.length()));
+                if (map.containsKey(sub)) {
+                    sb.append(map.get(sub));
+                    i = j;
+                }else {
+                    sb.append(cur);
+                }
+            }else {
+                sb.append(cur);
+            }
+        }
+
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
