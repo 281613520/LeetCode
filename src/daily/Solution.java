@@ -2999,6 +2999,39 @@ public class Solution {
         return sb.toString();
     }
 
+
+    public int pseudoPalindromicPaths (TreeNode root) {
+        int[] count = new int[10];
+        return dfs1457(root,count);
+    }
+
+    private int dfs1457(TreeNode root, int[] count) {
+        if (root == null){
+            return 0;
+        }
+        count[root.val]++;
+        int res = 0;
+        if (root.left == null && root.right == null){
+            if (isPseudoPalindrome(count)) {
+                res = 1;
+            }else{
+                res = dfs1457(root.left,count) +dfs1457(root.right,count);
+            }
+        }
+        count[root.val]--;
+        return res;
+    }
+
+    private boolean isPseudoPalindrome(int[] count) {
+        int odd = 0;
+        for (int value : count) {
+            if (value % 2 == 1) {
+                odd++;
+            }
+        }
+        return odd <= 1;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
