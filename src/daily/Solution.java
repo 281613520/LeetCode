@@ -3032,6 +3032,58 @@ public class Solution {
         return odd <= 1;
     }
 
+
+    public int uniqueLetterString(String s) {
+        int ans = 0;
+        int n = s.length();
+
+        for (int i = 0 ; i < n ; i++){
+            int l = i;
+            int r = i;
+            while (l >0 && s.charAt(l-1) != s.charAt(i)) l--;
+            while (r < n-1 && s.charAt(r+1) != s.charAt(i)) r++;
+            ans += (i - l +1) * (r-i+1);
+        }
+        return ans;
+    }
+
+
+    public boolean closeStrings(String word1, String word2) {
+           if (word1.length() != word2.length()){
+               return false;
+           }
+
+            int[] count1 = new int[26], count2 = new int[26];
+            for (char c : word1.toCharArray()) {
+                count1[c - 'a']++;
+            }
+            for (char c : word2.toCharArray()) {
+                count2[c - 'a']++;
+            }
+
+
+            for (int i = 0 ; i < 26 ; i++){
+                if ((count1[i] == 0 && count2[i] > 0) || (count1[i] > 0 && count2[i] == 0)){
+                    return false;
+                }
+            }
+
+
+
+            Arrays.sort(count1);
+            Arrays.sort(count2);
+
+
+            for (int i = 0 ; i < 26 ; i++){
+                if (count1[i] != count2[i]){
+                    return false;
+                }
+            }
+
+            return true;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
