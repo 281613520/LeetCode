@@ -3084,6 +3084,86 @@ public class Solution {
 
     }
 
+
+    public int minReorder(int n, int[][] connections) {
+        List<int[]>[] e = new List[n];
+        for (int i = 0; i < n; i++) {
+            e[i] = new ArrayList<int[]>();
+        }
+        for (int[] edge : connections) {
+            e[edge[0]].add(new int[]{edge[1], 1});
+            e[edge[1]].add(new int[]{edge[0], 0});
+        }
+        return dfs1466(0, -1, e);
+    }
+
+    private int dfs1466(int cur, int parent, List<int[]>[] e) {
+        int res = 0;
+        for (int[] dest: e[cur]){
+            int point = dest[0];
+            int direction = dest[1];
+            if (parent != point){
+                res += direction + dfs1466(point,cur,e);
+            }
+        }
+        return res;
+    }
+
+    public long maxTaxiEarnings(int n, int[][] rides) {
+        // 1 2 3 4 5
+        long[] dp = new long[n+1];
+        // dp[i] = max(dp[i-1],dp[start] + end - start + tip)
+        List<int[]>[] preProcess = new List[n+1];
+
+        for (int[] ride : rides) {
+            int start = ride[0];
+            int end = ride[1];
+            int tip = ride[2];
+            if (preProcess[end] == null){
+                preProcess[end] = new ArrayList<>();
+            }
+            preProcess[end].add(new int[]{start,end - start + tip});
+        }
+
+        for (int i = 1 ; i <= n ; i++){
+            dp[i] = dp[i-1];
+            if (preProcess[i] != null){
+                for (int[] process : preProcess[i]) {
+                    dp[i] = Math.max(dp[i],dp[process[0]] + process[1]);
+                }
+            }
+        }
+        return dp[n];
+    }
+
+
+    public int nextBeautifulNumber(int n) {
+        //1 打表打出来
+        //2 硬写 100000
+
+        for (int i = n + 1; i <= 1224444; ++i) {
+            if (isBalance(i)) {
+                return i;
+            }
+        }
+        return -1;
+
+    }
+
+    private boolean isBalance(int x) {
+        int[] count = new int[10];
+        while (x > 0) {
+            count[x % 10]++;
+            x /= 10;
+        }
+        for (int d = 0; d < 10; ++d) {
+            if (count[d] > 0 && count[d] != d) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
