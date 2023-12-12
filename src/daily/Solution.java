@@ -3237,9 +3237,87 @@ class Node {
         return ans;
     }
 
+
+    public int longestAlternatingSubarray(int[] nums, int threshold) {
+        int res = 0;
+        int n = nums.length;
+
+        int l = 0 ;
+        while (l < nums.length){
+            if (nums[l] > threshold || nums[l] %2 != 0){
+                l++;
+                continue;
+            }
+
+            int start = l;
+            l++;
+            while (l < n && nums[l] <= threshold && nums[l]%2 != nums[l-1]%2){
+                l++;
+            }
+
+            res = Math.max(res,l - start);
+        }
+
+        return res;
+    }
+
+    public int longestAlternatingSubarray2(int[] nums, int threshold) {
+        int res = 0;
+        int n = nums.length;
+
+       for (int i = 0 ; i< n ; i++){
+           if (nums[i] % 2 == 0 && nums[i] <= threshold){
+               for (int j = i; j < n ; j++){
+                   if (nums[j] <= threshold){
+                        if (i==j){
+                            res = Math.max(res,1);
+                        }else if (nums[j-1] % 2 != nums[j]%2){
+                            res = Math.max(res,j-i+1);
+                        }else {
+                            break;
+                        }
+
+                   }
+               }
+           }
+       }
+
+        return res;
+    }
+
+    public int[] secondGreaterElement(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+
+        for (int i = 0 ; i < n ; i++){
+            int count = 0;
+            int cur = nums[i];
+
+            for (int j = i+1 ; j< n ; j++){
+                if (cur < nums[j]){
+                    count++;
+                    if (count==2){
+                        ans[i] = nums[j];
+                        break;
+                    }
+                }
+            }
+
+            if (count != 2){
+                ans[i] = -1;
+            }
+        }
+
+
+        return ans;
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
+        //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
+        solution.longestAlternatingSubarray2(new int[]{2,10,5},7);
     }
 
 
