@@ -1,10 +1,12 @@
 package daily;
 
 
+import banzi.UnionFind;
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
 import math.TreeNode;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Solution {
@@ -2570,14 +2572,596 @@ public class Solution {
 
         int res = 0;
 
-        for (int i = 0 ; i < 10 ; i++){
-            if (sets[i].size() ==3){
+        for (int i = 0; i < 10; i++) {
+            if (sets[i].size() == 3) {
                 res++;
             }
         }
 
         return res;
 
+    }
+
+
+    public int maxProduct(String[] words) {
+        int[] word2int = new int[words.length];
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            for (int j = 0; j < word.length(); j++) {
+                word2int[i] |= 1 << (word.charAt(j) - 'a');
+            }
+        }
+
+        int ans = 0;
+
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if ((word2int[i] & word2int[j]) == 0) {
+                    ans = Math.max(ans, words[i].length() * words[j].length());
+                }
+            }
+        }
+
+        return ans;
+
+    }
+
+
+    public int findTheLongestBalancedSubstring(String s) {
+        int ans = 0;
+        int count0 = 0;
+        int count1 = 0;
+        int n = s.length();
+
+        for (int i = 0; i < n; i++) {
+            int cur = s.charAt(i) - '0';
+
+            if (cur == 0) {
+                if (count1 == 0) {
+                    count0++;
+                } else {
+                    count1 = 0;
+                    count0 = 1;
+                }
+            } else if (cur == 1) {
+                count1++;
+                ans = Math.max(ans, Math.min(count0, count1) * 2);
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        Arrays.sort(potions);
+        TreeMap<Long,Integer> set = new TreeMap<>();
+
+        int n = potions.length;
+
+        for (int i = 0 ; i < potions.length ; i++){
+            long key = potions[i];
+            if (!set.containsKey(key)){
+                set.put(key,i);
+            }
+        }
+
+        int[] ans = new int[spells.length];
+
+        for (int i = 0 ; i < spells.length ; i++){
+           long t = (long)Math.ceil((double) success / (double)spells[i]) ;
+           Long m = set.ceilingKey(t);
+           if (m == null){
+               ans[i] = 0;
+               continue;
+           }
+           int location = set.get(m);
+           ans[i] = n - location;
+        }
+
+        return ans;
+
+    }
+
+
+
+
+
+    public int[] successfulPairs2(int[] spells, int[] potions, long success) {
+        Arrays.sort(potions);
+        int[] ans = new int[spells.length];
+
+        for (int i = 0 ; i < spells.length ; i++){
+            int cur = spells[i];
+
+            int location = binarySearch2300(success,potions,cur);
+
+            ans[i] = potions.length - location;
+        }
+
+        return ans;
+    }
+
+    //最左边
+    private int binarySearch2300(long success, int[] potions, int cur) {
+        int ans = potions.length;
+        int l = 0;
+        int h = potions.length-1 ;
+        while ( l <= h){
+            int mid = l + (h - l)/2;
+            int target = potions[mid];
+            if ((long)target * cur >= success){
+                ans = mid;
+                h = mid-1;
+            }else {
+                l = mid +1;
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int minSwapsCouples(int[] row) {
+         int len = row.length;
+         int N = len/2;
+
+        UnionFind unionFind = new UnionFind(N);
+
+        for (int i= 0 ; i < len ; i+=2){
+            unionFind.union(row[i] / 2, row[i + 1] / 2);
+        }
+
+        return N - unionFind.getCount();
+    }
+
+
+    public int maximumSum(int[] nums) {
+        Map<Integer,Integer> cnt = new HashMap<>();
+        int res = 0;
+
+        for (int i = 0 ; i < nums.length ; i++){
+            int cur = nums[i];
+            int s = 0;
+            while (cur > 0){
+                s += cur%10;
+                cur /= 10;
+            }
+
+            if (cnt.containsKey(s)){
+                res = Math.max(res,cnt.get(s) + nums[i]);
+            }
+            cnt.put(s,Math.max(nums[i],cnt.getOrDefault(s,0)));
+        }
+        return res;
+    }
+
+
+    public int[] maxSumOfThreeSubarrays1(int[] nums, int k) {
+        int sum1 = 0, maxSum1 = 0, maxSum1Idx = 0;
+        int sum2 = 0, maxSum12 = 0, maxSum12Idx1 = 0, maxSum12Idx2 = 0;
+        int sum3 = 0, maxTotal = 0;
+
+        int[] ans = new int[3];
+
+        for (int i = 2*k ;  i < nums.length ; i++){
+            sum1 += nums[i - 2*k];
+            sum2 += nums[i-k];
+            sum3 += nums[i];
+
+            if (i >= k*3 - 1){
+                if (sum1 > maxSum1){
+                    maxSum1 = sum1;
+                    maxSum1Idx = i - 3 * k +1;
+                }
+                if (maxSum1 + sum2 > maxSum12){
+                    maxSum12 = maxSum1 + sum2;
+                    maxSum12Idx1 = maxSum1Idx;
+                    maxSum12Idx2 = i - 2*k +1;
+                }
+
+                if (maxSum12 + sum3 > maxTotal){
+                    maxTotal = sum3 + maxSum12;
+                    ans[0] = maxSum12Idx1;
+                    ans[1] = maxSum12Idx2;
+                    ans[2] = i - k + 1;;
+                }
+                sum1-= nums[i-3*k+1];
+                sum2-= nums[i-2*k+1];
+                sum3-= nums[i-k+1];
+            }
+
+        }
+
+        return ans;
+    }
+
+    public int[] maxSumOfThreeSubarrays2(int[] nums, int k) {
+        int n = nums.length;
+        long[][] dp = new long[n+1][4];
+        long[] sum = new long[n+1];
+        for (int i = 1 ; i <= n ; i++ ){
+            sum[i] = sum[i-1] + nums[i];
+        }
+
+        for (int i = n-k +1 ; i >= 0 ;i--){
+            for (int j = 1 ; j < 4 ; j++){
+                dp[i][j] = Math.max(dp[i+1][j],dp[i+k][j-1] + sum[i+k-1] - sum[i-1]);
+            }
+        }
+
+        int[] ans = new int[3];
+        int i = 1, j = 3, idx = 0;
+        //倒过来找
+        while (j > 0) {
+            if (dp[i + 1][j] > dp[i + k][j - 1] + sum[i + k - 1] - sum[i - 1]) {
+                //没找到重叠的 就往后挪动
+                i++;
+            } else {
+                // 找到一个不重叠的 就记录下来 同时向后跳k个 且j-- 表示已找到一个了
+                ans[idx++] = i - 1;
+                i += k; j--;
+            }
+        }
+        return ans;
+    }
+
+    public int maxSubArray(int[] nums) {
+        int ans = Integer.MIN_VALUE;
+        int tmp = 0;
+        for (int i = 0 ; i < nums.length ; i++){
+            int cur = tmp + nums[i];
+            tmp = Math.max(cur,nums[i]);
+            ans = Math.max(ans,tmp);
+        }
+        return ans;
+    }
+
+    public int maxSubArray2(int[] nums) {
+        int n = nums.length;
+       int[] dp = new int[n];
+       dp[0] = nums[0];
+
+       for (int i = 1 ; i < n ; i++){
+           dp[i] = Math.max(nums[i],dp[i-1]+nums[i]);
+       }
+
+       int ans = Integer.MIN_VALUE;
+
+       for (int i = 0 ; i < n ; i++){
+           ans = Math.max(ans,dp[i]);
+       }
+       return ans;
+    }
+
+
+    public int minDeletion(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        for (int i = 0 ; i < n-1 ; i++){
+            //当前是否为偶数
+            if ((i-ans) % 2 == 0){
+                // 判断是不是不满足条件，不满足就ans++
+                if (nums[i] == nums[i+1]){
+                    ans++;
+                }
+            }
+        }
+
+        if ((n-ans) % 2 != 0){
+            ans++;
+        }
+        return ans;
+    }
+
+    public int maxEnvelopes(int[][] envelopes) {
+        if (envelopes.length == 0){
+            return 0;
+        }
+        int n = envelopes.length;
+        Arrays.sort(envelopes, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] e1, int[] e2) {
+                if (e1[0] != e2[0]) {
+                    return e1[0] - e2[0];
+                } else {
+                    return e2[1] - e1[1];
+                }
+            }
+        });
+
+
+        // dp
+        // 以i为结尾的信封 最长的套娃是
+        //int[] dp = new int[n]; yidingchaoshi
+        // 考虑f【j】 长度为j的子序列中，的最小值
+        // 这样遇到比他大的 就能直接接在后面
+        // 遇到 比最后一个小的 就二分找前面的  找到恰好 f【i】< h <= f[i+1]的值，并更新掉i+1
+        List<Integer> f = new ArrayList<>();
+        f.add(envelopes[0][1]);
+        for (int i = 1; i < n ; i++){
+            int num = envelopes[i][1];
+            if (num > f.get(f.size()-1)){
+                f.add(envelopes[i][1]);
+            }else {
+                int index = bs(f,num);
+                f.set(index,num);
+            }
+        }
+
+        return f.size();
+    }
+
+    private int bs(List<Integer> f, int num) {
+        int l = 0 ;
+        int r = f.size()- 1;
+
+        while ( l < r){
+            int mid = (r-l)/2+l;
+            if (f.get(mid) < num){
+                l = mid +1;
+            }else {
+                r = mid;
+            }
+        }
+
+        return l;
+    }
+
+    // dp + 二分
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length == 0){
+            return 0;
+        }
+        int n = nums.length;
+
+        List<Integer> dp = new ArrayList<>();
+
+        dp.add(nums[0]);
+
+        for (int i = 1; i < n ; i++){
+            int num = nums[i];
+            if (num > dp.get(dp.size()-1)){
+                dp.add(num);
+            }else {
+                int index = bs(dp,num);
+                dp.set(index,num);
+            }
+        }
+        return dp.size();
+
+    }
+
+
+    public int minPathCost(int[][] grid, int[][] moveCost) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+
+        for (int i = 0 ; i < n ; i++){
+            dp[0][i] = grid[0][i];
+        }
+
+        for (int i = 1 ; i < m ;i++){
+            Arrays.fill(dp[i],Integer.MAX_VALUE);
+        }
+
+        int ans = Integer.MAX_VALUE;
+
+        for (int i = 1 ; i < m ;i++){
+            for (int j = 0 ; j < n ; j++){
+                for (int k = 0 ; k < n ;k++) {
+                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][k] + moveCost[grid[i - 1][k]][j] + grid[i][j]);
+                }
+            }
+        }
+
+        for (int i = 0 ; i < n ; i++){
+            ans = Math.min(ans,dp[m-1][i]);
+        }
+
+
+        return ans;
+    }
+
+
+    public String entityParser(String text) {
+        Map<String, String> map = new HashMap<>(){{
+            put("&quot;", "\"");
+            put("&apos;", "'");
+            put("&amp;", "&");
+            put("&gt;", ">");
+            put("&lt;", "<");
+            put("&frasl;", "/");
+        }};
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0 ; i < text.length() ;i++){
+            char cur = text.charAt(i);
+            if (cur == '&'){
+                int j = i + 1;
+                while (j < text.length() && j - i < 6 && text.charAt(j) != ';') j++;
+                String sub = text.substring(i, Math.min(j + 1, text.length()));
+                if (map.containsKey(sub)) {
+                    sb.append(map.get(sub));
+                    i = j;
+                }else {
+                    sb.append(cur);
+                }
+            }else {
+                sb.append(cur);
+            }
+        }
+
+        return sb.toString();
+    }
+
+
+    public int pseudoPalindromicPaths (TreeNode root) {
+        int[] count = new int[10];
+        return dfs1457(root,count);
+    }
+
+    private int dfs1457(TreeNode root, int[] count) {
+        if (root == null){
+            return 0;
+        }
+        count[root.val]++;
+        int res = 0;
+        if (root.left == null && root.right == null){
+            if (isPseudoPalindrome(count)) {
+                res = 1;
+            }else{
+                res = dfs1457(root.left,count) +dfs1457(root.right,count);
+            }
+        }
+        count[root.val]--;
+        return res;
+    }
+
+    private boolean isPseudoPalindrome(int[] count) {
+        int odd = 0;
+        for (int value : count) {
+            if (value % 2 == 1) {
+                odd++;
+            }
+        }
+        return odd <= 1;
+    }
+
+
+    public int uniqueLetterString(String s) {
+        int ans = 0;
+        int n = s.length();
+
+        for (int i = 0 ; i < n ; i++){
+            int l = i;
+            int r = i;
+            while (l >0 && s.charAt(l-1) != s.charAt(i)) l--;
+            while (r < n-1 && s.charAt(r+1) != s.charAt(i)) r++;
+            ans += (i - l +1) * (r-i+1);
+        }
+        return ans;
+    }
+
+
+    public boolean closeStrings(String word1, String word2) {
+           if (word1.length() != word2.length()){
+               return false;
+           }
+
+            int[] count1 = new int[26], count2 = new int[26];
+            for (char c : word1.toCharArray()) {
+                count1[c - 'a']++;
+            }
+            for (char c : word2.toCharArray()) {
+                count2[c - 'a']++;
+            }
+
+
+            for (int i = 0 ; i < 26 ; i++){
+                if ((count1[i] == 0 && count2[i] > 0) || (count1[i] > 0 && count2[i] == 0)){
+                    return false;
+                }
+            }
+
+
+
+            Arrays.sort(count1);
+            Arrays.sort(count2);
+
+
+            for (int i = 0 ; i < 26 ; i++){
+                if (count1[i] != count2[i]){
+                    return false;
+                }
+            }
+
+            return true;
+
+    }
+
+
+    public int minReorder(int n, int[][] connections) {
+        List<int[]>[] e = new List[n];
+        for (int i = 0; i < n; i++) {
+            e[i] = new ArrayList<int[]>();
+        }
+        for (int[] edge : connections) {
+            e[edge[0]].add(new int[]{edge[1], 1});
+            e[edge[1]].add(new int[]{edge[0], 0});
+        }
+        return dfs1466(0, -1, e);
+    }
+
+    private int dfs1466(int cur, int parent, List<int[]>[] e) {
+        int res = 0;
+        for (int[] dest: e[cur]){
+            int point = dest[0];
+            int direction = dest[1];
+            if (parent != point){
+                res += direction + dfs1466(point,cur,e);
+            }
+        }
+        return res;
+    }
+
+    public long maxTaxiEarnings(int n, int[][] rides) {
+        // 1 2 3 4 5
+        long[] dp = new long[n+1];
+        // dp[i] = max(dp[i-1],dp[start] + end - start + tip)
+        List<int[]>[] preProcess = new List[n+1];
+
+        for (int[] ride : rides) {
+            int start = ride[0];
+            int end = ride[1];
+            int tip = ride[2];
+            if (preProcess[end] == null){
+                preProcess[end] = new ArrayList<>();
+            }
+            preProcess[end].add(new int[]{start,end - start + tip});
+        }
+
+        for (int i = 1 ; i <= n ; i++){
+            dp[i] = dp[i-1];
+            if (preProcess[i] != null){
+                for (int[] process : preProcess[i]) {
+                    dp[i] = Math.max(dp[i],dp[process[0]] + process[1]);
+                }
+            }
+        }
+        return dp[n];
+    }
+
+
+    public int nextBeautifulNumber(int n) {
+        //1 打表打出来
+        //2 硬写 100000
+
+        for (int i = n + 1; i <= 1224444; ++i) {
+            if (isBalance(i)) {
+                return i;
+            }
+        }
+        return -1;
+
+    }
+
+    private boolean isBalance(int x) {
+        int[] count = new int[10];
+        while (x > 0) {
+            count[x % 10]++;
+            x /= 10;
+        }
+        for (int d = 0; d < 10; ++d) {
+            if (count[d] > 0 && count[d] != d) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
