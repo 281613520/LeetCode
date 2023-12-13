@@ -3286,30 +3286,47 @@ class Node {
     }
 
     public int[] secondGreaterElement(int[] nums) {
+        //单调栈
         int n = nums.length;
         int[] ans = new int[n];
 
+        Arrays.fill(ans,-1);
+
+        Deque<Integer> stack = new ArrayDeque<>();
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o2[0] - o1[0]);
+
         for (int i = 0 ; i < n ; i++){
-            int count = 0;
-            int cur = nums[i];
-
-            for (int j = i+1 ; j< n ; j++){
-                if (cur < nums[j]){
-                    count++;
-                    if (count==2){
-                        ans[i] = nums[j];
-                        break;
-                    }
-                }
+            while (!pq.isEmpty() && pq.peek()[0] < nums[i]){
+                ans[pq.poll()[1]] = nums[i];
             }
 
-            if (count != 2){
-                ans[i] = -1;
+
+            while (!stack.isEmpty() && nums[stack.peek()] < nums[i]){
+                pq.offer(new int[]{nums[stack.peek()], stack.peek()});
+                stack.pop();
             }
+
+            stack.push(i);
         }
 
 
         return ans;
+    }
+
+    public String makeSmallestPalindrome(String s) {
+
+        int i = 0 ,j = s.length() - 1;
+        char[] arr = s.toCharArray();
+
+        while (i <= j){
+            if (arr[i] != arr[j]){
+                arr[i] = arr[j] = (char)Math.min(arr[i],arr[j]);
+            }
+            i++;
+            j--;
+        }
+
+        return new String(arr);
     }
 
 
@@ -3317,7 +3334,7 @@ class Node {
     public static void main(String[] args) {
         Solution solution = new Solution();
         //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
-        solution.longestAlternatingSubarray2(new int[]{2,10,5},7);
+        solution.secondGreaterElement(new int[]{2,4,0,9,6});
     }
 
 
