@@ -2,6 +2,7 @@ package daily;
 
 
 import banzi.UnionFind;
+import com.sun.source.tree.Tree;
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
 import math.TreeNode;
@@ -3341,6 +3342,40 @@ class Node {
         }
 
         return dp[n];
+    }
+
+
+    public TreeNode reverseOddLevels(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(root);
+        int cnt = 1;
+
+        while (!queue.isEmpty()){
+            int size = queue.size();
+            List<TreeNode> list = new ArrayList<>();
+            List<Integer> valList = new ArrayList<>();
+            for (int i = 0 ; i < size ; i++){
+                TreeNode cur = queue.poll();
+                if (cur.left!= null) {
+                    queue.add(cur.left);
+                    queue.add(cur.right);
+                }
+                list.add(cur);
+
+                valList.add(cur.val);
+            }
+
+            Collections.reverse(valList);
+
+            if (cnt %2 == 1){
+                for (int i = 0 ; i < size ; i++){
+                    list.get(i).val = valList.get(i);
+                }
+            }
+            cnt++;
+        }
+
+        return root;
     }
 
     public static void main(String[] args) {
