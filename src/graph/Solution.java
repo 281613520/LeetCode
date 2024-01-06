@@ -60,4 +60,50 @@ public class Solution {
 
         return true;
     }
+
+
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        Map<Integer,List<Integer>> matrix = new HashMap<>();
+        for (int i = 0; i < manager.length; i++) {
+            matrix.putIfAbsent(manager[i], new ArrayList<>());
+            matrix.get(manager[i]).add(i);
+        }
+
+        return dfs1376(headID,informTime,matrix);
+    }
+
+    private int dfs1376(int id, int[] informTime, Map<Integer,List<Integer>> matrix) {
+        List<Integer> next = matrix.getOrDefault(id,new ArrayList<>());
+
+        int res = 0;
+
+        for (Integer i : next) {
+            res = Math.max(res,dfs1376(i,informTime,matrix));
+        }
+
+        return informTime[id] + res;
+    }
+
+    public int numOfMinutes2(int n, int headID, int[] manager, int[] informTime) {
+        Map<Integer,Integer> cahce = new HashMap<>();
+        int res = 0;
+        for (int i = 0 ; i < n ;i++){
+            res = Math.max(res,dfs13762(headID,manager,informTime,cahce,i));
+        }
+
+        return res;
+    }
+
+    private int dfs13762(int headID, int[] manager, int[] informTime, Map<Integer, Integer> cahce, int cur) {
+        if (cur == headID){
+            return 0;
+        }
+
+        if (!cahce.containsKey(cur)){
+            int res = dfs13762(headID,manager,informTime,cahce,manager[cur]) + informTime[manager[cur]];
+            cahce.put(cur,res);
+        }
+
+        return cahce.get(cur);
+    }
 }
