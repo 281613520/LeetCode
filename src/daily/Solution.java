@@ -3402,6 +3402,47 @@ class Node {
     }
 
 
+    public int numberOfBoomerangs(int[][] points) {
+        int res =0;
+
+        for (int[] from : points) {
+            Map<Integer, Integer> cache = new HashMap<>();
+            for (int[] to : points) {
+                int dis = (from[0] - to[0]) * (from[0] - to[0]) + (from[1] - to[1]) * (from[1] - to[1]);
+                cache.put(dis, cache.getOrDefault(dis, 0) + 1);
+            }
+
+            for (Map.Entry<Integer, Integer> integerIntegerEntry : cache.entrySet()) {
+                int num = integerIntegerEntry.getValue();
+                res += num * (num-1);
+            }
+        }
+
+        return res;
+    }
+
+    public int minExtraChar(String s, String[] dictionary) {
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, dictionary);
+
+        int[] dp = new int[s.length()+1];
+        Arrays.fill(dp,Integer.MAX_VALUE);
+
+        dp[0] = 0;
+
+        for (int i = 1 ; i <= s.length() ; i++){
+            dp[i] = dp[i-1]+1;
+            for (int j = i-1 ; j >= 0 ; j--){
+                if (set.contains(s.substring(j,i))){
+                    dp[i] = Math.min(dp[i],dp[j]);
+                }
+            }
+        }
+        return dp[s.length()];
+
+    }
+
+
 
 
     public static void main(String[] args) {
