@@ -3452,4 +3452,78 @@ class Node {
     }
 
 
+    public int splitArray(int[] nums, int m) {
+
+        int n = nums.length;
+
+        int[][] dp = new int[n+1][m+1];
+
+        for (int i = 0; i <= n; i++) {
+            Arrays.fill(dp[i], Integer.MAX_VALUE);
+        }
+
+        int[] sub = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            sub[i + 1] = sub[i] + nums[i];
+        }
+
+        dp[0][0] = 0;
+
+        for (int i = 1 ; i <= n ; i++){
+            for (int j = 1; j <= Math.min(i,m);j++){
+                for (int k = 0 ; k < i ; k++){
+                    dp[i][j] = Math.min(dp[i][j],Math.max(dp[k][j-1],sub[i] - sub[k]));
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
+
+
+    public int stoneGameVI(int[] a, int[] b) {
+        int n = a.length;
+        Integer[] ids = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            ids[i] = i;
+        }
+        Arrays.sort(ids, (i, j) -> a[j] + b[j] - a[i] - b[i]);
+        int diff = 0;
+        for (int i = 0; i < n; i++) {
+            diff += i % 2 == 0 ? a[ids[i]] : -b[ids[i]];
+        }
+        return Integer.compare(diff, 0);
+    }
+
+
+    public int stoneGameVII(int[] stones) {
+        int length = stones.length;
+        int[] preSum = new int[length+1];
+        preSum[0] = 0;
+        for (int i = 1 ; i < preSum.length ; i++){
+            preSum[i] = preSum[i-1] + stones[i-1];
+        }
+
+        int[][] mem = new int[length][length];
+
+        return dfs1690(mem,preSum,0,length-1);
+    }
+
+    private int dfs1690(int[][] mem, int[] preSum, int i, int j) {
+        if (i >= j){
+            return 0;
+        }
+
+        if (mem[i][j] != 0){
+            return mem[i][j];
+        }
+
+        // 选i 和 选j
+        int res = Math.max(preSum[j + 1] - preSum[i + 1] - dfs1690(mem, preSum,i + 1, j), preSum[j] - preSum[i] - dfs1690(mem, preSum,i, j-1));
+        mem[i][j] = res;
+
+        return res;
+    }
+
+
 }

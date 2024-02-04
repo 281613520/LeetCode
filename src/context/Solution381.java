@@ -35,6 +35,12 @@ public class Solution381 {
 
     }
 
+
+    public int[] countOfPairs(int n, int x, int y) {
+        int[] res = new int[n];
+        return res;
+    }
+
     public static void main(String[] args) {
         Solution381 solution381 = new Solution381();
         solution381.minimumPushes("abcde");
