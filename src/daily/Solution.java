@@ -3545,11 +3545,32 @@ class Node {
             }
         }
 
-
         return dp[0][n-1];
-
-
     }
 
+    public int maximumCostSubstring(String s, String chars, int[] vals) {
+        int[] table = new int[26];
+        int num = 1;
+        for (int i = 0 ; i < 26 ; i++){
+            table[i] = num;
+            num++;
+        }
 
+        for (int i = 0 ; i < chars.length() ; i++){
+            char cur = chars.charAt(i);
+            table[cur - 'a'] = vals[i];
+        }
+
+
+        int ans = 0;
+        int dp = 0;
+        for (char c : s.toCharArray()) {
+            dp = Math.max(dp,0) + table[c - 'a'];
+            ans = Math.max(ans,dp);
+        }
+
+
+        return ans;
+
+    }
 }
