@@ -3573,4 +3573,140 @@ class Node {
         return ans;
 
     }
+
+
+    public int maxResult(int[] nums, int k) {
+        int n = nums.length, idx = 0;
+        int[] dp = new int[n];
+        dp[0] = nums[0];
+        for(int i = 1; i < n; i++) {
+            int max = dp[i - 1];
+            for(int j = Math.max(i - k, idx); j < i - 1; j++) {
+                if(max < dp[j]) {
+                    max = dp[j];
+                    idx = j;
+                } else if(max == dp[j]) {
+                    idx = j;
+                }
+            }
+            dp[i] = max + nums[i];
+        }
+        return dp[n - 1];
+    }
+
+
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> levelOrder = new ArrayList<>();
+        if (root == null){
+            return levelOrder;
+        }
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+
+        while (!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> tmp = new ArrayList<>();
+            for (int i = 0 ; i < size ; i++){
+                TreeNode node = queue.poll();
+                if (node.left != null){
+                    queue.offer(node.left);
+                }
+
+                if (node.right != null){
+                    queue.offer(node.right);
+                }
+                tmp.add(node.val);
+            }
+            levelOrder.add(0,tmp);
+
+        }
+        return levelOrder;
+    }
+
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+        if (left == null) return right;
+        if (right == null) return left;
+        return root;
+    }
+
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> levelOrder = new ArrayList<>();
+        if (root == null){
+            return levelOrder;
+        }
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+
+        boolean isLeft = true;
+
+
+        while (!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> tmp = new ArrayList<>();
+            for (int i = 0 ; i < size ; i++){
+                TreeNode node = queue.poll();
+                if (node.left != null){
+                    queue.offer(node.left);
+                }
+
+                if (node.right != null){
+                    queue.offer(node.right);
+                }
+
+                if (isLeft){
+                    tmp.add(node.val);
+                }else {
+                    tmp.add(0,node.val);
+                }
+
+
+
+            }
+            levelOrder.add(tmp);
+            isLeft = !isLeft;
+
+        }
+        return levelOrder;
+    }
+
+    public List<Integer> postorder(Node2 root) {
+        List<Integer> res = new ArrayList<>();
+        dfs590(root,res);
+        return res;
+
+    }
+
+    private void dfs590(Node2 root, List<Integer> res) {
+        if (root == null){
+            return;
+        }
+
+        for (Node2 child : root.children) {
+            dfs590(child,res);
+        }
+        res.add(root.val);
+    }
+
+
+    class Node2 {
+        public int val;
+        public List<Node2> children;
+
+        public Node2() {}
+
+        public Node2(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, List<Node> _children) {
+            val = _val;
+            children = _children;
+        }
+    };
 }

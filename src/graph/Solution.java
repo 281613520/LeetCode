@@ -106,4 +106,40 @@ public class Solution {
 
         return cahce.get(cur);
     }
+
+    public boolean canReach(int[] arr, int start) {
+        if(arr[start] == 0) return true;
+           boolean[] visited = new boolean[arr.length];
+
+           Deque<Integer> queue = new ArrayDeque<>();
+           queue.add(start);
+           visited[start] = true;
+
+           while (!queue.isEmpty()){
+               Integer cur = queue.poll();
+               Integer front = cur - arr[cur];
+               Integer back  = cur + arr[cur];
+
+               if (front >=0 && !visited[front]){
+                   if (arr[front] == 0){
+                       return true;
+                   }
+
+                   queue.add(front);
+                   visited[front]  = true;
+               }
+
+               if (back < arr.length && !visited[back]){
+                   if (arr[back] == 0){
+                       return true;
+                   }
+
+                   queue.add(back);
+                   visited[back]  = true;
+               }
+           }
+
+           return false;
+    }
+
 }
