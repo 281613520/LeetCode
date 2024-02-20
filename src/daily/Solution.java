@@ -3704,9 +3704,38 @@ class Node {
             val = _val;
         }
 
-        public Node(int _val, List<Node> _children) {
+        public Node2(int _val, List<Node2> _children) {
             val = _val;
             children = _children;
         }
     };
+
+    private Map<Integer,Integer> nodeMap = new HashMap<>();
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = preorder.length;
+        for (int i = 0; i < n; i++) {
+            nodeMap.put(inorder[i], i);
+        }
+
+        return dfs105(preorder,inorder,0,n-1,0,n-1);
+    }
+
+    private TreeNode dfs105(int[] preorder, int[] inorder, int preorderLeft, int preorderRight, int inorderLeft, int inorderRight) {
+        if (preorderLeft > preorderRight){
+            return null;
+        }
+
+        int root = preorderLeft;
+        int index_inorder = nodeMap.get(preorder[root]);
+
+        TreeNode treeNode = new TreeNode();
+        treeNode.val = preorder[root];
+
+        int size_left_subtree = index_inorder - inorderLeft;
+
+        treeNode.left = dfs105(preorder,inorder,preorderLeft + 1, preorderLeft + size_left_subtree, inorderLeft, index_inorder - 1);
+        treeNode.right = dfs105(preorder,inorder,preorderLeft + size_left_subtree + 1,preorderRight,index_inorder+1,inorderRight);
+        return treeNode;
+    }
 }
