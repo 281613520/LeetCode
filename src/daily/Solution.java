@@ -3635,6 +3635,20 @@ class Node {
     }
 
 
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+        if (root != null){
+            if (root.val < p.val && root.val < q.val ){
+                return lowestCommonAncestor2(root.right,p,q);
+            }else if (root.val > p.val && root.val > q.val){
+                return lowestCommonAncestor2(root.left,p,q);
+            }else {
+                return root;
+            }
+        }
+        return root;
+    }
+
+
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> levelOrder = new ArrayList<>();
         if (root == null){
@@ -3737,5 +3751,59 @@ class Node {
         treeNode.left = dfs105(preorder,inorder,preorderLeft + 1, preorderLeft + size_left_subtree, inorderLeft, index_inorder - 1);
         treeNode.right = dfs105(preorder,inorder,preorderLeft + size_left_subtree + 1,preorderRight,index_inorder+1,inorderRight);
         return treeNode;
+    }
+
+
+
+    int[] nums;
+    public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+        List<Integer> treenode = new ArrayList<>();
+        dfs2478(treenode,root);
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        queries.forEach(query ->{
+            List<Integer> list = new ArrayList<>();
+            list.add(left(nums,queries.get(0)));
+            list.add(right(nums,queries.get(1)));
+            ans.add(list);
+        });
+
+        return ans;
+    }
+
+
+    private int left(int[] nums, Integer target) {
+        int l = -1, r = nums.length - 1;
+        while (l < r) {
+            int mid = (l + r + 1) / 2;
+            if (nums[mid] > target) r = mid - 1;
+            else l = mid;
+        }
+        return l == -1 ? -1 : nums[l];
+    }
+
+    private int right(int[] nums, Integer target) {
+
+        int l = 0, r = nums.length;
+        while (l  < r) {
+            int mid = (l + r) / 2;
+            if (nums[mid] >= target) r = mid;
+            else l = mid + 1;
+        }
+        return l == nums.length ? -1 : nums[l];
+    }
+
+
+
+    private void dfs2478(List<Integer> treenode, TreeNode root) {
+        if (root== null){
+            return;
+        }
+
+        dfs2478(treenode,root.left);
+        treenode.add(root.val);
+        dfs2478(treenode,root.right);
+
     }
 }
