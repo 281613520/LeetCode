@@ -3804,6 +3804,39 @@ class Node {
         dfs2478(treenode,root.left);
         treenode.add(root.val);
         dfs2478(treenode,root.right);
+    }
 
+    int ans = 0;
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        if (root == null)
+            return 0;
+
+        if (root.val > high){
+            return rangeSumBST(root.left,low,high);
+        }
+
+        if (root.val < low){
+            return rangeSumBST(root.right,low,high);
+        }
+        return root.val + rangeSumBST(root.left,low,high) + rangeSumBST(root.right,low,high);
+    }
+
+
+    int ans2073 = 0;
+    public int minIncrements(int n, int[] cost) {
+        dfs2673(1,cost);
+        return ans2073;
+    }
+
+    private int dfs2673(int n, int[] cost) {
+        if (n > cost.length){
+            return 0;
+        }
+
+        int left = dfs2673(2*n-1,cost);
+        int right = dfs2673(2*n,cost);
+        ans2073 += Math.abs(left-right);
+
+        return cost[n-1] + Math.max(left,right);
     }
 }
