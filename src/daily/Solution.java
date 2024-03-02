@@ -3443,15 +3443,6 @@ class Node {
     }
 
 
-
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        //solution.smallestMissingValueSubtree(new int[]{-1,0,1,0,3,3}, new int[]{5,4,6,2,1,3});
-        solution.secondGreaterElement(new int[]{2,4,0,9,6});
-    }
-
-
     public int splitArray(int[] nums, int m) {
 
         int n = nums.length;
@@ -3838,5 +3829,41 @@ class Node {
         ans2073 += Math.abs(left-right);
 
         return cost[n-1] + Math.max(left,right);
+    }
+
+
+    public boolean validPartition(int[] nums) {
+        int n = nums.length;
+
+        boolean[] dp = new boolean[n+1];
+        Arrays.fill(dp,false);
+        dp[0] = true;
+
+        for (int i = 1 ; i <= n;i++){
+            if (i >=2){
+                dp[i] =  dp[i-2] && checkRule1(nums,i);
+            }
+
+            if (i >= 3){
+                dp[i] = dp[i] || (dp[i-3] && checkRule2(nums,i));
+            }
+        }
+
+        return dp[n];
+    }
+
+    private boolean checkRule2(int[] nums, int i) {
+        return (nums[i] == nums[i-1] && nums[i-1] == nums[i-2]) || ((nums[i-2] +1 == nums[i-1]) && (nums[i-1] +1 == nums[i]));
+    }
+
+    private boolean checkRule1(int[] nums,int location) {
+        return nums[location] == nums[location-1];
+    }
+
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+
+        solution.validPartition(new int[]{4,4,4,5,6});
     }
 }
