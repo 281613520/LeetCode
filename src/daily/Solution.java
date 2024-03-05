@@ -3868,7 +3868,7 @@ public class Solution {
     private void eratosthenesPrime() {
 
         Arrays.fill(isPrime, true);
-        isPrime[1]  = false;
+        isPrime[1] = false;
 
         for (int i = 2; i * i <= n; i++) {
             if (isPrime[i]) {
@@ -3895,39 +3895,45 @@ public class Solution {
             G[j].add(i);
         }
 
+
         List<Integer> seen = new ArrayList<>();
-        long[] count = new long[n+1];
-        for (int i = 1 ; i<= n ; i++){
-            if (!isPrime[i]){
+        long[] count = new long[n + 1];
+        for (int i = 1; i <= n; i++) {
+            if (!isPrime[i]) {
                 continue;
             }
 
             long cur = 0;
             for (int j : G[i]) {
-                if (isPrime[j]){
+                if (isPrime[j]) {
                     continue;
                 }
-                if (count[j] == 0){
+                if (count[j] == 0) {
                     seen.clear();
-                    dfs2867(G,seen,j,i);
+                    dfs2867(G, seen, j, i);
                     long cnt = seen.size();
                     for (int k : seen) {
                         count[k] = cnt;
                     }
                 }
-                res += count[j] * cur;
+
+                res += cur * count[j];
                 cur += count[j];
+
             }
+
             res += cur;
         }
+
+
         return res;
     }
 
-    private void dfs2867(List<Integer>[] g, List<Integer> seen, int i,int pre) {
+    private void dfs2867(List<Integer>[] g, List<Integer> seen, int i, int pre) {
         seen.add(i);
         for (Integer j : g[i]) {
             if (j != pre && !isPrime[j]) {
-                dfs2867(g, seen, j,i);
+                dfs2867(g, seen, j, i);
             }
         }
     }
@@ -3938,9 +3944,55 @@ public class Solution {
     }
 
 
+    public int countPaths2(int n, int[][] roads) {
+        long[][] g = new long[n][n];
+
+        for (int i = 0 ;i < n;i++){
+            Arrays.fill(g[i],Long.MAX_VALUE/2);
+        }
+        for (int[] e : roads) {
+            int a = e[0], b = e[1], c = e[2];
+            g[a][b] = g[b][a] = c;
+        }
+
+        // 起始先将所有的点标记为「未更新」和「距离为正无穷」
+        boolean[] vis = new boolean[n];
+        long[] dist = new long[n];
+        int[] ways = new int[n];
+        Arrays.fill(dist, Long.MAX_VALUE/2);
+        // 只有起点最短距离为 0
+        dist[0] = 0;
+        ways[0] = 1;
+
+        // 有多少个点就迭代多少次
+        for (int k = 0; k < n; k++) {
+            // 每次找到「最短距离最小」且「未被更新」的点 t
+            int x = -1;
+            for (int i = 0; i < n; i++) {
+                if (!vis[i] && (x == -1 || dist[i] < dist[x])) x = i;
+            }
+            // 标记点 t 为已更新
+            vis[x] = true;
+            // 用点 t 的「最小距离」更新其他点
+            for (int y = 0; y < n; y++) {
+                long newDis = dist[x] + g[x][y];
+                if (newDis < dist[y]){
+                    dist[y] = newDis;
+                    ways[y] = ways[x];
+                }else if (newDis == dist[y]){
+                    ways[y] = (ways[x] + ways[y])% 1000000007;
+                }
+
+            }
+        }
+
+        return ways[n - 1];
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.countPaths(5,new int[][]{{1,2}, {1,3}, {2,4}, {2,5}});
+        solution.countPaths(5, new int[][]{{1, 2}, {1, 3}, {2, 4}, {2, 5}});
     }
 }
