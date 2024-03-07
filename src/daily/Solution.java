@@ -3990,9 +3990,24 @@ public class Solution {
     }
 
 
+    public int[] divisibilityArray(String word, int m) {
+        int n = word.length();
+        int[] res = new int[n];
+        long reminder = 0;
+
+        for (int i = 0 ; i < n ; i++){
+            int cur = word.charAt(i) -'0';
+            reminder = (cur + reminder*10) % m;
+            res[i] = reminder == 0? 1:0;
+        }
+
+        return res;
+
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.countPaths(5, new int[][]{{1, 2}, {1, 3}, {2, 4}, {2, 5}});
+        solution.divisibilityArray("1010",10);
     }
 }
