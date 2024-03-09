@@ -3947,8 +3947,8 @@ public class Solution {
     public int countPaths2(int n, int[][] roads) {
         long[][] g = new long[n][n];
 
-        for (int i = 0 ;i < n;i++){
-            Arrays.fill(g[i],Long.MAX_VALUE/2);
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(g[i], Long.MAX_VALUE / 2);
         }
         for (int[] e : roads) {
             int a = e[0], b = e[1], c = e[2];
@@ -3959,7 +3959,7 @@ public class Solution {
         boolean[] vis = new boolean[n];
         long[] dist = new long[n];
         int[] ways = new int[n];
-        Arrays.fill(dist, Long.MAX_VALUE/2);
+        Arrays.fill(dist, Long.MAX_VALUE / 2);
         // 只有起点最短距离为 0
         dist[0] = 0;
         ways[0] = 1;
@@ -3976,11 +3976,11 @@ public class Solution {
             // 用点 t 的「最小距离」更新其他点
             for (int y = 0; y < n; y++) {
                 long newDis = dist[x] + g[x][y];
-                if (newDis < dist[y]){
+                if (newDis < dist[y]) {
                     dist[y] = newDis;
                     ways[y] = ways[x];
-                }else if (newDis == dist[y]){
-                    ways[y] = (ways[x] + ways[y])% 1000000007;
+                } else if (newDis == dist[y]) {
+                    ways[y] = (ways[x] + ways[y]) % 1000000007;
                 }
 
             }
@@ -3995,19 +3995,66 @@ public class Solution {
         int[] res = new int[n];
         long reminder = 0;
 
-        for (int i = 0 ; i < n ; i++){
-            int cur = word.charAt(i) -'0';
-            reminder = (cur + reminder*10) % m;
-            res[i] = reminder == 0? 1:0;
+        for (int i = 0; i < n; i++) {
+            int cur = word.charAt(i) - '0';
+            reminder = (cur + reminder * 10) % m;
+            res[i] = reminder == 0 ? 1 : 0;
         }
 
         return res;
 
     }
 
+
+    public int minimumPossibleSum(int n, int target) {
+        final int MOD = (int) 1e9 + 7;
+        int half = target / 2;
+
+        if (half >= n) {
+            return (int) ((long) n * (n + 1) / 2 % MOD);
+        } else {
+            return (int) (((long) half * (1 + half) / 2 + ((long) (target + target + (n - half + 1)) * (n - half + 1) / 2)) % MOD);
+        }
+    }
+
+
+    public long kSum(int[] nums, int k) {
+        long sum = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] >= 0){
+                sum+= nums[i];
+            } else {
+                nums[i] = -nums[i];
+            }
+        }
+
+        Arrays.sort(nums);
+
+        PriorityQueue<long[]> priorityQueue = new PriorityQueue<>((o1, o2) -> (int) (o2[0] - o1[0]));
+        priorityQueue.offer(new long[]{sum,0});
+        long num = 0;
+        while (!priorityQueue.isEmpty() && k > 0){
+            long[] cur = priorityQueue.poll();
+
+            num = cur[0];
+            int index = (int)cur[1];
+
+            if (index + 1 <= nums.length){
+                priorityQueue.add(new long[]{num - nums[index],index+1});
+                if (index>0){
+                    priorityQueue.add(new long[]{num- nums[index] + nums[index-1],index+1});
+                }
+            }
+            k--;
+        }
+
+        return num;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.divisibilityArray("1010",10);
+        solution.kSum(new int[]{2,4,-2}, 5);
     }
 }
