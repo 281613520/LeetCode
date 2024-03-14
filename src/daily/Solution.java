@@ -4052,6 +4052,64 @@ public class Solution {
         return num;
     }
 
+
+    public String capitalizeTitle(String title) {
+        String[] strs = title.split(" ");
+        for (int i = 0; i < strs.length; i++) {
+            if (strs[i].length() == 1 || strs[i].length() ==2){
+                strs[i] = strs[i].toLowerCase();
+            }else {
+                //将首字母和其他字母分开
+                String A =strs[i].substring(0,1);
+                String B=strs[i].substring(1);
+                //将首字母变成大写
+                String upperCase=A.toUpperCase();
+                //其余字母小写
+                String lowerCase=B.toLowerCase();
+                strs[i] = upperCase + lowerCase;
+            }
+        }
+
+        return String.join(" ",strs);
+    }
+
+
+    public String maximumOddBinaryNumber(String s) {
+        int cnt1 = 0;
+
+        for (int i = 0 ; i < s.length();i++){
+            if (s.charAt(i) == '1'){
+                cnt1++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 1 ; i < s.length();i++){
+            if (i <= (cnt1-1)) {
+                sb.append("1");
+            }else {
+                sb.append("0");
+            }
+        }
+
+
+        sb.append("1");
+
+        return sb.toString();
+    }
+
+
+    public long maxArrayValue(int[] nums) {
+        long sum = nums[nums.length - 1];
+        for (int i = nums.length - 2; i >= 0; i--) {
+            sum = nums[i] <= sum ? nums[i] + sum : nums[i];
+        }
+        return sum;
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
