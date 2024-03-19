@@ -4022,8 +4022,8 @@ public class Solution {
         long sum = 0;
 
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i] >= 0){
-                sum+= nums[i];
+            if (nums[i] >= 0) {
+                sum += nums[i];
             } else {
                 nums[i] = -nums[i];
             }
@@ -4032,18 +4032,18 @@ public class Solution {
         Arrays.sort(nums);
 
         PriorityQueue<long[]> priorityQueue = new PriorityQueue<>((o1, o2) -> (int) (o2[0] - o1[0]));
-        priorityQueue.offer(new long[]{sum,0});
+        priorityQueue.offer(new long[]{sum, 0});
         long num = 0;
-        while (!priorityQueue.isEmpty() && k > 0){
+        while (!priorityQueue.isEmpty() && k > 0) {
             long[] cur = priorityQueue.poll();
 
             num = cur[0];
-            int index = (int)cur[1];
+            int index = (int) cur[1];
 
-            if (index + 1 <= nums.length){
-                priorityQueue.add(new long[]{num - nums[index],index+1});
-                if (index>0){
-                    priorityQueue.add(new long[]{num- nums[index] + nums[index-1],index+1});
+            if (index + 1 <= nums.length) {
+                priorityQueue.add(new long[]{num - nums[index], index + 1});
+                if (index > 0) {
+                    priorityQueue.add(new long[]{num - nums[index] + nums[index - 1], index + 1});
                 }
             }
             k--;
@@ -4056,39 +4056,39 @@ public class Solution {
     public String capitalizeTitle(String title) {
         String[] strs = title.split(" ");
         for (int i = 0; i < strs.length; i++) {
-            if (strs[i].length() == 1 || strs[i].length() ==2){
+            if (strs[i].length() == 1 || strs[i].length() == 2) {
                 strs[i] = strs[i].toLowerCase();
-            }else {
+            } else {
                 //将首字母和其他字母分开
-                String A =strs[i].substring(0,1);
-                String B=strs[i].substring(1);
+                String A = strs[i].substring(0, 1);
+                String B = strs[i].substring(1);
                 //将首字母变成大写
-                String upperCase=A.toUpperCase();
+                String upperCase = A.toUpperCase();
                 //其余字母小写
-                String lowerCase=B.toLowerCase();
+                String lowerCase = B.toLowerCase();
                 strs[i] = upperCase + lowerCase;
             }
         }
 
-        return String.join(" ",strs);
+        return String.join(" ", strs);
     }
 
 
     public String maximumOddBinaryNumber(String s) {
         int cnt1 = 0;
 
-        for (int i = 0 ; i < s.length();i++){
-            if (s.charAt(i) == '1'){
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '1') {
                 cnt1++;
             }
         }
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 1 ; i < s.length();i++){
-            if (i <= (cnt1-1)) {
+        for (int i = 1; i < s.length(); i++) {
+            if (i <= (cnt1 - 1)) {
                 sb.append("1");
-            }else {
+            } else {
                 sb.append("0");
             }
         }
@@ -4108,11 +4108,83 @@ public class Solution {
         return sum;
     }
 
+    public int maxMoves(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+
+        for (int i = 0; i < dp.length; i++) {
+            dp[i][0] = 1;
+        }
+
+        int ans = 1;
+        for (int j = 1; j < n; j++) {
+            for (int i = 0; i < m; i++) {
+                for (int q = -1; q <= 1; q++) {
+
+                    if (i + q < 0 || i + q >= m) {
+                        continue;
+                    }
+
+                    if (grid[i + q][j - 1] < grid[i][j] && dp[i+q][j-1] > 0 ) {
+                        dp[i][j] = Math.max(dp[i][j], dp[i + q][j - 1]+1);
+                    }
+
+                }
+                ans = Math.max(dp[i][j], ans);
+            }
+        }
+
+        return ans-1;
+
+    }
+
+    public int maximumScore(int[] nums, int k) {
+        int n = nums.length;
+        int[] l = new int[n];
+        int[] r = new int[n];
+        Deque<Integer> queue = new ArrayDeque<>();
+        Arrays.fill(l,-1);
+        Arrays.fill(r,n);
+
+        // 1. 填充l 找当前节点在最左边能到多少
+        for (int i = n-1 ; i >= 0 ; i--){
+            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]){
+                l[queue.pop()] = i;
+            }
+            queue.push(i);
+        }
+
+        queue.clear();
+
+        // 2. 填充r  找到当前节点在能在最右边到多少
+        for (int i = 0 ; i < n ; i++){
+            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]){
+                r[queue.pop()] = i;
+            }
+            queue.push(i);
+        }
+
+
+        int ans = 0;
+
+        for (int i = 0 ; i < n ; i++){
+            int t = nums[i];
+            int a = l[i];
+            int b = r[i];
+            if (a +1 <= k && k<=b-1) {
+                ans = Math.max(ans, t * ((b-1) - (a+1) + 1));
+            }
+        }
+
+        return ans;
+
+    }
 
 
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.kSum(new int[]{2,4,-2}, 5);
+        solution.kSum(new int[]{2, 4, -2}, 5);
     }
 }

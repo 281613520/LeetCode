@@ -158,7 +158,7 @@ public class Dandiaozhan {
             int a = l[i];
             int b = r[i];
             if (a +1 <= k && k<=b-1) {
-                ans = Math.max(ans, t * (b - a + 1));
+                ans = Math.max(ans, t * (b - a - 1));
             }
         }
         return ans;
