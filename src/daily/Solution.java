@@ -4182,6 +4182,72 @@ public class Solution {
     }
 
 
+    public int minimumVisitedCells(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = 1;
+        // 分两个方向移动
+        for (int i = 0; i < m; ++i) {
+            Arrays.fill(dp[i], -1);
+        }
+        //<dist,i>
+        PriorityQueue<int[]>[] rows = new PriorityQueue[m];
+        //<dist,j>
+        PriorityQueue<int[]>[] cols = new PriorityQueue[n];
+
+        for (int i = 0 ; i < m ; i++){
+            rows[i] = new PriorityQueue<>(Comparator.comparingInt(o -> o[0]));
+        }
+
+        for (int i = 0 ; i < n ; i++){
+            cols[i] = new PriorityQueue<>(Comparator.comparingInt(o -> o[0]));
+        }
+
+
+        for (int i = 0 ; i < m ;i++){
+            for (int j = 0 ; j < n ; j++){
+                // 行纬度进行移动  向右移动
+                while (!rows[i].isEmpty() && rows[i].peek()[1] + grid[i][rows[i].peek()[1]] < j){
+                    rows[i].poll();
+                }
+                if (!rows[i].isEmpty()){
+                    dp[i][j] = update(dp[i][j], dp[i][rows[i].peek()[1]] + 1);
+                }
+
+
+                // 列纬度进行移动  向下移动
+                while (!cols[j].isEmpty() && cols[j].peek()[1] + grid[cols[j].peek()[1]][j] < i){
+                    cols[j].poll();
+                }
+                if (!cols[j].isEmpty()){
+                    dp[i][j] = update(dp[i][j], dp[cols[j].peek()[1]][j] + 1);
+                }
+
+                if (dp[i][j] != -1){
+                    rows[i].offer(new int[]{dp[i][j],j});
+                    cols[j].offer(new int[]{dp[i][j],i});
+                }
+            }
+        }
+
+
+
+        return dp[m-1][n-1];
+
+    }
+
+    public int update(int x, int y) {
+        return x == -1 || y < x ? y : x;
+    }
+
+
+
+    public int distinctIntegers(int n) {
+        return n==1?1:n-1;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
