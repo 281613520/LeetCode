@@ -4247,6 +4247,94 @@ public class Solution {
         return n==1?1:n-1;
     }
 
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount+1];
+
+        Arrays.fill(dp,-1);
+        dp[0] = 0;
+
+        for (int i = 1 ; i<= amount ; i++){
+            for (int coin:coins){
+                if (i >= coin) {
+                    dp[i] = Math.max(dp[i], dp[i - coin] + coin);
+                }
+            }
+        }
+
+        return dp[amount] > amount ? -1: dp[amount];
+    }
+
+
+
+    public int countWays(int[][] ranges) {
+        Arrays.sort(ranges, Comparator.comparingInt(a -> a[0]));
+
+        int ans = 1;
+        int maxR = -1;
+        for (int[] range : ranges) {
+            if (range[0] > maxR){
+                ans = ans*2 %1000000007;
+            }
+            maxR = Math.max(maxR,range[1]);
+        }
+
+
+        return ans;
+
+    }
+
+
+    public int firstDayBeenInAllRooms(int[] nextVisit) {
+        // 第一次访问到i  前面的一定都是 [0,i-1] 都是偶数
+        // 根据nextvisit 跳转 到 j  从j重新访问一边再到i 需要吧[j,i-1]的路再来一遍
+
+        // dp[i] = 2+ dp[j]+dp[j+1]+...+dp[i-1]
+        // dp[i] = 2 + s[i]-s[to]
+        //  s[i+1] = dp[i]+ s[i]
+        // s[i+1] = s[i]*2 - s[to] +2
+        int n = nextVisit.length;
+        int[] dp = new int[n];
+        int MOD = 1000000007;
+        dp[0] = 0;
+        for(int i = 1;i<n;i++){
+            dp[i] = 2*dp[i-1] - dp[nextVisit[i-1]] + 2;
+            if(dp[i] < 0){
+                dp[i] += MOD;
+            }
+            dp[i] %= MOD;
+        }
+        return dp[n-1];
+    }
+
+
+    public List<TreeNode> allPossibleFBT(int n) {
+        List<TreeNode> res = new ArrayList<>();
+        if (n%2 == 0){
+            return res;
+        }
+
+        if (n == 1){
+            res.add(new TreeNode(0));
+            return res;
+        }
+
+        for (int i = 1 ; i < n ; i+=2){
+            List<TreeNode> left = allPossibleFBT(i);
+            List<TreeNode> right = allPossibleFBT(n-1-i);
+
+            for (int l = 0 ; l < left.size() ; l++){
+                for (int r = 0 ; r < right.size() ; r++){
+                    TreeNode treeNode = new TreeNode(0,left.get(l),right.get(r));
+                    res.add(treeNode);
+                }
+            }
+        }
+
+
+        return res;
+    }
+
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
