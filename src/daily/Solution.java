@@ -1282,26 +1282,6 @@ public class Solution {
     }
 
 
-    public int maxAncestorDiff(TreeNode root) {
-        return dfsTreeForDiff(root, root.val, root.val);
-    }
-
-    private int dfsTreeForDiff(TreeNode node, int min, int max) {
-        if (node == null) {
-            return 0;
-        }
-
-        int diff = Math.max(Math.abs(node.val - min), Math.abs(node.val - max));
-        min = Math.min(node.val, min);
-        max = Math.max(node.val, max);
-        diff = Math.max(diff, dfsTreeForDiff(node.left, min, max));
-        diff = Math.max(diff, dfsTreeForDiff(node.right, min, max));
-
-
-        return diff;
-    }
-
-
     public int maxSumAfterPartitioning(int[] arr, int k) {
         // 区间内的最大值
         int n = arr.length;
@@ -4334,6 +4314,43 @@ public class Solution {
         return res;
     }
 
+
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+            if (original == null){
+                return null;
+            }
+
+            if (original == target){
+                return cloned;
+            }
+
+            TreeNode left = getTargetCopy(original.left, cloned.left, target);
+            if (left != null){
+                return left;
+            }
+
+            return getTargetCopy(original.right, cloned.right, target);
+    }
+
+
+    public int maxAncestorDiff(TreeNode root) {
+        return help1206(root,root.val,root.val);
+    }
+
+    private int help1206(TreeNode node, int max, int min) {
+        if (node == null){
+            return 0;
+        }
+
+        int diff = Math.max(Math.abs(node.val - max),Math.abs(node.val - min));
+
+        min = Math.min(min,node.val);
+        max = Math.max(max,node.val);
+
+        diff = Math.max(diff,help1206(node.left,max,min));
+        diff = Math.max(diff,help1206(node.right,max,min));
+        return diff;
+    }
 
 
     public static void main(String[] args) {
