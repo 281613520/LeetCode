@@ -4106,8 +4106,8 @@ public class Solution {
                         continue;
                     }
 
-                    if (grid[i + q][j - 1] < grid[i][j] && dp[i+q][j-1] > 0 ) {
-                        dp[i][j] = Math.max(dp[i][j], dp[i + q][j - 1]+1);
+                    if (grid[i + q][j - 1] < grid[i][j] && dp[i + q][j - 1] > 0) {
+                        dp[i][j] = Math.max(dp[i][j], dp[i + q][j - 1] + 1);
                     }
 
                 }
@@ -4115,7 +4115,7 @@ public class Solution {
             }
         }
 
-        return ans-1;
+        return ans - 1;
 
     }
 
@@ -4124,12 +4124,12 @@ public class Solution {
         int[] l = new int[n];
         int[] r = new int[n];
         Deque<Integer> queue = new ArrayDeque<>();
-        Arrays.fill(l,-1);
-        Arrays.fill(r,n);
+        Arrays.fill(l, -1);
+        Arrays.fill(r, n);
 
         // 1. 填充l 找当前节点在最左边能到多少
-        for (int i = n-1 ; i >= 0 ; i--){
-            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]){
+        for (int i = n - 1; i >= 0; i--) {
+            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]) {
                 l[queue.pop()] = i;
             }
             queue.push(i);
@@ -4138,8 +4138,8 @@ public class Solution {
         queue.clear();
 
         // 2. 填充r  找到当前节点在能在最右边到多少
-        for (int i = 0 ; i < n ; i++){
-            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]){
+        for (int i = 0; i < n; i++) {
+            while (!queue.isEmpty() && nums[queue.peek()] > nums[i]) {
                 r[queue.pop()] = i;
             }
             queue.push(i);
@@ -4148,12 +4148,12 @@ public class Solution {
 
         int ans = 0;
 
-        for (int i = 0 ; i < n ; i++){
+        for (int i = 0; i < n; i++) {
             int t = nums[i];
             int a = l[i];
             int b = r[i];
-            if (a +1 <= k && k<=b-1) {
-                ans = Math.max(ans, t * ((b-1) - (a+1) + 1));
+            if (a + 1 <= k && k <= b - 1) {
+                ans = Math.max(ans, t * ((b - 1) - (a + 1) + 1));
             }
         }
 
@@ -4176,44 +4176,43 @@ public class Solution {
         //<dist,j>
         PriorityQueue<int[]>[] cols = new PriorityQueue[n];
 
-        for (int i = 0 ; i < m ; i++){
+        for (int i = 0; i < m; i++) {
             rows[i] = new PriorityQueue<>(Comparator.comparingInt(o -> o[0]));
         }
 
-        for (int i = 0 ; i < n ; i++){
+        for (int i = 0; i < n; i++) {
             cols[i] = new PriorityQueue<>(Comparator.comparingInt(o -> o[0]));
         }
 
 
-        for (int i = 0 ; i < m ;i++){
-            for (int j = 0 ; j < n ; j++){
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 // 行纬度进行移动  向右移动
-                while (!rows[i].isEmpty() && rows[i].peek()[1] + grid[i][rows[i].peek()[1]] < j){
+                while (!rows[i].isEmpty() && rows[i].peek()[1] + grid[i][rows[i].peek()[1]] < j) {
                     rows[i].poll();
                 }
-                if (!rows[i].isEmpty()){
+                if (!rows[i].isEmpty()) {
                     dp[i][j] = update(dp[i][j], dp[i][rows[i].peek()[1]] + 1);
                 }
 
 
                 // 列纬度进行移动  向下移动
-                while (!cols[j].isEmpty() && cols[j].peek()[1] + grid[cols[j].peek()[1]][j] < i){
+                while (!cols[j].isEmpty() && cols[j].peek()[1] + grid[cols[j].peek()[1]][j] < i) {
                     cols[j].poll();
                 }
-                if (!cols[j].isEmpty()){
+                if (!cols[j].isEmpty()) {
                     dp[i][j] = update(dp[i][j], dp[cols[j].peek()[1]][j] + 1);
                 }
 
-                if (dp[i][j] != -1){
-                    rows[i].offer(new int[]{dp[i][j],j});
-                    cols[j].offer(new int[]{dp[i][j],i});
+                if (dp[i][j] != -1) {
+                    rows[i].offer(new int[]{dp[i][j], j});
+                    cols[j].offer(new int[]{dp[i][j], i});
                 }
             }
         }
 
 
-
-        return dp[m-1][n-1];
+        return dp[m - 1][n - 1];
 
     }
 
@@ -4222,28 +4221,26 @@ public class Solution {
     }
 
 
-
     public int distinctIntegers(int n) {
-        return n==1?1:n-1;
+        return n == 1 ? 1 : n - 1;
     }
 
     public int coinChange(int[] coins, int amount) {
-        int[] dp = new int[amount+1];
+        int[] dp = new int[amount + 1];
 
-        Arrays.fill(dp,-1);
+        Arrays.fill(dp, -1);
         dp[0] = 0;
 
-        for (int i = 1 ; i<= amount ; i++){
-            for (int coin:coins){
+        for (int i = 1; i <= amount; i++) {
+            for (int coin : coins) {
                 if (i >= coin) {
                     dp[i] = Math.max(dp[i], dp[i - coin] + coin);
                 }
             }
         }
 
-        return dp[amount] > amount ? -1: dp[amount];
+        return dp[amount] > amount ? -1 : dp[amount];
     }
-
 
 
     public int countWays(int[][] ranges) {
@@ -4252,10 +4249,10 @@ public class Solution {
         int ans = 1;
         int maxR = -1;
         for (int[] range : ranges) {
-            if (range[0] > maxR){
-                ans = ans*2 %1000000007;
+            if (range[0] > maxR) {
+                ans = ans * 2 % 1000000007;
             }
-            maxR = Math.max(maxR,range[1]);
+            maxR = Math.max(maxR, range[1]);
         }
 
 
@@ -4276,35 +4273,35 @@ public class Solution {
         int[] dp = new int[n];
         int MOD = 1000000007;
         dp[0] = 0;
-        for(int i = 1;i<n;i++){
-            dp[i] = 2*dp[i-1] - dp[nextVisit[i-1]] + 2;
-            if(dp[i] < 0){
+        for (int i = 1; i < n; i++) {
+            dp[i] = 2 * dp[i - 1] - dp[nextVisit[i - 1]] + 2;
+            if (dp[i] < 0) {
                 dp[i] += MOD;
             }
             dp[i] %= MOD;
         }
-        return dp[n-1];
+        return dp[n - 1];
     }
 
 
     public List<TreeNode> allPossibleFBT(int n) {
         List<TreeNode> res = new ArrayList<>();
-        if (n%2 == 0){
+        if (n % 2 == 0) {
             return res;
         }
 
-        if (n == 1){
+        if (n == 1) {
             res.add(new TreeNode(0));
             return res;
         }
 
-        for (int i = 1 ; i < n ; i+=2){
+        for (int i = 1; i < n; i += 2) {
             List<TreeNode> left = allPossibleFBT(i);
-            List<TreeNode> right = allPossibleFBT(n-1-i);
+            List<TreeNode> right = allPossibleFBT(n - 1 - i);
 
-            for (int l = 0 ; l < left.size() ; l++){
-                for (int r = 0 ; r < right.size() ; r++){
-                    TreeNode treeNode = new TreeNode(0,left.get(l),right.get(r));
+            for (int l = 0; l < left.size(); l++) {
+                for (int r = 0; r < right.size(); r++) {
+                    TreeNode treeNode = new TreeNode(0, left.get(l), right.get(r));
                     res.add(treeNode);
                 }
             }
@@ -4316,40 +4313,83 @@ public class Solution {
 
 
     public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
-            if (original == null){
-                return null;
-            }
+        if (original == null) {
+            return null;
+        }
 
-            if (original == target){
-                return cloned;
-            }
+        if (original == target) {
+            return cloned;
+        }
 
-            TreeNode left = getTargetCopy(original.left, cloned.left, target);
-            if (left != null){
-                return left;
-            }
+        TreeNode left = getTargetCopy(original.left, cloned.left, target);
+        if (left != null) {
+            return left;
+        }
 
-            return getTargetCopy(original.right, cloned.right, target);
+        return getTargetCopy(original.right, cloned.right, target);
     }
 
 
     public int maxAncestorDiff(TreeNode root) {
-        return help1206(root,root.val,root.val);
+        return help1206(root, root.val, root.val);
     }
 
     private int help1206(TreeNode node, int max, int min) {
-        if (node == null){
+        if (node == null) {
             return 0;
         }
 
-        int diff = Math.max(Math.abs(node.val - max),Math.abs(node.val - min));
+        int diff = Math.max(Math.abs(node.val - max), Math.abs(node.val - min));
 
-        min = Math.min(min,node.val);
-        max = Math.max(max,node.val);
+        min = Math.min(min, node.val);
+        max = Math.max(max, node.val);
 
-        diff = Math.max(diff,help1206(node.left,max,min));
-        diff = Math.max(diff,help1206(node.right,max,min));
+        diff = Math.max(diff, help1206(node.left, max, min));
+        diff = Math.max(diff, help1206(node.right, max, min));
         return diff;
+    }
+
+
+    public int maximumCount(int[] nums) {
+        int countPositive = 0;
+        int countNegative = 0;
+
+        for (int num : nums) {
+            if (num < 0) {
+                countNegative++;
+            } else if (num > 0) {
+                countPositive++;
+            }
+        }
+
+        return Math.max(countNegative, countPositive);
+    }
+
+    public int minOperations(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        int n = nums.length;
+
+        for (int num : nums) {
+            set.add(num);
+        }
+
+        List<Integer> lists = new ArrayList<>(set);
+
+        Collections.sort(lists);
+
+        int res = Integer.MAX_VALUE;
+        int j = 0;// j总是比较靠右的
+        for (int i = 0; i < lists.size(); i++) {
+            int x = lists.get(i);
+            int y = x + n -1;
+            while (j < lists.size() && lists.get(j)<= y) {
+                res = Math.min(res,n- (j-i+1));
+                j++;
+            }
+        }
+
+        return res;
+
     }
 
 

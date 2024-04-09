@@ -123,7 +123,6 @@ public class Solution390 {
 
     public static void main(String[] args) {
         Solution390 solution390 = new Solution390();
-
         solution390.stringIndices(new String[]{"abcd","bcd","xbcd"},new String[]{"cd","bcd","xyz"});
     }
 }
