@@ -4378,7 +4378,7 @@ public class Solution {
         Collections.sort(lists);
 
         int res = Integer.MAX_VALUE;
-        int j = 0;// j总是比较靠右的
+        int j = 0;// j总是比较靠右的 因为x在不断增大
         for (int i = 0; i < lists.size(); i++) {
             int x = lists.get(i);
             int y = x + n -1;
@@ -4391,6 +4391,35 @@ public class Solution {
         return res;
 
     }
+
+    public int findChampion(int n, int[][] edges) {
+        int[] res = new  int[n];
+        for (int i = 0 ; i < n ; i++){
+            res[i] = i;
+        }
+
+        for (int[] edge : edges) {
+            int winner = edge[0];
+            int loser = edge[1];
+
+            if (res[loser] == loser){
+                res[loser] = winner;
+            }
+        }
+
+        int cnt = 0;
+        int ans  = -1;
+        for (int i = 0; i < res.length; i++) {
+            if (res[i] == i){
+                cnt++;
+                ans = i;
+            }
+        }
+
+        return cnt == 1? ans:-1;
+
+    }
+
 
 
     public static void main(String[] args) {
