@@ -4421,10 +4421,68 @@ public class Solution {
     }
 
 
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> tmoList = new ArrayList<>();
+        Arrays.sort(candidates);
+        backtrace39(candidates,0,0,target,res,tmoList);
+        return res;
+    }
+
+    private void backtrace39(int[] candidates, int start,int preSum, int target, List<List<Integer>> res,List<Integer> tmoList) {
+        if (start >= candidates.length){
+            return;
+        }
+
+        if (preSum  == target){
+            res.add(new ArrayList<>(tmoList));
+            return;
+        }
+
+        for (int i = start; i < candidates.length; i++) {
+            int cur = candidates[i];
+            if (cur + preSum > target){
+                break;
+            }
+            backtrace39(candidates, i, preSum + cur, target, res, tmoList);
+            tmoList.remove(tmoList.size() - 1);
+        }
+    }
+
+
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> res = new ArrayList<>();
+        Set<Integer> combine = new HashSet<>();
+
+        backtrace216(res,combine,0,0,k,n);
+
+        return res;
+    }
+
+    private void backtrace216(List<List<Integer>> res, Set<Integer> combine, int start, int preSum, int k, int n) {
+        if (combine.size() > k){
+            return;
+        }
+
+        if (combine.size() == k && n == preSum){
+            res.add(new ArrayList<>(combine));
+            return;
+        }
+
+        for (int i = start+1; i < 10 ; i++){
+            if (preSum +i > n){
+                break;
+            }
+            combine.add(i);
+            backtrace216(res,combine,i,preSum+i,k,n);
+            combine.remove(i);
+        }
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.kSum(new int[]{2, 4, -2}, 5);
+        solution.combinationSum3(3,7);
     }
 }
