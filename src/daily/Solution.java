@@ -4495,6 +4495,34 @@ public class Solution {
     }
 
 
+    public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+        int total = 0;
+        for (int i = 0; i < customers.length; i++) {
+            if (grumpy[i] == 0){
+                total += customers[i];
+            }
+        }
+
+
+        int maxIncrease = 0;
+        int increase = 0;
+
+        for (int i = 0 ; i < minutes ; i++){
+            maxIncrease += customers[i]*grumpy[i];
+        }
+        increase = maxIncrease;
+
+        for (int i = minutes ; i < customers.length ; i++){
+            increase = increase - customers[i-minutes]*grumpy[i-minutes] + customers[i]*grumpy[i];
+            maxIncrease = Math.max(increase,maxIncrease);
+        }
+
+
+        return maxIncrease + total;
+    }
+    
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
