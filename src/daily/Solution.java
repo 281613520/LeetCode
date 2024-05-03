@@ -4516,9 +4516,50 @@ public class Solution {
             increase = increase - customers[i-minutes]*grumpy[i-minutes] + customers[i]*grumpy[i];
             maxIncrease = Math.max(increase,maxIncrease);
         }
-
-
         return maxIncrease + total;
+    }
+
+
+    public long totalCost(int[] costs, int k, int candidates) {
+        int n = costs.length;
+
+
+        PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]);
+        int left = candidates - 1;
+        int right = n- candidates;
+        if (left + 1 < right){
+            for (int i = 0 ; i <= left ; i++){
+                queue.add(new int[]{costs[i],i});
+            }
+
+            for (int i = right; i < n; ++i) {
+                queue.offer(new int[]{costs[i], i});
+            }
+        }else {
+            for (int i = 0 ; i < n ; i++){
+                queue.add(new int[]{costs[i],i});
+            }
+        }
+
+        long ans = 0;
+        for (int i = 0 ; i < k ; i++){
+            int[] arr = queue.poll();
+            int cost = arr[0], id = arr[1];
+            ans += cost;
+
+            if (left+1 < right){
+                if (id <= left) {
+                    ++left;
+                    queue.offer(new int[]{costs[left], left});
+                } else {
+                    --right;
+                    queue.offer(new int[]{costs[right], right});
+                }
+            }
+        }
+
+        return ans;
+
     }
     
 
