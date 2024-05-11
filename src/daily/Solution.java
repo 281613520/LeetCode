@@ -4561,7 +4561,121 @@ public class Solution {
         return ans;
 
     }
-    
+
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = startTime.length;
+        int[][] jobs = new int[n][];
+
+        for (int i = 0 ; i < n ; i++){
+            jobs[i] = new int[]{startTime[i], endTime[i], profit[i]};
+        }
+
+        Arrays.sort(jobs, (o1, o2) -> o1[1] - o2[1]);
+
+        int[] dp = new int[n+1];
+
+        for (int i = 0 ; i < n ; i++){
+            int j = search(jobs,i,jobs[i][0]);
+            dp[i+1] = Math.max(dp[i],dp[j+1]+jobs[i][2]);
+        }
+
+        return dp[n];
+    }
+
+
+    private int search(int[][] jobs, int right, int upper) {
+        int left = -1;
+        while (left + 1 < right) {
+            int mid = (left + right) >>> 1;
+            if (jobs[mid][1] <= upper) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+
+
+    public int garbageCollection(String[] garbage, int[] travel) {
+        Map<Character,Integer> disMap = new HashMap<>();
+        
+        int res = 0;
+        int cur = 0;
+        for (int i = 0; i < garbage.length; i++) {
+            res += garbage[i].length();
+            if (i > 0) {
+                cur += travel[i-1];
+            }
+
+            for (char c : garbage[i].toCharArray()) {
+                disMap.put(c,cur);
+            }
+        }
+
+        return res + disMap.values().stream().reduce(0,Integer::sum);
+    }
+
+
+    public int wateringPlants(int[] plants, int capacity) {
+        int res = 0;
+
+        int curCapacity = capacity;
+
+        for (int i = 0; i < plants.length; i++) {
+            int cur = plants[i];
+            if (curCapacity < cur){
+                res +=(i+i);
+                curCapacity = capacity;
+                curCapacity -= cur;
+            }else {
+                curCapacity -= cur;
+            }
+            res++;
+        }
+
+
+        return res;
+    }
+
+
+    public int minimumRefill(int[] plants, int capacityA, int capacityB) {
+        int res = 0;
+        int n = plants.length;
+        int posa = 0,posb = n-1;
+        int vala = capacityA,valb = capacityB;
+
+        while (posa < posb){
+            if (vala < plants[posa]){
+                res++;
+                vala = capacityA - plants[posa];
+            }else {
+                vala -= plants[posa];
+            }
+
+            if (valb < plants[posb]){
+                res++;
+                valb = capacityB - plants[posb];
+            }else {
+                valb -= plants[posb];
+            }
+
+            posa++;
+            posb--;
+        }
+
+        if (posa == posb){
+            if (vala >= valb && vala < plants[posa]) {
+                ++res;
+            }
+            if (vala < valb && valb < plants[posb]) {
+                ++res;
+            }
+        }
+
+
+        return res;
+    }
 
 
     public static void main(String[] args) {
