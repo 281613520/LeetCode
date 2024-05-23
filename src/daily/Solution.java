@@ -4716,6 +4716,26 @@ public class Solution {
     }
 
 
+    public int longestEqualSubarray(List<Integer> nums, int k) {
+        Map<Integer,List<Integer>> map = new HashMap<>();
+        for (int i = 0; i < nums.size(); i++) {
+            map.computeIfAbsent(nums.get(i),x -> new ArrayList<>()).add(i);
+        }
+        int ans = 0;
+        for (List<Integer> value : map.values()) {
+            for (int i=0,j = 0 ; j < value.size() ; j++){
+                while (value.get(j) - value.get(i) - (j-i) > k){
+                    i++;
+                }
+
+                ans = Math.max(ans,j-i +1);
+            }
+        }
+
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
