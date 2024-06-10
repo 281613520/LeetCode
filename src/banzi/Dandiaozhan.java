@@ -164,4 +164,31 @@ public class Dandiaozhan {
         return ans;
     }
 
+    public int[] mostCompetitive(int[] nums, int k) {
+        Deque<Integer> deque = new ArrayDeque<>();
+        int n = nums.length;
+        // 找一个长度为k的  单调递增的数组
+        for (int i = 0 ; i < nums.length ; i++){
+            while (!deque.isEmpty() && deque.size() + n - i > k && deque.peek() > nums[i]){
+                    deque.pop();
+            }
+            deque.push(nums[i]);
+        }
+
+        int[] res = new int[k];
+
+        for (int i = 0; i <k; i++) {
+            res[i] = deque.pollLast();
+        }
+        return res;
+
+    }
+
+    public static void main(String[] args) {
+        Dandiaozhan dandiaozhan = new Dandiaozhan();
+
+
+        dandiaozhan.mostCompetitive(new int[]{2,4,3,3,5,4,9,6},4);
+    }
+
 }

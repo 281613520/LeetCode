@@ -1,5 +1,7 @@
 package contest328;
 
+import context.week5.UndergroundSystem;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,32 +27,33 @@ public class Solution {
     }
 
     public long countGood(int[] nums, int k) {
-        Map<Integer, Integer> map = new HashMap<>();
-        int lo = 0;
-        int hi = 0;
-        long cnt = 0;
-        int pairs = 0;
+            Map<Integer,  Integer> map = new HashMap<>();
 
-        while (hi < nums.length) {
-            map.put(nums[hi], map.getOrDefault(nums[hi], 0) + 1);
-            pairs += map.getOrDefault(nums[hi], 0);
+            int left = 0 ,right = 0,pairs = 0;
+            long cnt = 0;
 
-            while (pairs >= k && lo <= hi) {
-                pairs -= map.get(nums[lo]) - 1;
-                map.put(nums[lo], map.get(nums[lo]) - 1);
-                lo++;
+            while (right< nums.length) {
+                pairs += map.getOrDefault(nums[right],0);
+                map.put(nums[right], map.getOrDefault(nums[right], 0) + 1);
+
+                while (pairs >= k && left <= right){
+                    pairs -= map.get(nums[left]) -1;
+                    map.put(nums[left], map.get(nums[left]) - 1);
+                    left++;
+                }
+
+                cnt += left;
+                right++;
             }
 
-            cnt += lo;
-            hi++;
-        }
-
-        return cnt;
+            return cnt;
     }
 
     public long maxOutput(int n, int[][] edges, int[] price) {
+        // 正常思路是遍历边 来算以a为根结点的最大值
 
-        return 0;
+        long ans = 0;
+        return ans;
     }
 
 }

@@ -4736,6 +4736,73 @@ public class Solution {
     }
 
 
+    public int[] countPairsOfConnectableServers(int[][] edges, int signalSpeed) {
+        // jiantu
+        int n = edges.length+1;
+        List<int[]>[] graph = new ArrayList[n];
+        Arrays.setAll(graph,g -> new ArrayList<>());
+
+        for (int i = 0; i < edges.length; i++) {
+            int x = edges[i][0];
+            int y = edges[i][1];
+            int value = edges[i][2];
+            graph[x].add(new int[]{y,value});
+            graph[y].add(new int[]{x,value});
+        }
+
+        int[] ans = new int[n];
+
+        for (int i = 0 ; i < n ;i++){
+            if (graph[i].size() == 1){
+                continue;
+            }
+            int sum = 0;
+            for (int[] children : graph[i]) {
+                int cnt = dfs3067(children[0],i,children[1],graph,signalSpeed);
+                ans[i] += sum*cnt;
+                sum += cnt;
+            }
+        }
+        return ans;
+    }
+
+    private int dfs3067(int child, int fa,int sum, List<int[]>[] graph, int signalSpeed) {
+        int cnt = sum % signalSpeed == 0? 1 : 0;
+
+        for (int[] next : graph[child]) {
+            int y = next[0];
+            if (y != fa) {
+                cnt += dfs3067(next[0], child, sum + next[1], graph, signalSpeed);
+            }
+        }
+
+        return cnt;
+    }
+
+
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+
+        int light = 0;
+        int heavy = people.length-1;
+        int ans = 0;
+        while (light <= heavy){
+            if (people[light] + people[heavy] <=  limit){
+                light++;
+            }
+            heavy--;
+            ans++;
+        }
+
+        return ans;
+    }
+
+    public int maxCoins(int[] nums) {
+
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
