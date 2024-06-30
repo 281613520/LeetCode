@@ -4822,6 +4822,61 @@ public class Solution {
     }
 
 
+    public int countBattleships(char[][] board) {
+        int ans = 0;
+        int m = board.length;
+        int n = board[0].length;
+
+        for (int i = 0 ; i < m ; i++){
+            for (int j = 0 ; j < n ; j++){
+                if (board[i][j] == 'X'){
+                    board[i][j] = '.';
+                    for (int k = j+1 ; k < n && board[i][k] == 'X';k++){
+                        board[i][k] = '.';
+                    }
+
+                    for (int k = i+1 ; k < m && board[k][j] == 'X';k++){
+                        board[k][j] = '.';
+                    }
+
+                    ans++;
+                }
+            }
+        }
+
+
+
+
+        return ans;
+    }
+
+
+
+    public int[] nextGreaterElements(int[] nums) {
+        // 单调栈
+            int[] ans = new int[nums.length];
+
+            int n = nums.length;
+            Arrays.fill(ans, -1);
+            Deque<Integer> stack = new ArrayDeque<>();
+            stack.push(-1);
+            for (int i = 2*nums.length - 1; i >= 0; i--) {
+                int x = nums[i%n];
+                while (!stack.isEmpty() && x > nums[stack.peek()]){
+                    stack.pop();
+                }
+
+                if (i < n && !stack.isEmpty()){
+                    ans[i] = stack.peek();
+                }
+
+                stack.push(i);
+            }
+
+            return ans;
+    }
+
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
