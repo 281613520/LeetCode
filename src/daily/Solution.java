@@ -4908,6 +4908,98 @@ public class Solution {
     }
 
 
+    public int maximumPrimeDifference(int[] nums) {
+        int limit = 100;
+        boolean[] isPrime = new boolean[limit + 1];
+        for (int i = 2; i <= limit; i++) {
+            isPrime[i] = true;
+        }
+
+        for (int factor = 2; factor * factor <= limit; factor++) {
+            if (isPrime[factor]) {
+                for (int j = factor * factor; j <= limit; j += factor) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+
+        int first = -1;
+        int ans = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (isPrime[nums[i]]){
+                if (first == -1){
+                    first = i;
+                }else {
+                    ans = Math.max(ans,i - first );
+                }
+
+            }
+        }
+
+        return ans;
+    }
+
+
+
+    public boolean checkMove(char[][] board, int rMove, int cMove, char color) {
+        boolean res = false;
+
+        int[] dx = new int[]{1,1, 1,-1,-1,-1,0,0};
+        int[] dy = new int[]{0,1,-1,-1, 0, 1,1,-1};
+
+        for (int i = 0 ; i < 8 ; i++){
+            if (checkvalid(board,dx[i],dy[i],color,rMove,cMove)){
+                return true;
+            }
+        }
+
+        return res;
+    }
+
+    private boolean checkvalid(char[][] board,int dx,int dy,char color,int rMove,int cMove){
+        int x = rMove+ dx;
+        int y = cMove+dy;
+        int step = 1;
+        while (x>=0 && x < 8 && y>= 0 && y <8){
+            if (step == 1){
+                if (board[x][y] == '.' || board[x][y] == color) {
+                    return false;
+                }
+            }else {
+                if (board[x][y] == '.') {
+                    return false;
+                }
+                if (board[x][y] == color) {
+                    return true;
+                }
+            }
+
+            x+= dx;
+            y+= dy;
+            step++;
+        }
+
+        return false;
+    }
+
+
+    public long countAlternatingSubarrays(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        long sum = 1;
+        for (int i = 1 ; i < n ; i++){
+            if (nums[i] != nums[i-1]){
+                dp[i] = dp[i-1]+1;
+            }else {
+                dp[i] = 1;
+            }
+            sum += dp[i];
+        }
+
+        return sum;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
