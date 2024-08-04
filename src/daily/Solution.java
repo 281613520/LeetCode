@@ -8,6 +8,7 @@ import context.week5.UndergroundSystem;
 import math.TreeNode;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solution {
@@ -4999,6 +5000,130 @@ public class Solution {
 
         return sum;
     }
+
+    public int pivotIndex(int[] nums) {
+        int sum = Arrays.stream(nums).sum();
+        int index = 0;
+        int cur = 0;
+        for (;index < nums.length ; index++){
+            if (cur == (sum - cur - nums[index])){
+                return index;
+            }else {
+                cur += nums[index];
+            }
+        }
+
+        return -1;
+    }
+
+
+
+
+    public List<Integer> getGoodIndices(int[][] variables, int target) {
+        List<Integer> ans = new ArrayList<>();
+
+        for (int i = 0; i < variables.length; i++) {
+            int[] v = variables[i];
+            if (powMod(powMod(v[0], v[1], 10), v[2], v[3]) == target) {
+                ans.add(i);
+            }
+        }
+
+        return ans;
+    }
+
+
+    public int powMod(int x, int y, int mod) {
+        int res = 1;
+        while (y != 0) {
+            if ((y & 1) != 0) {
+                res = res * x % mod;
+            }
+            x = x * x % mod;
+            y >>= 1;
+        }
+        return res;
+    }
+
+
+    public int maxmiumScore(int[] cards, int cnt) {
+        Arrays.sort(cards);
+        int n = cards.length;
+        int sum = 0;
+        for (int i = n-cnt; i < cnt; i++) {
+         sum += cards[i];
+        }
+
+        if (sum %2 == 0){
+            return sum;
+        }
+        // 奇数时 去掉前cnt个中最小的偶数  加上 后面最大的奇数
+        //       去掉最小的奇数  加上后面最大的偶数
+        // 先按照x的奇偶
+        int x = cards[n-cnt];
+        int ans = replaceX(cards,cnt,sum,x);
+        for (int i = n - cnt + 1; i < n; i++) {
+            if (cards[i] % 2 != x % 2) { // 找到一个最大的奇偶性和 x 不同的数
+                ans = Math.max(ans, replaceX(cards, cnt, sum, cards[i])); // 替换
+                break;
+            }
+        }
+        return ans;
+    }
+
+    private int replaceX(int[] cards, int cnt, int sum, int x) {
+        for (int i = cards.length - cnt -1; i >=0; i--) {
+            if (cards[i]%2 != x %2){
+                return sum - x +cards[i];
+            }
+        }
+        return 0;
+    }
+
+
+    public int maxPointsInsideSquare(int[][] points, String s) {
+        int[] minD = new int[26];
+        Arrays.fill(minD,Integer.MAX_VALUE);
+        int min2 = Integer.MAX_VALUE;
+        for (int i = 0; i < points.length; i++) {
+            int distance = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+            int charLocation = s.charAt(i) - 'a';
+            if (distance < minD[charLocation]){
+                min2 = Math.min(min2,minD[charLocation]);
+                minD[charLocation] = distance;
+            }else {
+                min2 = Math.min(min2,distance);
+            }
+        }
+
+        int res = 0;
+
+        for (int i : minD) {
+            if (i < min2){
+                res++;
+            }
+        }
+
+
+        return res;
+    }
+
+
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if (root == null){
+            return false;
+        }
+        return isSameTree(root,subRoot) || isSubtree(root.left,subRoot)|| isSubtree(root.right,subRoot);
+    }
+
+    private boolean isSameTree(TreeNode root, TreeNode subRoot) {
+        if (root == null || subRoot == null){
+            return root == subRoot;
+        }
+
+        return root.val == subRoot.val  && isSameTree(root.left,subRoot.left) && isSameTree(root.right,subRoot.right);
+    }
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
