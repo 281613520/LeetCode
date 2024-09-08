@@ -5,6 +5,7 @@ import banzi.UnionFind;
 import com.sun.source.tree.Tree;
 import contest316.ListNode;
 import context.week5.UndergroundSystem;
+import context.week7.FindDiagonalOrder;
 import math.TreeNode;
 
 import java.io.PrintWriter;
@@ -4382,9 +4383,9 @@ public class Solution {
         int j = 0;// j总是比较靠右的 因为x在不断增大
         for (int i = 0; i < lists.size(); i++) {
             int x = lists.get(i);
-            int y = x + n -1;
-            while (j < lists.size() && lists.get(j)<= y) {
-                res = Math.min(res,n- (j-i+1));
+            int y = x + n - 1;
+            while (j < lists.size() && lists.get(j) <= y) {
+                res = Math.min(res, n - (j - i + 1));
                 j++;
             }
         }
@@ -4394,8 +4395,8 @@ public class Solution {
     }
 
     public int findChampion(int n, int[][] edges) {
-        int[] res = new  int[n];
-        for (int i = 0 ; i < n ; i++){
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {
             res[i] = i;
         }
 
@@ -4403,21 +4404,21 @@ public class Solution {
             int winner = edge[0];
             int loser = edge[1];
 
-            if (res[loser] == loser){
+            if (res[loser] == loser) {
                 res[loser] = winner;
             }
         }
 
         int cnt = 0;
-        int ans  = -1;
+        int ans = -1;
         for (int i = 0; i < res.length; i++) {
-            if (res[i] == i){
+            if (res[i] == i) {
                 cnt++;
                 ans = i;
             }
         }
 
-        return cnt == 1? ans:-1;
+        return cnt == 1 ? ans : -1;
 
     }
 
@@ -4426,23 +4427,23 @@ public class Solution {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> tmoList = new ArrayList<>();
         Arrays.sort(candidates);
-        backtrace39(candidates,0,0,target,res,tmoList);
+        backtrace39(candidates, 0, 0, target, res, tmoList);
         return res;
     }
 
-    private void backtrace39(int[] candidates, int start,int preSum, int target, List<List<Integer>> res,List<Integer> tmoList) {
-        if (start >= candidates.length){
+    private void backtrace39(int[] candidates, int start, int preSum, int target, List<List<Integer>> res, List<Integer> tmoList) {
+        if (start >= candidates.length) {
             return;
         }
 
-        if (preSum  == target){
+        if (preSum == target) {
             res.add(new ArrayList<>(tmoList));
             return;
         }
 
         for (int i = start; i < candidates.length; i++) {
             int cur = candidates[i];
-            if (cur + preSum > target){
+            if (cur + preSum > target) {
                 break;
             }
             backtrace39(candidates, i, preSum + cur, target, res, tmoList);
@@ -4455,35 +4456,35 @@ public class Solution {
         List<List<Integer>> res = new ArrayList<>();
         Set<Integer> combine = new HashSet<>();
 
-        backtrace216(res,combine,0,0,k,n);
+        backtrace216(res, combine, 0, 0, k, n);
 
         return res;
     }
 
     private void backtrace216(List<List<Integer>> res, Set<Integer> combine, int start, int preSum, int k, int n) {
-        if (combine.size() > k){
+        if (combine.size() > k) {
             return;
         }
 
-        if (combine.size() == k && n == preSum){
+        if (combine.size() == k && n == preSum) {
             res.add(new ArrayList<>(combine));
             return;
         }
 
-        for (int i = start+1; i < 10 ; i++){
-            if (preSum +i > n){
+        for (int i = start + 1; i < 10; i++) {
+            if (preSum + i > n) {
                 break;
             }
             combine.add(i);
-            backtrace216(res,combine,i,preSum+i,k,n);
+            backtrace216(res, combine, i, preSum + i, k, n);
             combine.remove(i);
         }
     }
 
 
     public int combinationSum4(int[] nums, int target) {
-        int[] dp = new int[target+1];
-        dp[0]=1;
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
         for (int i = 1; i <= target; i++) {
             for (int num : nums) {
                 if (i >= num) {
@@ -4499,7 +4500,7 @@ public class Solution {
     public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
         int total = 0;
         for (int i = 0; i < customers.length; i++) {
-            if (grumpy[i] == 0){
+            if (grumpy[i] == 0) {
                 total += customers[i];
             }
         }
@@ -4508,14 +4509,14 @@ public class Solution {
         int maxIncrease = 0;
         int increase = 0;
 
-        for (int i = 0 ; i < minutes ; i++){
-            maxIncrease += customers[i]*grumpy[i];
+        for (int i = 0; i < minutes; i++) {
+            maxIncrease += customers[i] * grumpy[i];
         }
         increase = maxIncrease;
 
-        for (int i = minutes ; i < customers.length ; i++){
-            increase = increase - customers[i-minutes]*grumpy[i-minutes] + customers[i]*grumpy[i];
-            maxIncrease = Math.max(increase,maxIncrease);
+        for (int i = minutes; i < customers.length; i++) {
+            increase = increase - customers[i - minutes] * grumpy[i - minutes] + customers[i] * grumpy[i];
+            maxIncrease = Math.max(increase, maxIncrease);
         }
         return maxIncrease + total;
     }
@@ -4527,28 +4528,28 @@ public class Solution {
 
         PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]);
         int left = candidates - 1;
-        int right = n- candidates;
-        if (left + 1 < right){
-            for (int i = 0 ; i <= left ; i++){
-                queue.add(new int[]{costs[i],i});
+        int right = n - candidates;
+        if (left + 1 < right) {
+            for (int i = 0; i <= left; i++) {
+                queue.add(new int[]{costs[i], i});
             }
 
             for (int i = right; i < n; ++i) {
                 queue.offer(new int[]{costs[i], i});
             }
-        }else {
-            for (int i = 0 ; i < n ; i++){
-                queue.add(new int[]{costs[i],i});
+        } else {
+            for (int i = 0; i < n; i++) {
+                queue.add(new int[]{costs[i], i});
             }
         }
 
         long ans = 0;
-        for (int i = 0 ; i < k ; i++){
+        for (int i = 0; i < k; i++) {
             int[] arr = queue.poll();
             int cost = arr[0], id = arr[1];
             ans += cost;
 
-            if (left+1 < right){
+            if (left + 1 < right) {
                 if (id <= left) {
                     ++left;
                     queue.offer(new int[]{costs[left], left});
@@ -4567,17 +4568,17 @@ public class Solution {
         int n = startTime.length;
         int[][] jobs = new int[n][];
 
-        for (int i = 0 ; i < n ; i++){
+        for (int i = 0; i < n; i++) {
             jobs[i] = new int[]{startTime[i], endTime[i], profit[i]};
         }
 
         Arrays.sort(jobs, (o1, o2) -> o1[1] - o2[1]);
 
-        int[] dp = new int[n+1];
+        int[] dp = new int[n + 1];
 
-        for (int i = 0 ; i < n ; i++){
-            int j = search(jobs,i,jobs[i][0]);
-            dp[i+1] = Math.max(dp[i],dp[j+1]+jobs[i][2]);
+        for (int i = 0; i < n; i++) {
+            int j = search(jobs, i, jobs[i][0]);
+            dp[i + 1] = Math.max(dp[i], dp[j + 1] + jobs[i][2]);
         }
 
         return dp[n];
@@ -4599,22 +4600,22 @@ public class Solution {
 
 
     public int garbageCollection(String[] garbage, int[] travel) {
-        Map<Character,Integer> disMap = new HashMap<>();
-        
+        Map<Character, Integer> disMap = new HashMap<>();
+
         int res = 0;
         int cur = 0;
         for (int i = 0; i < garbage.length; i++) {
             res += garbage[i].length();
             if (i > 0) {
-                cur += travel[i-1];
+                cur += travel[i - 1];
             }
 
             for (char c : garbage[i].toCharArray()) {
-                disMap.put(c,cur);
+                disMap.put(c, cur);
             }
         }
 
-        return res + disMap.values().stream().reduce(0,Integer::sum);
+        return res + disMap.values().stream().reduce(0, Integer::sum);
     }
 
 
@@ -4625,11 +4626,11 @@ public class Solution {
 
         for (int i = 0; i < plants.length; i++) {
             int cur = plants[i];
-            if (curCapacity < cur){
-                res +=(i+i);
+            if (curCapacity < cur) {
+                res += (i + i);
                 curCapacity = capacity;
                 curCapacity -= cur;
-            }else {
+            } else {
                 curCapacity -= cur;
             }
             res++;
@@ -4643,21 +4644,21 @@ public class Solution {
     public int minimumRefill(int[] plants, int capacityA, int capacityB) {
         int res = 0;
         int n = plants.length;
-        int posa = 0,posb = n-1;
-        int vala = capacityA,valb = capacityB;
+        int posa = 0, posb = n - 1;
+        int vala = capacityA, valb = capacityB;
 
-        while (posa < posb){
-            if (vala < plants[posa]){
+        while (posa < posb) {
+            if (vala < plants[posa]) {
                 res++;
                 vala = capacityA - plants[posa];
-            }else {
+            } else {
                 vala -= plants[posa];
             }
 
-            if (valb < plants[posb]){
+            if (valb < plants[posb]) {
                 res++;
                 valb = capacityB - plants[posb];
-            }else {
+            } else {
                 valb -= plants[posb];
             }
 
@@ -4665,7 +4666,7 @@ public class Solution {
             posb--;
         }
 
-        if (posa == posb){
+        if (posa == posb) {
             if (vala >= valb && vala < plants[posa]) {
                 ++res;
             }
@@ -4679,26 +4680,26 @@ public class Solution {
     }
 
     public List<List<Integer>> findWinners(int[][] matches) {
-        Map<Integer,Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         Set<Integer> winner = new HashSet<>();
-        for (int[] cur : matches){
+        for (int[] cur : matches) {
             int win = cur[0];
             int loser = cur[1];
             winner.add(win);
-            map.put(loser,map.getOrDefault(loser,0) + 1);
+            map.put(loser, map.getOrDefault(loser, 0) + 1);
         }
 
         List<Integer> list1 = new ArrayList<>();
         List<Integer> list2 = new ArrayList<>();
 
-        map.forEach((k,v) -> {
-            if (v == 1){
+        map.forEach((k, v) -> {
+            if (v == 1) {
                 list2.add(k);
             }
         });
 
-        winner.forEach( v -> {
-            if (!map.containsKey(v)){
+        winner.forEach(v -> {
+            if (!map.containsKey(v)) {
                 list1.add(v);
             }
         });
@@ -4718,18 +4719,18 @@ public class Solution {
 
 
     public int longestEqualSubarray(List<Integer> nums, int k) {
-        Map<Integer,List<Integer>> map = new HashMap<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
         for (int i = 0; i < nums.size(); i++) {
-            map.computeIfAbsent(nums.get(i),x -> new ArrayList<>()).add(i);
+            map.computeIfAbsent(nums.get(i), x -> new ArrayList<>()).add(i);
         }
         int ans = 0;
         for (List<Integer> value : map.values()) {
-            for (int i=0,j = 0 ; j < value.size() ; j++){
-                while (value.get(j) - value.get(i) - (j-i) > k){
+            for (int i = 0, j = 0; j < value.size(); j++) {
+                while (value.get(j) - value.get(i) - (j - i) > k) {
                     i++;
                 }
 
-                ans = Math.max(ans,j-i +1);
+                ans = Math.max(ans, j - i + 1);
             }
         }
 
@@ -4739,36 +4740,36 @@ public class Solution {
 
     public int[] countPairsOfConnectableServers(int[][] edges, int signalSpeed) {
         // jiantu
-        int n = edges.length+1;
+        int n = edges.length + 1;
         List<int[]>[] graph = new ArrayList[n];
-        Arrays.setAll(graph,g -> new ArrayList<>());
+        Arrays.setAll(graph, g -> new ArrayList<>());
 
         for (int i = 0; i < edges.length; i++) {
             int x = edges[i][0];
             int y = edges[i][1];
             int value = edges[i][2];
-            graph[x].add(new int[]{y,value});
-            graph[y].add(new int[]{x,value});
+            graph[x].add(new int[]{y, value});
+            graph[y].add(new int[]{x, value});
         }
 
         int[] ans = new int[n];
 
-        for (int i = 0 ; i < n ;i++){
-            if (graph[i].size() == 1){
+        for (int i = 0; i < n; i++) {
+            if (graph[i].size() == 1) {
                 continue;
             }
             int sum = 0;
             for (int[] children : graph[i]) {
-                int cnt = dfs3067(children[0],i,children[1],graph,signalSpeed);
-                ans[i] += sum*cnt;
+                int cnt = dfs3067(children[0], i, children[1], graph, signalSpeed);
+                ans[i] += sum * cnt;
                 sum += cnt;
             }
         }
         return ans;
     }
 
-    private int dfs3067(int child, int fa,int sum, List<int[]>[] graph, int signalSpeed) {
-        int cnt = sum % signalSpeed == 0? 1 : 0;
+    private int dfs3067(int child, int fa, int sum, List<int[]>[] graph, int signalSpeed) {
+        int cnt = sum % signalSpeed == 0 ? 1 : 0;
 
         for (int[] next : graph[child]) {
             int y = next[0];
@@ -4785,10 +4786,10 @@ public class Solution {
         Arrays.sort(people);
 
         int light = 0;
-        int heavy = people.length-1;
+        int heavy = people.length - 1;
         int ans = 0;
-        while (light <= heavy){
-            if (people[light] + people[heavy] <=  limit){
+        while (light <= heavy) {
+            if (people[light] + people[heavy] <= limit) {
                 light++;
             }
             heavy--;
@@ -4800,26 +4801,26 @@ public class Solution {
 
     public int maxCoins(int[] nums) {
         int n = nums.length;
-        int[] arr = new int[n+2];
+        int[] arr = new int[n + 2];
         // dp[i][j] =  max(dp[i][k] + val[i] * val[k] * val[j] + dp[k][j],dp[i][j])
         arr[0] = 1;
         arr[1] = 1;
 
-        for (int i = 1 ; i <= n ; i++){
-            arr[i] = nums[i-1];
+        for (int i = 1; i <= n; i++) {
+            arr[i] = nums[i - 1];
         }
 
-        int[][] dp = new int[n+2][n+2];
+        int[][] dp = new int[n + 2][n + 2];
 
-        for (int i = arr.length -1; i >= 0; i--){
-            for (int j = i+2 ; j <= n+1 ; j++){
-                for (int k = i+1 ; k < j ; k++){
-                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + arr[i]*arr[k]* arr[j]+ dp[k][j]);
+        for (int i = arr.length - 1; i >= 0; i--) {
+            for (int j = i + 2; j <= n + 1; j++) {
+                for (int k = i + 1; k < j; k++) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i][k] + arr[i] * arr[k] * arr[j] + dp[k][j]);
                 }
             }
         }
 
-        return dp[0][n+1];
+        return dp[0][n + 1];
     }
 
 
@@ -4828,15 +4829,15 @@ public class Solution {
         int m = board.length;
         int n = board[0].length;
 
-        for (int i = 0 ; i < m ; i++){
-            for (int j = 0 ; j < n ; j++){
-                if (board[i][j] == 'X'){
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'X') {
                     board[i][j] = '.';
-                    for (int k = j+1 ; k < n && board[i][k] == 'X';k++){
+                    for (int k = j + 1; k < n && board[i][k] == 'X'; k++) {
                         board[i][k] = '.';
                     }
 
-                    for (int k = i+1 ; k < m && board[k][j] == 'X';k++){
+                    for (int k = i + 1; k < m && board[k][j] == 'X'; k++) {
                         board[k][j] = '.';
                     }
 
@@ -4846,37 +4847,33 @@ public class Solution {
         }
 
 
-
-
         return ans;
     }
 
 
-
     public int[] nextGreaterElements(int[] nums) {
         // 单调栈
-            int[] ans = new int[nums.length];
+        int[] ans = new int[nums.length];
 
-            int n = nums.length;
-            Arrays.fill(ans, -1);
-            Deque<Integer> stack = new ArrayDeque<>();
-            stack.push(-1);
-            for (int i = 2*nums.length - 1; i >= 0; i--) {
-                int x = nums[i%n];
-                while (!stack.isEmpty() && x > nums[stack.peek()]){
-                    stack.pop();
-                }
-
-                if (i < n && !stack.isEmpty()){
-                    ans[i] = stack.peek();
-                }
-
-                stack.push(i);
+        int n = nums.length;
+        Arrays.fill(ans, -1);
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int i = 2 * nums.length - 1; i >= 0; i--) {
+            int x = nums[i % n];
+            while (!stack.isEmpty() && x > nums[stack.peek()]) {
+                stack.pop();
             }
 
-            return ans;
-    }
+            if (i < n && !stack.isEmpty()) {
+                ans[i] = stack.peek();
+            }
 
+            stack.push(i);
+        }
+
+        return ans;
+    }
 
 
     public int findTargetSumWays(int[] nums, int target) {
@@ -4884,7 +4881,7 @@ public class Solution {
         int n = nums.length;
 
         for (int num : nums) {
-            s+= num;
+            s += num;
         }
 
         s -= Math.abs(target);
@@ -4893,15 +4890,15 @@ public class Solution {
         }
         int m = s / 2;// 背包容量
 
-        int[][] dp = new int[n+1][m+1];
+        int[][] dp = new int[n + 1][m + 1];
         dp[0][0] = 1;
 
-        for (int i = 0 ; i < n ; i++){
-            for (int j = 0 ; j <= m;j++){
-                if (j < nums[i]){
-                    dp[i+1][j] = dp[i][j];
-                }else {
-                    dp[i+1][j] = dp[i][j-nums[i]] + dp[i][j];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (j < nums[i]) {
+                    dp[i + 1][j] = dp[i][j];
+                } else {
+                    dp[i + 1][j] = dp[i][j - nums[i]] + dp[i][j];
                 }
             }
         }
@@ -4927,11 +4924,11 @@ public class Solution {
         int first = -1;
         int ans = 0;
         for (int i = 0; i < nums.length; i++) {
-            if (isPrime[nums[i]]){
-                if (first == -1){
+            if (isPrime[nums[i]]) {
+                if (first == -1) {
                     first = i;
-                }else {
-                    ans = Math.max(ans,i - first );
+                } else {
+                    ans = Math.max(ans, i - first);
                 }
 
             }
@@ -4941,15 +4938,14 @@ public class Solution {
     }
 
 
-
     public boolean checkMove(char[][] board, int rMove, int cMove, char color) {
         boolean res = false;
 
-        int[] dx = new int[]{1,1, 1,-1,-1,-1,0,0};
-        int[] dy = new int[]{0,1,-1,-1, 0, 1,1,-1};
+        int[] dx = new int[]{1, 1, 1, -1, -1, -1, 0, 0};
+        int[] dy = new int[]{0, 1, -1, -1, 0, 1, 1, -1};
 
-        for (int i = 0 ; i < 8 ; i++){
-            if (checkvalid(board,dx[i],dy[i],color,rMove,cMove)){
+        for (int i = 0; i < 8; i++) {
+            if (checkvalid(board, dx[i], dy[i], color, rMove, cMove)) {
                 return true;
             }
         }
@@ -4957,16 +4953,16 @@ public class Solution {
         return res;
     }
 
-    private boolean checkvalid(char[][] board,int dx,int dy,char color,int rMove,int cMove){
-        int x = rMove+ dx;
-        int y = cMove+dy;
+    private boolean checkvalid(char[][] board, int dx, int dy, char color, int rMove, int cMove) {
+        int x = rMove + dx;
+        int y = cMove + dy;
         int step = 1;
-        while (x>=0 && x < 8 && y>= 0 && y <8){
-            if (step == 1){
+        while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+            if (step == 1) {
                 if (board[x][y] == '.' || board[x][y] == color) {
                     return false;
                 }
-            }else {
+            } else {
                 if (board[x][y] == '.') {
                     return false;
                 }
@@ -4975,8 +4971,8 @@ public class Solution {
                 }
             }
 
-            x+= dx;
-            y+= dy;
+            x += dx;
+            y += dy;
             step++;
         }
 
@@ -4989,10 +4985,10 @@ public class Solution {
         int[] dp = new int[n];
         dp[0] = 1;
         long sum = 1;
-        for (int i = 1 ; i < n ; i++){
-            if (nums[i] != nums[i-1]){
-                dp[i] = dp[i-1]+1;
-            }else {
+        for (int i = 1; i < n; i++) {
+            if (nums[i] != nums[i - 1]) {
+                dp[i] = dp[i - 1] + 1;
+            } else {
                 dp[i] = 1;
             }
             sum += dp[i];
@@ -5005,18 +5001,16 @@ public class Solution {
         int sum = Arrays.stream(nums).sum();
         int index = 0;
         int cur = 0;
-        for (;index < nums.length ; index++){
-            if (cur == (sum - cur - nums[index])){
+        for (; index < nums.length; index++) {
+            if (cur == (sum - cur - nums[index])) {
                 return index;
-            }else {
+            } else {
                 cur += nums[index];
             }
         }
 
         return -1;
     }
-
-
 
 
     public List<Integer> getGoodIndices(int[][] variables, int target) {
@@ -5050,18 +5044,18 @@ public class Solution {
         Arrays.sort(cards);
         int n = cards.length;
         int sum = 0;
-        for (int i = n-cnt; i < cnt; i++) {
-         sum += cards[i];
+        for (int i = n - cnt; i < cnt; i++) {
+            sum += cards[i];
         }
 
-        if (sum %2 == 0){
+        if (sum % 2 == 0) {
             return sum;
         }
         // 奇数时 去掉前cnt个中最小的偶数  加上 后面最大的奇数
         //       去掉最小的奇数  加上后面最大的偶数
         // 先按照x的奇偶
-        int x = cards[n-cnt];
-        int ans = replaceX(cards,cnt,sum,x);
+        int x = cards[n - cnt];
+        int ans = replaceX(cards, cnt, sum, x);
         for (int i = n - cnt + 1; i < n; i++) {
             if (cards[i] % 2 != x % 2) { // 找到一个最大的奇偶性和 x 不同的数
                 ans = Math.max(ans, replaceX(cards, cnt, sum, cards[i])); // 替换
@@ -5072,9 +5066,9 @@ public class Solution {
     }
 
     private int replaceX(int[] cards, int cnt, int sum, int x) {
-        for (int i = cards.length - cnt -1; i >=0; i--) {
-            if (cards[i]%2 != x %2){
-                return sum - x +cards[i];
+        for (int i = cards.length - cnt - 1; i >= 0; i--) {
+            if (cards[i] % 2 != x % 2) {
+                return sum - x + cards[i];
             }
         }
         return 0;
@@ -5083,23 +5077,23 @@ public class Solution {
 
     public int maxPointsInsideSquare(int[][] points, String s) {
         int[] minD = new int[26];
-        Arrays.fill(minD,Integer.MAX_VALUE);
+        Arrays.fill(minD, Integer.MAX_VALUE);
         int min2 = Integer.MAX_VALUE;
         for (int i = 0; i < points.length; i++) {
-            int distance = Math.max(Math.abs(points[i][0]),Math.abs(points[i][1]));
+            int distance = Math.max(Math.abs(points[i][0]), Math.abs(points[i][1]));
             int charLocation = s.charAt(i) - 'a';
-            if (distance < minD[charLocation]){
-                min2 = Math.min(min2,minD[charLocation]);
+            if (distance < minD[charLocation]) {
+                min2 = Math.min(min2, minD[charLocation]);
                 minD[charLocation] = distance;
-            }else {
-                min2 = Math.min(min2,distance);
+            } else {
+                min2 = Math.min(min2, distance);
             }
         }
 
         int res = 0;
 
         for (int i : minD) {
-            if (i < min2){
+            if (i < min2) {
                 res++;
             }
         }
@@ -5110,24 +5104,537 @@ public class Solution {
 
 
     public boolean isSubtree(TreeNode root, TreeNode subRoot) {
-        if (root == null){
+        if (root == null) {
             return false;
         }
-        return isSameTree(root,subRoot) || isSubtree(root.left,subRoot)|| isSubtree(root.right,subRoot);
+        return isSameTree(root, subRoot) || isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
     }
 
     private boolean isSameTree(TreeNode root, TreeNode subRoot) {
-        if (root == null || subRoot == null){
+        if (root == null || subRoot == null) {
             return root == subRoot;
         }
 
-        return root.val == subRoot.val  && isSameTree(root.left,subRoot.left) && isSameTree(root.right,subRoot.right);
+        return root.val == subRoot.val && isSameTree(root.left, subRoot.left) && isSameTree(root.right, subRoot.right);
     }
 
+
+    public int findIntegers(int n) {
+        int m = Integer.SIZE - Integer.numberOfLeadingZeros(n);
+        int[][] mem = new int[m][2];
+        for (int[] row : mem) {
+            Arrays.fill(row, -1); // -1 表示没有计算过
+        }
+
+        return dp600(m - 1, 0, true, n, mem);
+    }
+
+    /**
+     * @param i                当前位置
+     * @param pre              前一个位置显得什么
+     * @param isLimit。是否收到上线约束
+     * @param n
+     * @param mem
+     * @return
+     */
+    private int dp600(int i, int pre, boolean isLimit, int n, int[][] mem) {
+        if (i < 0) {
+            return 1;
+        }
+
+
+        if (!isLimit && mem[i][pre] >= 0) {
+            return mem[i][pre];
+        }
+
+        //  n >> i & 1 检查第i位是否可以为1
+        int up = isLimit ? n >> i & 1 : 1;
+        // 先来一个写0 的版本
+        int res = dp600(i - 1, 0, isLimit && up == 0, n, mem);
+
+        // 如果前一个是0 且现在可以填入1
+        if (pre == 0 && up == 1) {
+            res += dp600(i - 1, 1, isLimit, n, mem);
+        }
+
+        if (!isLimit) {
+            mem[i][pre] = res;
+        }
+
+        return res;
+
+    }
+
+    public int numberOfStableArrays(int zero, int one, int limit) {
+        final long MOD = 1000000007;
+        long[][][] dp = new long[zero + 1][one + 1][2];
+        for (int i = 0; i <= Math.min(zero, limit); i++) {
+            dp[i][0][0] = 1;
+        }
+
+        for (int j = 0; j <= Math.min(one, limit); j++) {
+            dp[0][j][1] = 1;
+        }
+
+        for (int i = 1; i <= zero; i++) {
+            for (int j = 1; j <= one; j++) {
+                if (i > limit) {
+                    dp[i][j][0] = dp[i - 1][j][0] + dp[i - 1][j][1] - dp[i - limit - 1][j][1];
+                } else {
+                    dp[i][j][0] = dp[i - 1][j][0] + dp[i - 1][j][1];
+                }
+
+                dp[i][j][0] = (dp[i][j][0] % MOD + MOD) % MOD;
+
+                if (j > limit) {
+                    dp[i][j][1] = dp[i][j - 1][1] + dp[i][j - 1][0] - dp[i][j - limit - 1][0];
+                } else {
+                    dp[i][j][1] = dp[i][j - 1][1] + dp[i][j - 1][0];
+                }
+                dp[i][j][1] = (dp[i][j][1] % MOD + MOD) % MOD;
+            }
+        }
+        return (int) ((dp[zero][one][0] + dp[zero][one][1]) % MOD);
+    }
+
+    public int addedInteger(int[] nums1, int[] nums2) {
+        return Arrays.stream(nums2).max().getAsInt() - Arrays.stream(nums1).max().getAsInt();
+    }
+
+
+    public long numberOfRightTriangles(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        int[] col = new int[n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                col[j] += grid[i][j];
+            }
+        }
+
+        long res = 0;
+
+        for (int i = 0; i < m; i++) {
+            int sum = Arrays.stream(grid[i]).sum();
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    res += (long) (sum - 1) * (col[j] - 1);
+                }
+
+            }
+        }
+
+        return res;
+    }
+
+
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int[][] dp = new int[m + 1][n + 1];
+
+
+        for (int i = 1; i <= m; i++) {
+            int num1 = nums1[i - 1];
+
+            for (int j = 1; j <= n; j++) {
+                int num2 = nums2[j - 1];
+                if (num1 == num2) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+
+
+        return dp[m][n];
+    }
+
+
+    public boolean[] isArraySpecial(int[] nums, int[][] queries) {
+        int[] flag = new int[nums.length];
+        int i = 1;
+        int count = 1;
+        flag[0] = count;
+        while (i < nums.length) {
+            if (nums[i - 1] % 2 != nums[i] % 2) {
+
+            } else {
+                count++;
+            }
+            flag[i] = count;
+            i++;
+        }
+
+        boolean[] res = new boolean[queries.length];
+        for (int j = 0; j < queries.length; j++) {
+            int start = queries[j][0];
+            int end = queries[j][1];
+            res[j] = flag[start] == flag[end];
+        }
+
+        return res;
+    }
+
+
+    public int maxScore(List<List<Integer>> grid) {
+        int m = grid.size();
+        int n = grid.get(0).size();
+        int[][] dp = new int[m][n];
+
+        int ans = Integer.MIN_VALUE;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                if (i == 0) {
+                    int tmp = dp[i][j - 1] + grid.get(i).get(j) - grid.get(i).get(j - 1);
+                    ans = Math.max(ans, tmp);
+                    dp[i][j] = Math.max(0, tmp);
+                } else if (j == 0) {
+                    int tmp = dp[i - 1][j] + grid.get(i).get(j) - grid.get(i - 1).get(j);
+                    ans = Math.max(ans, tmp);
+                    dp[i][j] = Math.max(0, tmp);
+                } else {
+                    int tmp1 = dp[i][j - 1] + grid.get(i).get(j) - grid.get(i).get(j - 1);
+                    int tmp2 = dp[i - 1][j] + grid.get(i).get(j) - grid.get(i - 1).get(j);
+                    ans = Math.max(ans, Math.max(tmp1, tmp2));
+                    dp[i][j] = Math.max(0, Math.max(tmp1, tmp2));
+                }
+            }
+        }
+        return ans;
+    }
+
+
+    public boolean checkRecord(String s) {
+        int countA = 0;
+        int countL = 0;
+        for (char c : s.toCharArray()) {
+            if (c == 'A') {
+                countA++;
+                if (countA >= 2) {
+                    return false;
+                }
+            }
+            if (c == 'L') {
+                countL++;
+                if (countL >= 3) {
+                    return false;
+                }
+            } else {
+                countL = 0;
+            }
+        }
+
+        return true;
+    }
+
+
+    public int checkRecord(int n) {
+        final int MOD = 1000000007;
+        int[][][] dp = new int[n + 1][2][3]; // 长度，A 的数量，结尾连续 L 的数量
+        dp[0][0][0] = 1;
+
+
+        for (int i = 1; i <= n; i++) {
+            //P
+            for (int j = 0; j <= 1; j++) {
+                for (int k = 0; k <= 2; k++) {
+                    dp[i][j][0] = (dp[i][j][0] + dp[i - 1][j][k]) % MOD;
+                }
+            }
+
+            // A
+            for (int k = 0; k <= 2; k++) {
+                dp[i][1][0] = (dp[i][1][0] + dp[i - 1][0][k]) % MOD;
+            }
+
+            // L
+            for (int j = 0; j <= 1; j++) {
+                for (int k = 1; k <= 2; k++) {
+                    dp[i][j][k] = (dp[i][j][k] + dp[i - 1][j][k - 1]) % MOD;
+                }
+            }
+
+        }
+
+
+        int sum = 0;
+
+        for (int j = 0; j <= 1; j++) {
+            for (int k = 0; k <= 2; k++) {
+                sum = (sum + dp[n][j][k]) % MOD;
+            }
+        }
+
+        return sum;
+    }
+
+    Map<Integer, Employee> map = new HashMap<>();
+
+    public int getImportance(List<Employee> employees, int id) {
+        for (Employee i : employees) {
+            map.put(i.id, i);
+        }
+
+        return dfs690(id);
+    }
+
+    private int dfs690(int id) {
+        Employee employee = map.get(id);
+        int total = employee.importance;
+        for (int i = 0; i < employee.subordinates.size(); i++) {
+            total += dfs690(employee.subordinates.get(i));
+        }
+        return total;
+    }
+
+
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        int sum = Arrays.stream(nums).sum();
+
+
+        if (sum % k != 0) return false;
+
+        int avg = sum / k;
+
+
+        // 1. 自己就满足
+        // 2. 自己不满足 需要找补
+
+
+        return false;
+    }
+
+
+    public int medianOfUniquenessArray(int[] nums) {
+        int n = nums.length;
+        long k = ((long) n * (n + 1) / 2 + 1) / 2;
+        int left = 0;
+        int right = n;
+        // 一共有 n*（n+1）个组合
+        // 数字为【1，n-1】
+        // 找中间的位置，然后枚举每个值中间值，看大小是否满足位置，要找到刚好第k个
+
+        while (left + 1 < right) {
+            int mid = (left + right) / 2; // 独特的个数
+            if (check3134(nums, mid, k)) {
+                // true 证明比较多 需要缩小
+                right = mid;
+            } else {
+                // false 证明有点少 需要扩大
+                left = mid;
+            }
+        }
+
+
+        return right;
+    }
+
+    private boolean check3134(int[] nums, int mid, long k) {
+        long cnt = 0;
+        int left = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+
+        for (int r = 0; r < nums.length; r++) {
+            freq.merge(nums[r], 1, Integer::sum);
+            while (freq.size() > mid) {
+                int out = nums[left];
+                if (freq.merge(out, -1, Integer::sum) == 0) {
+                    freq.remove(out);
+                }
+                left++;
+            }
+
+            cnt += r - left + 1;
+            if (cnt >= k) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+
+    public int minimumSubstringsInPartition(String s) {
+        // dp[i] = dp[j] + 1
+        int n = s.length();
+        int[] dp = new int[n];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            Map<Character, Integer> count = new HashMap<>();
+            int maxCnt = 0;
+            for (int j = i; j >= 0; j--) {
+                count.put(s.charAt(j), count.getOrDefault(s.charAt(j), 0) + 1);
+                maxCnt = Math.max(maxCnt, count.getOrDefault(s.charAt(j), 0));
+                if (j >= 1) {
+                    if (maxCnt * count.size() == (i - j + 1) && dp[j - 1] != Integer.MAX_VALUE) {
+                        dp[i] = Math.min(dp[i], dp[j - 1] + 1);
+                    }
+                } else {
+                    if (maxCnt * count.size() == (i - j + 1)) {
+                        dp[i] = Math.min(dp[i], 1);
+                    }
+                }
+            }
+        }
+
+        return dp[n - 1];
+    }
+
+
+    public boolean canMakeSquare(char[][] grid) {
+        for (int i = 0; i <=1 ; i++) {
+            for (int j = 0; j <=1; j++) {
+                if (check3217(grid,i,j)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean check3217(char[][] grid, int x, int y) {
+
+        int count = 0;
+        for (int i = 0; i <= 1 ; i++) {
+            for (int j = 0; j <= 1; j++) {
+                if (grid[x+i][y+j] == 'B'){
+                    count++;
+                }
+            }
+        }
+
+        return count != 2;
+    }
+
+
+    public long sumDigitDifferences(int[] nums) {
+        long ans = 0;
+        int flag = String.valueOf(nums[0]).length();
+        int n = nums.length;
+        int mod = 1;
+        for (int i = 1 ; i <= flag ;i++){
+            int[] cnt = new int[10];
+            for (int j = 0; j < nums.length; j++) {
+                int cur = nums[j];
+                int num = cur /mod % 10;
+                cnt[num]++;
+            }
+
+            long tmp = 0L;
+            for (int ttt : cnt) {
+                tmp += (long) (n - ttt) * ttt;
+            }
+
+            ans += tmp/2;
+            mod = mod*10;
+        }
+
+        return ans;
+    }
+
+
+    public int maxConsecutiveAnswers(String answerKey, int k) {
+        int[] count = new int[2];
+        int ans = 0;
+        for (int left = 0 ,right = 0;right < answerKey.length();right++ ) {
+            if (answerKey.charAt(right) =='T'){
+                count[1]++;
+            }else {
+                count[0]++;
+            }
+            while (count[1]>k && count[0]>k){
+                if (answerKey.charAt(left++) =='T'){
+                    count[1]--;
+                }else {
+                    count[0]--;
+                }
+            }
+            ans = Math.max(ans,right - left +1);
+        }
+        return ans;
+    }
+
+    public long maxStrength(int[] nums) {
+       Arrays.sort(nums);
+       int n = nums.length;
+       if (n==1){
+           return nums[0];
+       }
+
+       int neg = 0;
+       int pos = 0;
+        for (int num : nums) {
+            if (num< 0){
+                neg++;
+            }else if (num>0){
+                pos++;
+            }
+        }
+
+
+        if (pos == 0 && neg == 1){
+            return nums[n-1];
+        }
+
+        long ans = 1;
+        if (pos > 0) {
+            for (int i = n - pos +1; i < n; i++) {
+                ans *= nums[i];
+            }
+        }
+
+        if (neg > 0){
+            int num = neg /2;
+            if (num > 0){
+                int r = num*2 -1;
+                for (int i = 0 ; i <=r ; i++){
+                    ans *= nums[i];
+                }
+            }
+        }
+
+
+        return ans;
+    }
+
+    public int countWays(List<Integer> nums) {
+        int ans = 0;
+        int n = nums.size();
+
+        nums.sort(Comparator.comparingInt(o -> o));
+
+        for (int pick = 0; pick <=n; pick++) {
+            if (pick > 0 && nums.get(pick-1) >= pick){
+                continue;
+            }
+            if (pick < n && nums.get(pick) <= pick){
+                continue;
+            }
+            ans++;
+        }
+        return ans;
+    }
+
+
+    public int maximumLength(int[] nums, int k) {
+
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.findTargetSumWays(new int[]{1,1,1,1,1},3);
+        solution.maxStrength(new int[]{-4,-4,-5});
+
+
     }
 }
