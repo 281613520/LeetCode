@@ -5627,7 +5627,142 @@ public class Solution {
 
 
     public int maximumLength(int[] nums, int k) {
+        int n = nums.length;
+        int[][] dp = new int[n][51];
+        for (int i = 0; i < n-1; i++) {
+            Arrays.fill(dp[i], -1);
+        }
 
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 1;
+            for (int l = 0 ; l <= k ;l++){
+                for (int j = 0 ; j < i ; j++){
+                    int add = nums[i] == nums[j] ? 0 :1;
+                    if (l - add >= 0 && dp[j][l-add] != -1){
+                        dp[i][l] = Math.max(dp[i][l],dp[j][l-add]+1);
+                    }
+                }
+
+               ans = Math.max(ans,dp[i][l]);
+            }
+        }
+
+        return ans;
+    }
+
+
+    public ListNode mergeNodes(ListNode head) {
+        ListNode dummy = new ListNode(-1);
+        ListNode flag = dummy;
+        ListNode cur = head.next;
+        int sum = 0;
+
+        while (cur != null) {
+            if (cur.val != 0){
+                sum += cur.val;
+            }else {
+                ListNode tmp  = new ListNode(sum);
+                flag.next = tmp;
+                flag = tmp;
+                sum = 0;
+            }
+            cur = cur.next;
+        }
+
+        return dummy.next;
+    }
+
+
+    public long countQuadruplets(int[] nums) {
+        long res = 0;
+        int n = nums.length;
+        // less 左边比当前数字小的个数
+        // bigger 右边比当前数字大的个数
+        int[][] bigger = new int[n][n+1];
+        int[][] less = new int[n][n+1];
+        // bigger[k][x] = x < nums[k+1] bigger[k+1][x] or  x >= nums[k+1] bigger[k+1][x]
+        for (int k = n-2;k >=2 ; k--){
+            System.arraycopy(bigger[k + 1], 0, bigger[k], 0, n + 1);
+            for (int x = 1; x < nums[k + 1]; x++) {
+                bigger[k][x] = bigger[k+1][x] +1;
+            }
+        }
+        // less[j][x] = x <= nums[j-1] less[j-1][x] or nums[j-1] < x less[j-1][x] +1
+        for (int j = 1 ; j < n;j++){
+            for (int x = 1 ; x <= nums[j-1] ; x++){
+                less[j][x] = less[j-1][x];
+            }
+            for (int x = nums[j-1] +1 ; x <= n ; x++){
+                less[j][x] = less[j-1][x] +1;
+            }
+        }
+        // j之前比nums[k] 小的。k之后比nums[j]大的
+        int j = 1;
+        for(;j< n -2 ; j++){
+            for (int k = j+1;k < n -1 ;k++){
+                if (nums[k] < nums[j]){
+                    // 乘法法则
+                    res += (long) less[j][nums[k]] * bigger[k][nums[j]];
+                }
+            }
+        }
+        return res;
+    }
+
+
+    public int maximizeWin(int[] prizePositions, int k) {
+        int left = 0;
+        int right = 0;
+        int ans = 0;
+        int n = prizePositions.length;
+
+        int[] dp = new int[n+1];
+
+        for (; right < n; right++) {
+            while (prizePositions[right] - prizePositions[left] > k) {
+                left++;
+            }
+
+            ans = Math.max(ans, dp[left]+ right - left + 1);
+            dp[right+1] = Math.max(dp[right],right - left +1);
+        }
+
+        return ans;
+    }
+
+
+    public long minimumTime(int[] time, int totalTrips) {
+        long left = 1 ;
+
+        long right = (long) totalTrips * Arrays.stream(time).max().orElse(0);
+
+        while (left < right){
+            long mid = (right- left)/2 + left;
+            boolean check_res = check2187(mid,time,totalTrips);
+
+            if (!check_res){
+                left = mid +1;
+            }else {
+                right = mid;
+            }
+        }
+
+        return left;
+    }
+
+    private boolean check2187(long mid, int[] time, int totalTrips) {
+        long count = 0;
+        for (int i : time) {
+            count += mid/i;
+        }
+
+        return count >= totalTrips;
+    }
+
+
+    public double nthPersonGetsNthSeat(int n) {
+        return n==1 ? 1:0.5;
     }
 
     public static void main(String[] args) {
