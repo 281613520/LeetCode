@@ -5765,11 +5765,40 @@ public class Solution {
         return n==1 ? 1:0.5;
     }
 
+
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int start = 0;
+        int n = gas.length;
+
+        while (start < gas.length){
+            int gasSum = 0;
+            int costSum = 0;
+            int cnt = 0;
+
+            while (cnt < n){
+                int location = (start + cnt) % n;
+                gasSum += gas[location];
+                costSum += cost[location];
+
+                if (gasSum < costSum){
+                    break;
+                }
+                cnt++;
+            }
+
+            if (cnt == n){
+                return start;
+            }else {
+                start+= start +  cnt + 1;
+            }
+        }
+
+        return -1;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
         solution.maxStrength(new int[]{-4,-4,-5});
-
-
     }
 }
