@@ -5817,9 +5817,220 @@ public class Solution {
         return -1;
     }
 
+
+    public String destCity(List<List<String>> paths) {
+        Set<String> map = new HashSet<>();
+        for (List<String> path : paths) {
+            map.add(path.get(0));
+        }
+
+        for (List<String> path : paths) {
+            if (!map.contains(path.get(1))) {
+                return path.get(1);
+            }
+        }
+
+        return "";
+    }
+
+
+
+    public long numberOfPairs(int[] nums1, int[] nums2, int k) {
+        long res = 0;
+        // nums2[j]*k % nums1[i] == 0
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int num : nums1) {
+            if (num % k == 0) {
+                Set<Integer> factors = findFactors(num/k);
+                for (Integer factor : factors) {
+                    map.put(factor, map.getOrDefault(factor, 0) + 1);
+                }
+            }
+        }
+
+        for (int num : nums2) {
+            res += map.getOrDefault(num,0);
+        }
+
+        return res;
+    }
+
+    public static Set<Integer> findFactors(int n) {
+        Set<Integer> factors = new HashSet<>();
+        factors.add(1);
+        factors.add(n);
+
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                factors.add(i);
+                if (i != n / i) {
+                    factors.add(n / i);
+                }
+            }
+        }
+
+        return factors;
+    }
+
+    public String compressedString(String word) {
+        StringBuilder res  = new StringBuilder();
+
+        char prev = word.charAt(0);
+        int count = 0;
+
+        for (int i = 0; i < word.length(); i++) {
+            char cur = word.charAt(i);
+            if (cur != prev || count == 9){
+                res.append(count).append(prev);
+                count = 1;
+                prev = cur;
+            }else {
+                count++;
+            }
+        }
+
+        res.append(count).append(prev);
+        return res.toString();
+    }
+
+
+    public int twoEggDrop(int n) {
+        int[] dp = new int[n+1];
+        Arrays.fill(dp, Integer.MAX_VALUE/2);
+        dp[0] = 0;
+
+        // dp[i] = Min 1~k {max{k-1,dp[i-k]}+1}  碎掉了 只能从1～k-1 最大是k-1  不碎 转移到紫问题
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                dp[i] = Math.min(dp[i], Math.max(j-1,dp[i-j])+1);
+            }
+        }
+
+        return dp[n];
+    }
+
+
+    public int smallestRangeI(int[] nums, int k) {
+        int max = Arrays.stream(nums).max().getAsInt();
+        int min = Arrays.stream(nums).min().getAsInt();
+        return max - min > 2*k? max - min - 2*k:0;
+    }
+
+
+    public int[] findRedundantConnection(int[][] edges) {
+        UnionFind uf = new UnionFind(edges.length+1);
+
+        for (int[] edge : edges) {
+            int f = edge[0];
+            int t = edge[1];
+            if (uf.find(f) != uf.find(t)) {
+                uf.union(f,t);
+            }else {
+                return new int[]{f,t};
+            }
+        }
+
+        return new int[0];
+    }
+
+    public int findWinningPlayer(int[] skills, int k) {
+        int maxI = 0;
+        int cnt = 0;
+        for (int i = 1; i < skills.length; i++) {
+            if (skills[i] > skills[maxI]) {
+                maxI = i;
+                cnt = 0;
+            }
+            cnt++;
+            if (cnt == k){
+                break;
+            }
+
+        }
+
+        return maxI;
+    }
+
+
+
+    public int minChanges(int n, int k) {
+            int res = 0;
+
+            while (n > 0 || k > 0){
+                if ((n&1)== 0 && (k&1)==1){
+                    return -1;
+                }
+
+                if ((n&1) == 1 && (k&1) ==0){
+                    res++;
+                }
+
+                n>>=1;
+                k>>=1;
+            }
+
+            return res;
+    }
+
+
+    public long maxEnergyBoost(int[] energyDrinkA, int[] energyDrinkB) {
+        int n = energyDrinkA.length;
+        long[][] dp = new long[n+1][2];
+
+        dp[1][0] = energyDrinkA[0];
+        dp[1][1] = energyDrinkB[0];
+
+
+        // dp[i][0] = max(dp[i-1][0]+energyDrinkA[i],dp[i-2][1]+energyDrinkA[i])
+        // dp[i][1] = max(dp[i-1][1]+energyDrinkB[i],dp[i-2][0]+energyDrinkB[i])
+        for (int i = 1; i <= n ; i++) {
+            dp[i][0] = dp[i-1][0] + energyDrinkA[i-1];
+            dp[i][1] = dp[i-1][1] + energyDrinkB[i-1];
+            if (i>=2){
+                dp[i][0] = Math.max(dp[i][0],dp[i-2][1] + energyDrinkA[i-1]);
+                dp[i][1] = Math.max(dp[i][1],dp[i-2][0] + energyDrinkB[i-1]);
+            }
+        }
+
+        return Math.max(dp[n][0],dp[n][1]);
+    }
+
+    public int[] resultsArray(int[] nums, int k) {
+        int n  = nums.length;
+        int[] count = new int[n];
+
+        for (int i = 0 ; i < n ; i++){
+            if (i == 0){
+                count[i] = 1;
+            }else {
+                if (nums[i] - nums[i-1] == 1){
+                    count[i] = count[i-1] +1;
+                }else {
+                    count[i] = 1;
+                }
+            }
+        }
+
+        int[] res = new int[n-k+1];
+
+        for (int i = k-1; i < n; i++) {
+            if (count[i] >= k){
+                res[i-k+1] = nums[i];
+            }else {
+                res[i-k+1] = -1;
+            }
+        }
+
+
+        return res;
+    }
+
+
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        solution.maxStrength(new int[]{-4,-4,-5});
+        solution.resultsArray(new int[]{1,2,3,4,3,2,5},3);
     }
 }
