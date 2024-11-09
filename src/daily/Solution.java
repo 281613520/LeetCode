@@ -6027,6 +6027,64 @@ public class Solution {
     }
 
 
+    public boolean judgeSquareSum(int c) {
+        long left = 0;
+        long right = (long)Math.sqrt(c);
+
+        while (left <= right){
+            long sum  = left * left + right * right;
+            if (sum == c){
+                return true;
+            }else if (sum < c){
+                left++;
+            }else {
+                right--;
+            }
+        }
+
+        return false;
+    }
+
+
+    public int maxIncreasingCells(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+
+        TreeMap<Integer,List<int[]>> index = new TreeMap<>();
+        // 先将所有的数字全部排列
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[0].length; j++) {
+                index.computeIfAbsent(mat[i][j],k-> new ArrayList<>()).add(new int[]{i,j});
+            }
+        }
+        
+        int res = 0;
+        // 标记
+        int[] rowMax = new int[m];
+        int[] colMax = new int[n];
+        // 从小到大进行计算，这样子就能有序
+        for (List<int[]> pos : index.values()) {
+            //枚举每个值的不同位置
+            int[] tmp = new int[pos.size()];
+            for (int i = 0; i < pos.size(); i++) {
+                int x = pos.get(i)[0];
+                int y = pos.get(i)[1];
+                tmp[i] = Math.max(rowMax[x] , colMax[y]) +1;
+                res = Math.max(res,tmp[i]);
+            }
+
+            for (int i = 0; i < pos.size(); i++) {
+                int x = pos.get(i)[0];
+                int y = pos.get(i)[1];
+                rowMax[x] = Math.max(rowMax[x] , tmp[i]);
+                colMax[y] = Math.max(colMax[y] , tmp[i]);
+            }
+        }
+
+        return ans;
+    }
+
+
 
     public static void main(String[] args) {
         Solution solution = new Solution();
