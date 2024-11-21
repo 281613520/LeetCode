@@ -6059,20 +6059,22 @@ public class Solution {
         }
         
         int res = 0;
-        // 标记
+        // 标记第i行的最大值
         int[] rowMax = new int[m];
+        // 标记第j列的最大值
         int[] colMax = new int[n];
         // 从小到大进行计算，这样子就能有序
         for (List<int[]> pos : index.values()) {
-            //枚举每个值的不同位置
+            // 枚举每个值的不同位置 每个点位的最大值
             int[] tmp = new int[pos.size()];
             for (int i = 0; i < pos.size(); i++) {
                 int x = pos.get(i)[0];
                 int y = pos.get(i)[1];
+                // 找到这个点位的最大
                 tmp[i] = Math.max(rowMax[x] , colMax[y]) +1;
                 res = Math.max(res,tmp[i]);
             }
-
+            // 在计算完后 刷新这个行列真正的最大值 （不同的点位可能导致不同的结果）
             for (int i = 0; i < pos.size(); i++) {
                 int x = pos.get(i)[0];
                 int y = pos.get(i)[1];
@@ -6081,7 +6083,136 @@ public class Solution {
             }
         }
 
-        return ans;
+        return res;
+    }
+
+    List<Integer> [] g;
+    int res3249 = 0;
+
+    public int countGoodNodes(int[][] edges) {
+        int n = edges.length +1;
+        g = new List[n];
+
+        for (int i = 0; i < n; i++) {
+            g[i] = new ArrayList<>();
+        }
+
+        for (int[] edge : edges) {
+            g[edge[0]].add(edge[1]);
+            g[edge[1]].add(edge[0]);
+        }
+
+
+        dfs3249(0,-1);
+
+        return res3249;
+    }
+
+    private int dfs3249(int node, int parent) {
+        boolean valid = true;
+        int treeSize = 0;
+        int subTreeSize = 0;
+        for (Integer child : g[node]) {
+            if (node != parent) {
+                int size = dfs3249(child, node);
+                if (subTreeSize == 0) {
+                    subTreeSize = size;
+                } else if (size != subTreeSize) {
+                    valid = false;
+                }
+                treeSize += size;
+            }
+        }
+
+        if (valid){
+            res3249++;
+        }
+        return treeSize +1;
+    }
+
+
+    public int minFlips(int[][] grid) {
+        //1 行回文
+        int count_row = 0;
+        for (int i = 0; i < grid.length; i++) {
+            int left = 0;
+            int right = grid[0].length-1;
+            while (left < right) {
+                if (grid[i][left] != grid[i][right]) {
+                    count_row++;
+                }
+                left++;
+                right--;
+            }
+        }
+
+
+        // 2 列回文
+        int count_col = 0;
+
+
+        for (int j = 0; j < grid[0].length; j++) {
+            int high = 0;
+            int low = grid.length-1;
+            while (high < low) {
+                if (grid[high][j] != grid[low][j]) {
+                    count_col++;
+                }
+                high++;
+                low--;
+            }
+        }
+
+        return Math.min(count_col,count_row);
+    }
+
+
+    public int numFriendRequests(int[] ages) {
+        int[] ageCount = new int[121];
+
+        for (int age : ages) {
+            ageCount[age]++;
+        }
+
+        int[] preSum = new int[121];
+        preSum[0] = 0;
+        for (int i = 1; i < preSum.length; i++) {
+            preSum[i] = preSum[i-1] + ageCount[i];
+        }
+
+        int res = 0;
+        for (int i = 15; i < 121; i++) {
+            if (ageCount[i] > 0){
+                int bound = (int) (i * 0.5+7);
+                ans += ageCount[i] * (preSum[i] - preSum[bound] -1);
+            }
+        }
+        return res;
+    }
+
+    public int finalPositionOfSnake(int n, List<String> commands) {
+        int i = 0;
+        int j = 0;
+        for (String command : commands) {
+            switch (command.charAt(0)) {
+                case 'U':
+                    i++;
+                    break;
+                case 'D':
+                    i--;
+                    break;
+                case 'R':
+                     j++;
+                     break;
+                case  'L':
+                    j--;
+                    break;
+
+            }
+        }
+
+        return i*n+j;
+
     }
 
 
