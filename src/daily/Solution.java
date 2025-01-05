@@ -6216,6 +6216,242 @@ public class Solution {
     }
 
 
+    public int[] shortestDistanceAfterQueries(int n, int[][] queries) {
+        List<List<Integer>> prev = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            prev.add(new ArrayList<>());
+        }
+        int[] dp = new int[n];
+        for (int i = 1; i < n; i++) {
+            prev.get(i).add(i-1);
+            dp[i] = i;
+        }
+
+        int[] res = new int[queries.length];
+
+        for (int i = 0; i < queries.length; i++) {
+            int from = queries[i][0];
+            int to = queries[i][1];
+            prev.get(to).add(from);
+            for (int t = to; t < n; t++) {
+                for (int f : prev.get(t)) {
+                    dp[t] = Math.min(dp[t],dp[f]+1);
+                }
+            }
+
+            res[i] = dp[n-1];
+        }
+
+        return res;
+    }
+
+    public int[] shortestDistanceAfterQueries2(int n, int[][] queries) {
+        int[] roads = new int[n];
+        for (int i = 0; i < roads.length; i++) {
+            roads[i] = i+1;
+        }
+
+        int[] res = new int[queries.length];
+        int cnt = n-1;
+
+        for (int i = 0; i < queries.length; i++) {
+            int from = queries[i][0];
+            int to = queries[i][1];
+            // 区间内没有被处理过
+            if (roads[from] > 0 && roads[from] < to){
+                // 从from 开始 改为0
+                for (int j = roads[from]; j < to;) {
+                    cnt--;
+                    // 跳到下一个位置  其实直接++应该是正确的
+                    int tmp = roads[j];
+                    roads[j] = 0;
+                    j = tmp;
+                }
+
+                roads[from] = to;
+            }
+
+            res[i] = cnt;
+        }
+
+
+        return res;
+    }
+
+
+    public int numberOfAlternatingGroups(int[] colors, int k) {
+        int cnt = 0;
+        int n = colors.length;
+        int ans = 0;
+
+        for (int i = 0; i < n*2; i++) {
+            if (colors[i%n] == colors[(i+1)%n]){
+                cnt = 0;
+            }
+            cnt++;
+
+            if (i>= n && cnt >= k){
+                ans++;
+            }
+        }
+
+
+        return ans;
+    }
+
+
+    public int minimumCost(int m, int n, int[] horizontalCut, int[] verticalCut) {
+        int h = 1; int v = 1;
+        Arrays.sort(horizontalCut);
+        Arrays.sort(verticalCut);
+        int ans = 0;
+        int i = m-2;
+        int j = n-2;
+
+        while (i>=0 || j>=0){
+            if (j<0 || (i >= 0 && horizontalCut[i] >= verticalCut[j])){
+                ans += horizontalCut[i]*v;
+                h++;
+                i--;
+            }else {
+                ans += verticalCut[j]*h;
+                v++;
+                j--;
+            }
+        }
+        return ans;
+
+    }
+
+
+
+    public String rankTeams(String[] votes) {
+        Map<Character,int[]> ranking  = new HashMap<>();
+
+        int n = votes.length;
+
+        for (char c : votes[0].toCharArray()) {
+            ranking.put(c,new int[votes[0].length()]);
+        }
+
+        for (String vote : votes) {
+            for (int i = 0; i < vote.length(); i++) {
+                ranking.get(vote.charAt(i))[i]++;
+            }
+        }
+
+        List<Character> result = new ArrayList<>();
+        for (Map.Entry<Character,int[]> entry : ranking.entrySet()) {
+            result.add(entry.getKey());
+        }
+
+        result.sort(new Comparator<Character>() {
+            @Override
+            public int compare(Character a, Character b) {
+                int[] aSort = ranking.get(a);
+                int[] bSort = ranking.get(b);
+                for (int i = 0; i < aSort.length; i++) {
+                    if (aSort[i] != bSort[i]) {
+                        return bSort[i] - aSort[i];
+                    }
+                }
+
+                return a-b;
+            }
+        });
+
+        StringBuilder sb = new StringBuilder();
+        for (Character c : result) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        List<Integer> list =  new ArrayList<>();
+        ListNode tmp = head;
+        while (tmp != null) {
+            list.add(tmp.val);
+            tmp = tmp.next;
+        }
+
+        return dfs1367(list,0,root);
+    }
+
+    private boolean dfs1367(List<Integer> list, int location, TreeNode root) {
+        if (location >= list.size()) {
+            return true;
+        }
+
+        if (root == null){
+            return false;
+        }
+
+        if (list.get(location) != root.val) {
+            boolean tmp = dfs1367(list,0,root.left) || dfs1367(list,0,root.right);
+            if (location == 0){
+                return tmp;
+            }
+            return tmp|| dfs1367(list,0,root);
+        }
+        return dfs1367(list,location+1,root.left) || dfs1367(list,location+1,root.right);
+    }
+
+
+    public int getLargestOutlier(int[] nums) {
+        Map<Integer, Integer> cnt = new HashMap<>();
+        int total = 0;
+        for (int x : nums) {
+            cnt.merge(x, 1, Integer::sum); // cnt[x]++
+            total += x;
+        }
+
+        int ans = Integer.MIN_VALUE;
+
+        for (int x : cnt.keySet()) {
+            cnt.merge(x,-1,Integer::sum);
+            if ((total - x)%2 == 0 && cnt.getOrDefault((total-x)/2,0) > 0) {
+                ans = Math.max(ans, x);
+            }
+            cnt.merge(x,1,Integer::sum);
+        }
+        return ans;
+    }
+
+    public String convertDateToBinary(String date) {
+        String[] str = date.split("-");
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < str.length; i++) {
+            Integer x = Integer.parseInt(str[i]);
+            String bit = Integer.toBinaryString(x);
+            list.add(bit);
+        }
+        return String.join("-", list);
+    }
+
+
+    public long minimumCost2(int m, int n, int[] horizontalCut, int[] verticalCut) {
+        int h = 1; int v = 1;
+        Arrays.sort(horizontalCut);
+        Arrays.sort(verticalCut);
+        long ans = 0;
+        int i = m-2;
+        int j = n-2;
+
+        while (i>=0 || j>=0){
+            if (j < 0 || (i >= 0 && horizontalCut[i] >= verticalCut[j])){
+                ans += (long) horizontalCut[i] *v;
+                i--;
+                h++;
+            }else {
+                ans += (long) verticalCut[j] *h;
+                v++;
+                j--;
+            }
+        }
+        return ans;
+    }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
